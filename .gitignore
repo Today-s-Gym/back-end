@@ -17,6 +17,14 @@ bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
 
+### project
+application.yml
+Secret.java
+*.properties
+*.yml
+*.json
+resources
+
 ### IntelliJ IDEA ###
 .idea
 *.iws
