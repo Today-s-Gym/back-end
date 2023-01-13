@@ -36,7 +36,7 @@ public class Record {
     private boolean deleted = false;
     private int report = 0;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 

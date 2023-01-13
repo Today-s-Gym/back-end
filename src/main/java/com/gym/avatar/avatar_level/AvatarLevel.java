@@ -1,5 +1,6 @@
 package com.gym.avatar.avatar_level;
 
+import com.gym.avatar.avatar.Avatar;
 import com.gym.avatar.my_avatar.MyAvatar;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,7 +25,9 @@ public class AvatarLevel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer avatarLevelId;
-    private Integer avatarId;       // 아바타의 Id
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Avatar avatar;          // 아바타 엔티티와 연관관계
     private Integer level;          // 아바타 레벨
     private String imgUrl;          // 아바라 레벨에 해당하는 아바타 이미지
 
