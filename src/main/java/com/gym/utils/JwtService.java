@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class JwtService {
 
-    public Integer getUserId() {
-        Integer userId = 0;
+    public static Integer getUserId() {
+        Integer userId = 1;
         return userId;
     }
 }
