@@ -44,7 +44,7 @@ public class User {
     private boolean deleted = false;
     private int report = 0;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
 

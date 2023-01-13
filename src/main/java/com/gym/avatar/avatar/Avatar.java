@@ -21,7 +21,7 @@ public class Avatar {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer avatarId;   // 아바타의 Id
     private String name;        // 아바타 이름
-    private String imgUrl;      // 아바타 대표 이미지 → 아바타 목록 보기에서 사용하기 위함
+
 
     @CreationTimestamp
     private LocalDateTime createdAt = LocalDateTime.now();

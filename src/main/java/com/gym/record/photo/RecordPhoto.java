@@ -21,7 +21,7 @@ public class RecordPhoto {
 
     private String imgUrl;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "record_id")
     private Record record;
 }
