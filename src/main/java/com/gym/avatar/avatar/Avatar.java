@@ -22,7 +22,6 @@ public class Avatar {
     private Integer avatarId;   // 아바타의 Id
     private String name;        // 아바타 이름
 
-
     @CreationTimestamp
     private LocalDateTime createdAt = LocalDateTime.now();
     @UpdateTimestamp
