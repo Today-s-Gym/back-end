@@ -6,10 +6,7 @@ import com.gym.post.Post;
 import com.gym.post.comment.Comment;
 import com.gym.record.Record;
 import com.gym.tag.Tag;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -20,6 +17,7 @@ import java.util.List;
 @Entity
 @Builder
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "user")
