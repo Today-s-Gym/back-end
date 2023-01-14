@@ -49,4 +49,20 @@ public class Record {
     @OneToMany(mappedBy = "record", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<Tag> tagList;
 
+    //==연관관계 메서드==//
+    public void setUser(User user){
+        this.user = user;
+    }
+
+    //==객체 생성 매서드==//
+    public void createContent(String content){
+        this.content = content;
+    }
+    public static Record createRecord(String content, User user){
+        Record record = new Record();
+        record.createContent(content);
+        record.setUser(user);
+        return record;
+    }
+
 }
