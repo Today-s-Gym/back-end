@@ -26,7 +26,7 @@ public class RecordService {
         User user = userRepository.findById(JwtService.getUserId()).get();
         Record record = Record.createRecord(content, user);
         recordRepository.save(record);
-        return user.getUserId();
+        return record.getRecordId();
     }
 
 }
