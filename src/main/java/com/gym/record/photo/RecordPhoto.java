@@ -24,4 +24,10 @@ public class RecordPhoto {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "record_id")
     private Record record;
+
+    //==객체 생성 메서드==//
+    public void createRecord(Record record){
+        this.record = record;
+    }
+
 }
