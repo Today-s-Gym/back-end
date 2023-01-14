@@ -1,5 +1,6 @@
 package com.gym.category;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gym.post.Post;
 import com.gym.user.User;
 import lombok.Getter;
@@ -16,9 +17,11 @@ public class Category {
     private Integer categoryId;
     private String name;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "category", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<User> userList;
 
     @OneToMany(mappedBy = "category", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<Post> postList;
+
 }
