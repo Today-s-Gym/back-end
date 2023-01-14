@@ -20,4 +20,8 @@ public class RecordPhotoService {
         recordPhotoRepository.saveAll(recordPhotos);
     }
 
+    public List<RecordPhoto> findByRecordId(int recordId){
+        return recordPhotoRepository.findAllByRecord(recordId);
+    }
+
 }

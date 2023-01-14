@@ -10,9 +10,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -41,20 +43,28 @@ public class Record {
     private User user;
 
     @OneToMany(mappedBy = "record", cascade = {CascadeType.ALL}, orphanRemoval = true)
-    private List<Post> postList;
+    private List<Post> postList ;
 
     @OneToMany(mappedBy = "record", cascade = {CascadeType.ALL}, orphanRemoval = true)
-    private List<RecordPhoto> photoList;
+    private List<RecordPhoto> photoList = new ArrayList<>();
 
     @OneToMany(mappedBy = "record", cascade = {CascadeType.ALL}, orphanRemoval = true)
-    private List<Tag> tagList;
+    private List<Tag> tagList = new ArrayList<>();;
 
     //==연관관계 메서드==//
-    public void setUser(User user){
-        this.user = user;
+    public void addPhotoList(RecordPhoto recordPhoto){
+        this.photoList.add(recordPhoto);
+        recordPhoto.createRecord(this);
+    }
+    public void addTagList(Tag tag){
+        this.tagList.add(tag);
+        tag.createRecord(this);
     }
 
     //==객체 생성 매서드==//
+    public void setUser(User user){
+        this.user = user;
+    }
     public void createContent(String content){
         this.content = content;
     }

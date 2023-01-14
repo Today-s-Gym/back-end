@@ -20,4 +20,8 @@ public class TagService {
         tagRepository.saveAll(tags);
     }
 
+    public List<Tag> findByRecordId(int recordId){
+        return tagRepository.findAllByRecord(recordId);
+    }
+
 }
