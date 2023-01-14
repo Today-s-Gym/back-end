@@ -38,11 +38,11 @@ public class RecordController {
         Record record = recordRepository.findById(recordId).get();
         List<RecordPhoto> recordPhotos = recordRequestDto.getRecordPhotos();
         for (RecordPhoto recordPhoto : recordPhotos) {
-            recordPhoto.createRecord(record);
+            record.addPhotoList(recordPhoto);
         }
         List<Tag> tags = recordRequestDto.getTags();
         for (Tag tag : tags) {
-            tag.createRecord(record);
+            record.addTagList(tag);
             tag.createUser(record.getUser());
         }
         recordPhotoService.saveRecordPhoto(recordPhotos);
@@ -57,9 +57,7 @@ public class RecordController {
     public RecordGetRes getRecord(@Param("date") String date){
         User user = userRepository.findById(JwtService.getUserId()).get();
         Record record = recordService.findRecordByDay(date);
-        List<RecordPhoto>  recordPhotos= recordPhotoService.findByRecordId(record.getRecordId());
-        List<Tag> tags = tagService.findByRecordId(record.getRecordId());
-        RecordGetRes recordGetRes = new RecordGetRes(record,user,recordPhotos,tags);
+        RecordGetRes recordGetRes = new RecordGetRes(record,user);
         return recordGetRes;
     }
 }
