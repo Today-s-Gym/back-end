@@ -20,4 +20,12 @@ public class Like {
     private Integer userId;     // 좋아요를 누른 유저의 Id
     private Integer postId;     // 좋아요를 누른 게시글의 Id
     private boolean status;     // true = 좋아요, false = 취소
+
+    public void changeStatus() {
+        if (this.status == true) {
+            this.status = false;
+        } else {
+            this.status = true;
+        }
+    }
 }
