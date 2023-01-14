@@ -53,11 +53,11 @@ public class Record {
 
     //==연관관계 메서드==//
     public void addPhotoList(RecordPhoto recordPhoto){
-        this.photoList.add(recordPhoto);
+        photoList.add(recordPhoto);
         recordPhoto.createRecord(this);
     }
     public void addTagList(Tag tag){
-        this.tagList.add(tag);
+        tagList.add(tag);
         tag.createRecord(this);
     }
 
