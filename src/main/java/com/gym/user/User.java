@@ -62,4 +62,9 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<Tag> tagList;
+
+    // == 메서드 추가 == //
+    public void changeAccountPrivacy(boolean locked) {
+        this.locked = locked;
+    }
 }
