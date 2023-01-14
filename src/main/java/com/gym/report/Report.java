@@ -1,5 +1,6 @@
 package com.gym.report;
 
+import com.gym.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,4 +31,27 @@ public class Report {
 
     @CreationTimestamp
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    private void setReporter(Integer userId) {
+        this.reporterId = userId;
+    }
+
+    private void setReported(Integer reportedId) {
+        this.reportedId = reportedId;
+    }
+
+    private void setType (ReportType type) {
+        this.type = type;
+    }
+
+    //==객체 생성 메서드==//
+
+    public static Report createReportUser(User user, User reportedUser) {
+        Report report = new Report();
+        report.setReporter(user.getUserId());
+        report.setReported(reportedUser.getUserId());
+        report.setType(ReportType.USER);
+        reportedUser.addReportCount();
+        return report;
+    }
 }

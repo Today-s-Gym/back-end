@@ -67,4 +67,8 @@ public class User {
     public void changeAccountPrivacy(boolean locked) {
         this.locked = locked;
     }
+
+    public void addReportCount() {
+        this.report++;
+    }
 }
