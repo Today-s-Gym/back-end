@@ -30,4 +30,12 @@ public class Tag {
     @JoinColumn(name = "user_id")
     private User user;
 
+    //==객체 생성 메서드==//
+    public void createRecord(Record record){
+        this.record = record;
+    }
+    public void createUser(User user){
+        this.user=user;
+    }
+
 }
