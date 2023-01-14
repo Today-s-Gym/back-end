@@ -2,6 +2,8 @@ package com.gym.utils;
 
 import com.gym.config.exception.BaseException;
 import com.gym.config.exception.BaseResponseStatus;
+import com.gym.post.Post;
+import com.gym.post.PostRepository;
 import com.gym.user.User;
 import com.gym.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,12 +22,19 @@ public class UtilService {
     public static final int DAY = 30;
     public static final int MONTH = 12;
     private final UserRepository userRepository;
+    private final PostRepository postRepository;
 
 
     public User findByUserIdWithValidation(Integer userId) throws BaseException {
         User user = userRepository.getByUserId(userId).orElse(null);
         if(user == null) throw new BaseException(BaseResponseStatus.INVALID_USER);
         return user;
+    }
+
+    public Post findByPostIdWithValidation(Integer postId) throws BaseException {
+        Post post = postRepository.getByPostId(postId).orElse(null);
+        if(post == null) throw new BaseException(BaseResponseStatus.INVALID_POST);
+        return post;
     }
 
     // 게시글에 첨부된 기록에 사진이 없을 시에 기본으로 뜨는 이미지를 나타냄!!!

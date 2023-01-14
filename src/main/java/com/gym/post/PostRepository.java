@@ -9,6 +9,8 @@ import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<Post, Integer> {
 
+    Optional<Post> getByPostId(Integer postId);
+
     @Query(value = "SELECT p FROM Post p WHERE p.category= :categoryId ORDER BY p.postId DESC")
     Optional<List<Post>> findByCategoryId(Integer categoryId, Pageable limit);
 }
