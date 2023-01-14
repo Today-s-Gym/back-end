@@ -24,13 +24,20 @@ public enum BaseResponseStatus {
 
     // users
     USERS_EMPTY_USER_ID(false, 2010, "유저 아이디 값을 확인해주세요."),
+    INVALID_USER(false, 2011, "존재하지 않는 사용자입니다."),
+
 
     // [POST] /users
     POST_USERS_EMPTY_EMAIL(false, 2015, "이메일을 입력해주세요."),
     POST_USERS_INVALID_EMAIL(false, 2016, "이메일 형식을 확인해주세요."),
     POST_USERS_EXISTS_EMAIL(false,2017,"중복된 이메일입니다."),
 
+    // report
+    REPORT_USER_SELF(false, 2100, "자신을 신고할 수 없습니다."),
 
+    // posts
+    EMPTY_CATEGORY(false, 2200, "해당 카테고리에 게시글이 없습니다."),
+    INVALID_POST(false, 2201, "유효하지 않은 게시글입니다."),
 
     /**
      * 3000 : Response 오류
