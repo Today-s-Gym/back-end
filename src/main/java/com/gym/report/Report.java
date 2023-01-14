@@ -23,7 +23,9 @@ public class Report {
 
     private Integer reporterId; // 신고하는 유저의 ID
     private Integer reportedId; // 신고당하는 것의 ID
-    private String type;        // 신고 당하는 것이 무엇인지 구별 (USER, POST, COMMENT 중 1개)
+
+    @Enumerated(EnumType.STRING)
+    private ReportType type;        // 신고 당하는 것이 무엇인지 구별 (USER, POST, COMMENT 중 1개)
     private String content;     // 신고 내용
 
     @CreationTimestamp
