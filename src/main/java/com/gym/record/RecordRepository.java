@@ -7,10 +7,10 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 public interface RecordRepository extends JpaRepository<Record, Integer> {
 
-   @Query("select r from Record r where date_format(r.createdAt, '%Y-%m-%d') = :date and r.user.userId = :userId")
-   Record findRecordDay(@Param("date") String date, @Param("userId") Integer userId);
-
+    @Query("select r from Record r where r.user.userId = :userId and dAte_format(r.createdAt, '%Y-%m-%d') = :date")
+    Record findAllByUserId(@Param("userId") Integer userId, @Param("date") String date);
 }
