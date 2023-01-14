@@ -29,4 +29,11 @@ public class RecordService {
         return record.getRecordId();
     }
 
+    public Record findRecordByDay(String date){
+        User user = userRepository.findById(JwtService.getUserId()).get();
+        return recordRepository.findRecordDay(date, user.getUserId());
+    }
+
+
+
 }
