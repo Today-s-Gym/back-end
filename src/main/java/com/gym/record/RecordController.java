@@ -11,6 +11,7 @@ import com.gym.tag.TagService;
 import com.gym.user.User;
 import com.gym.user.UserRepository;
 import com.gym.utils.JwtService;
+import com.gym.utils.UtilService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
@@ -33,14 +34,23 @@ public class RecordController {
      * Record, 사진여러개, 태그여러개 저장
      */
     @PostMapping("/record")
-    public BaseResponse<Integer> createRecord(@RequestBody RecordGetReq recordRequestDto){
-        Integer recordId = recordService.saveRecord(recordRequestDto.getContent());
+    public BaseResponse<Integer> createRecord(@RequestBody RecordGetReq recordGetReq){
+        Integer recordId = recordService.saveRecord(recordGetReq.getContent());
         Record record = recordRepository.findById(recordId).get();
-        List<RecordPhoto> recordPhotos = recordRequestDto.getRecordPhotos();
-        for (RecordPhoto recordPhoto : recordPhotos) {
+        List<RecordPhoto> recordPhotos = recordGetReq.getRecordPhotos();
+        //Record 사진 추가
+        if(recordPhotos.isEmpty()){
+            String str = UtilService.returnRecordBaseImage();
+            RecordPhoto recordPhoto = new RecordPhoto(str, record);
             record.addPhotoList(recordPhoto);
         }
-        List<Tag> tags = recordRequestDto.getTags();
+        else {
+            for (RecordPhoto recordPhoto : recordPhotos) {
+                record.addPhotoList(recordPhoto);
+            }
+        }
+        //Tag 추가
+        List<Tag> tags = recordGetReq.getTags();
         for (Tag tag : tags) {
             record.addTagList(tag);
             tag.createUser(record.getUser());
@@ -54,10 +64,10 @@ public class RecordController {
      * Record, 사진, 태그 조회 (날짜 기준)
      */
     @GetMapping("/record")
-    public RecordGetRes getRecord(@Param("date") String date){
+    public BaseResponse<RecordGetRes> getRecord(@Param("date") String date){
         User user = userRepository.findById(JwtService.getUserId()).get();
         Record record = recordService.findRecordByDay(date);
         RecordGetRes recordGetRes = new RecordGetRes(record,user);
-        return recordGetRes;
+        return new BaseResponse<>(recordGetRes);
     }
 }
