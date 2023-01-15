@@ -3,6 +3,7 @@ package com.gym.report;
 import com.gym.config.exception.BaseException;
 import com.gym.config.exception.BaseResponseStatus;
 import com.gym.post.Post;
+import com.gym.post.comment.Comment;
 import com.gym.user.User;
 import com.gym.user.UserRepository;
 import com.gym.utils.UtilService;
@@ -118,5 +119,59 @@ class ReportServiceTest {
         Assertions.assertThatThrownBy(() -> reportService.saveReportPost(reporter, reportedPost))
                 .isInstanceOf(BaseException.class)
                 .extracting("status").isEqualTo(BaseResponseStatus.REPORT_POST_SELF);
+    }
+
+    @Test
+    @DisplayName("댓글 신고 report 확인 테스트")
+    @Transactional
+    void saveReportCommentTest() throws BaseException {
+        // given
+        Integer reporterId = 1;
+        Integer reportedCommentId = 1;
+        User reporter = utilService.findByUserIdWithValidation(reporterId);
+        Comment reportedComment = utilService.findByCommentIdWithValidation(reportedCommentId);
+
+        // when
+        Integer reportId = reportService.saveReportComment(reporter, reportedComment);
+
+        // then
+        Report report = reportRepository.findById(reportId).get();
+        Assertions.assertThat(report).extracting("reporterId", "reportedId", "type")
+                .contains(reporterId, reportedCommentId, ReportType.COMMENT);
+    }
+
+    @Test
+    @DisplayName("댓글 신고 당한 댓글의 report 카운트 증가 테스트")
+    @Transactional
+    void saveReportComment_ReportCountTest() throws BaseException {
+        //given
+        Integer reporterId = 1;
+        Integer reportedCommentId = 1;
+        User reporter = utilService.findByUserIdWithValidation(reporterId);
+        Comment reportedComment = utilService.findByCommentIdWithValidation(reportedCommentId);
+        int beforeReportCount = reportedComment.getReport();
+
+        //when
+        reportService.saveReportComment(reporter, reportedComment);
+
+        //then
+        int afterReporterCount = utilService.findByCommentIdWithValidation(reportedCommentId).getReport();
+        Assertions.assertThat(afterReporterCount).isEqualTo(beforeReportCount+1);
+    }
+
+    @Test
+    @DisplayName("자신의 댓글을 신고할 경우 예외처리한다.")
+    @Transactional
+    void saveReportComment_self_exception() throws BaseException {
+        //given
+        Integer reporterId = 1;
+        Integer reportedCommentId = 2;
+        User reporter = utilService.findByUserIdWithValidation(reporterId);
+        Comment reportedComment = utilService.findByCommentIdWithValidation(reportedCommentId);
+
+        // when, then
+        Assertions.assertThatThrownBy(() -> reportService.saveReportComment(reporter, reportedComment))
+                .isInstanceOf(BaseException.class)
+                .extracting("status").isEqualTo(BaseResponseStatus.REPORT_COMMENT_SELF);
     }
 }
