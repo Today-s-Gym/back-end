@@ -9,14 +9,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequiredArgsConstructor
 public class RecordController {
     private final RecordService recordService;
-
-
-
 
     /**
      * Record, 사진여러개, 태그여러개 저장
@@ -46,7 +45,7 @@ public class RecordController {
      * Record, 사진, 태그 조회 (달 기준)
      */
     @GetMapping("/record/month")
-    public BaseResponse<RecordGetRes> getRecordMonth(@Param("month") String month){
+    public BaseResponse<List<RecordGetRes>> getRecordMonth(@Param("month") String month){
         try {
             return new BaseResponse<>(recordService.findRecordByMonth(month));
         }catch (BaseException exception){
