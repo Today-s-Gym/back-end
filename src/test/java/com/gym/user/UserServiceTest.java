@@ -1,8 +1,11 @@
 package com.gym.user;
 
+import com.gym.config.exception.BaseException;
 import com.gym.user.dto.AccountPrivacyReq;
 import com.gym.utils.JwtService;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,5 +38,18 @@ class UserServiceTest {
         // then
         User findUser = userRepository.findById(userId).get();
         Assertions.assertThat(findUser.isLocked()).isEqualTo(locked);
+    }
+
+    @Test
+    @DisplayName("사용자 이메일 조회 테스트")
+    void findUserEmailByUserId() throws BaseException {
+        // given
+        Integer userId = 2;
+
+        // when
+        String email = userService.findUserEmailByUserId(userId);
+
+        // then
+        Assertions.assertThat(email).isEqualTo("user2@gmail.com");
     }
 }
