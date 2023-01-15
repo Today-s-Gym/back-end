@@ -25,9 +25,9 @@ public class ReportController {
 
     @PostMapping("/report/user")
     public BaseResponse<Integer> reportUser(@RequestBody ReportReq reportReq) throws BaseException {
-        User user = userRepository.findById(JwtService.getUserId()).get();
-        validateReportedUser(JwtService.getUserId(), reportReq.getReportedId());
-        return new BaseResponse<>(reportService.saveReportUser(user, reportReq.getReportedId()));
+        User reporter = utilService.findByUserIdWithValidation(JwtService.getUserId());
+        User reportedUser = utilService.findByUserIdWithValidation(reportReq.getReportedId());
+        return new BaseResponse<>(reportService.saveReportUser(reporter, reportedUser));
     }
 
     @PostMapping("/report/post")
@@ -42,11 +42,5 @@ public class ReportController {
         User reporter = utilService.findByUserIdWithValidation(JwtService.getUserId());
         Comment reportedComment = utilService.findByCommentIdWithValidation(reportReq.getReportedId());
         return new BaseResponse<>(reportService.saveReportComment(reporter, reportedComment));
-    }
-
-    private void validateReportedUser(Integer userId, Integer reportedId) throws BaseException {
-        if (userId==reportedId) {
-            throw new BaseException(REPORT_USER_SELF);
-        }
     }
 }

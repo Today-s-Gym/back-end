@@ -38,10 +38,11 @@ class ReportServiceTest {
         //given
         Integer reporterId = 1;
         Integer reportedUserId = 2;
-        User user = userRepository.findById(reporterId).get();
+        User reporter = utilService.findByUserIdWithValidation(reporterId);
+        User reportedUser = utilService.findByUserIdWithValidation(reportedUserId);
 
         //when
-        Integer reportId = reportService.saveReportUser(user, reportedUserId);
+        Integer reportId = reportService.saveReportUser(reporter, reportedUser);
 
         //then
         Report report = reportRepository.findById(reportId).get();
@@ -56,15 +57,32 @@ class ReportServiceTest {
         //given
         Integer reporterId = 1;
         Integer reportedUserId = 2;
-        int beforeReportCount = userRepository.findById(reportedUserId).get().getReport();
-        User user = userRepository.findById(reporterId).get();
+        User reporter = utilService.findByUserIdWithValidation(reporterId);
+        User reportedUser = utilService.findByUserIdWithValidation(reportedUserId);
+        int beforeReportCount = reportedUser.getReport();
 
         //when
-        reportService.saveReportUser(user, reportedUserId);
+        reportService.saveReportUser(reporter, reportedUser);
 
         //then
-        int afterReporterCount = userRepository.findById(reportedUserId).get().getReport();
+        int afterReporterCount = utilService.findByUserIdWithValidation(reportedUserId).getReport();
         Assertions.assertThat(afterReporterCount).isEqualTo(beforeReportCount+1);
+    }
+
+    @Test
+    @DisplayName("자신을 신고할 경우 예외처리한다.")
+    @Transactional
+    void saveReportUser_self_exception() throws BaseException {
+        //given
+        Integer reporterId = 1;
+        Integer reportedUserId = 1;
+        User reporter = utilService.findByUserIdWithValidation(reporterId);
+        User reportedUser = utilService.findByUserIdWithValidation(reportedUserId);
+
+        // when, then
+        Assertions.assertThatThrownBy(() -> reportService.saveReportUser(reporter, reportedUser))
+                .isInstanceOf(BaseException.class)
+                .extracting("status").isEqualTo(BaseResponseStatus.REPORT_USER_SELF);
     }
 
     @Test
