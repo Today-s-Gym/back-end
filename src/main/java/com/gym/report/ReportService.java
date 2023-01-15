@@ -2,6 +2,7 @@ package com.gym.report;
 
 import com.gym.config.exception.BaseException;
 import com.gym.post.Post;
+import com.gym.post.comment.Comment;
 import com.gym.user.User;
 import com.gym.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,8 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-import static com.gym.config.exception.BaseResponseStatus.INVALID_USER;
-import static com.gym.config.exception.BaseResponseStatus.REPORT_POST_SELF;
+import static com.gym.config.exception.BaseResponseStatus.*;
 
 @Service
 @RequiredArgsConstructor
@@ -42,6 +42,20 @@ public class ReportService {
     private void validateReportedPost(User reporter, Post reportedPost) throws BaseException {
         if (reporter.equals(reportedPost.getUser())) {
             throw new BaseException(REPORT_POST_SELF);
+        }
+    }
+
+    @Transactional
+    public Integer saveReportComment(User reporter, Comment reportedComment) throws BaseException {
+        validateReportedComment(reporter, reportedComment);
+        Report report = Report.createReportComment(reporter, reportedComment);
+        reportRepository.save(report);
+        return report.getReportId();
+    }
+
+    private void validateReportedComment(User reporter, Comment reportedComment) throws BaseException {
+        if (reporter.equals(reportedComment.getUser())) {
+            throw new BaseException(REPORT_COMMENT_SELF);
         }
     }
 }
