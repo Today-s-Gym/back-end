@@ -38,10 +38,11 @@ class ReportServiceTest {
         //given
         Integer reporterId = 1;
         Integer reportedUserId = 2;
-        User user = userRepository.findById(reporterId).get();
+        User reporter = utilService.findByUserIdWithValidation(reporterId);
+        User reportedUser = utilService.findByUserIdWithValidation(reportedUserId);
 
         //when
-        Integer reportId = reportService.saveReportUser(user, reportedUserId);
+        Integer reportId = reportService.saveReportUser(reporter, reportedUser);
 
         //then
         Report report = reportRepository.findById(reportId).get();
@@ -56,14 +57,15 @@ class ReportServiceTest {
         //given
         Integer reporterId = 1;
         Integer reportedUserId = 2;
-        int beforeReportCount = userRepository.findById(reportedUserId).get().getReport();
-        User user = userRepository.findById(reporterId).get();
+        User reporter = utilService.findByUserIdWithValidation(reporterId);
+        User reportedUser = utilService.findByUserIdWithValidation(reportedUserId);
+        int beforeReportCount = reportedUser.getReport();
 
         //when
-        reportService.saveReportUser(user, reportedUserId);
+        reportService.saveReportUser(reporter, reportedUser);
 
         //then
-        int afterReporterCount = userRepository.findById(reportedUserId).get().getReport();
+        int afterReporterCount = utilService.findByUserIdWithValidation(reportedUserId).getReport();
         Assertions.assertThat(afterReporterCount).isEqualTo(beforeReportCount+1);
     }
 
