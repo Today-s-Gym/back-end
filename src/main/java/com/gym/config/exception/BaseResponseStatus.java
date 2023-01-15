@@ -44,6 +44,11 @@ public enum BaseResponseStatus {
     // comment
     INVALID_COMMENT(false, 2300, "유효하지 않은 댓글입니다."),
 
+    // record
+    INVALID_RECORD(false,2400,"유호하지 않은 기록입니다."),
+
+    RECORD_DATE_EXISTS(false, 2401, "기록 추가는 하루에 한번입니다"),
+
     /**
      * 3000 : Response 오류
      */
