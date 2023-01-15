@@ -38,7 +38,7 @@ public class TagService {
      */
     public Page<String> findRecentTag() throws BaseException {
         User user = utilService.findByUserIdWithValidation(JwtService.getUserId());
-        PageRequest pageRequest = PageRequest.of(0, 10);
+        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "id"));
         Page<String> pages = tagRepository.findByRecord(user.getUserId(), pageRequest);
         return pages;
     }

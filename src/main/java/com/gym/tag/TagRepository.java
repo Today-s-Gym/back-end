@@ -14,6 +14,6 @@ public interface TagRepository extends JpaRepository<Tag, Integer> {
     @Query("select t from Tag t join fetch t.record where t.record.recordId = :recordId")
     List<Tag> findAllByRecord(@Param("recordId") Integer recordId);
 
-    @Query("select distinct t.name from Tag t where t.user.userId = :userId order by t.createdAt desc")
+    @Query("select distinct t.name from Tag t where t.user.userId = :userId")
     Page<String> findByRecord(@Param("userId") Integer userId, Pageable pageable);
 }
