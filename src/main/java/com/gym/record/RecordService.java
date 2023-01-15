@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.gym.config.exception.BaseResponseStatus.EMPTY_RECORD;
 import static com.gym.config.exception.BaseResponseStatus.RECORD_DATE_EXISTS;
@@ -57,6 +58,7 @@ public class RecordService {
         //Tag 추가
         List<Tag> tags = recordGetReq.getTags();
         for (Tag tag : tags) {
+            if(record.getTagList().contains(tag)) continue;
             record.addTagList(tag);
             tag.createUser(record.getUser());
         }
@@ -92,11 +94,13 @@ public class RecordService {
     /**
      * y-m에 따라 기록 조회
      */
-    public RecordGetRes findRecordByMonth(String month) throws BaseException {
+    public List<RecordGetRes> findRecordByMonth(String month) throws BaseException {
         try {
             User user = utilService.findByUserIdWithValidation(JwtService.getUserId());
-            Record record = recordRepository.findAllByMonth(user.getUserId(), month);
-            RecordGetRes recordGetRes = new RecordGetRes(record, user);
+            List<Record> records = recordRepository.findAllByMonth(user.getUserId(), month);
+            List<RecordGetRes> recordGetRes = records.stream()
+                    .map(record-> new RecordGetRes(record, user))
+                    .collect(Collectors.toList());
             return recordGetRes;
         }catch(NullPointerException e){
             throw new BaseException(EMPTY_RECORD);
