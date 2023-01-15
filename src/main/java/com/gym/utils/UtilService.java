@@ -6,10 +6,12 @@ import com.gym.post.Post;
 import com.gym.post.PostRepository;
 import com.gym.post.comment.Comment;
 import com.gym.post.comment.CommentRepository;
+import com.gym.record.RecordRepository;
 import com.gym.user.User;
 import com.gym.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import com.gym.record.Record;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -26,6 +28,7 @@ public class UtilService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
+    private final RecordRepository recordRepository;
 
 
     public User findByUserIdWithValidation(Integer userId) throws BaseException {
@@ -44,6 +47,12 @@ public class UtilService {
         Comment comment = commentRepository.getByCommentId(commentId).orElse(null);
         if(comment==null) throw new BaseException(BaseResponseStatus.INVALID_COMMENT);
         return comment;
+    }
+
+    public Record findByRecordIdWithValidation(Integer recordId) throws BaseException{
+        Record record = recordRepository.getByRecordId(recordId).orElse(null);
+        if(record==null) throw new BaseException(BaseResponseStatus.INVALID_RECORD);
+        return record;
     }
 
     // 게시글에 첨부된 기록에 사진이 없을 시에 기본으로 뜨는 이미지를 나타냄!!!

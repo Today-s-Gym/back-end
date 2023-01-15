@@ -1,6 +1,7 @@
 package com.gym.record;
 
 
+import com.gym.config.exception.BaseException;
 import com.gym.config.exception.BaseResponse;
 import com.gym.record.dto.RecordGetReq;
 import com.gym.record.dto.RecordGetRes;
@@ -23,51 +24,29 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 public class RecordController {
-    private final RecordRepository recordRepository;
-    private final UserRepository userRepository;
     private final RecordService recordService;
-    private final RecordPhotoService recordPhotoService;
 
-    private final TagService tagService;
+
+
 
     /**
      * Record, 사진여러개, 태그여러개 저장
      */
     @PostMapping("/record")
     public BaseResponse<Integer> createRecord(@RequestBody RecordGetReq recordGetReq){
-        Integer recordId = recordService.saveRecord(recordGetReq.getContent());
-        Record record = recordRepository.findById(recordId).get();
-        List<RecordPhoto> recordPhotos = recordGetReq.getRecordPhotos();
-        //Record 사진 추가
-        if(recordPhotos.isEmpty()){
-            String str = UtilService.returnRecordBaseImage();
-            RecordPhoto recordPhoto = new RecordPhoto(str, record);
-            record.addPhotoList(recordPhoto);
-        }
-        else {
-            for (RecordPhoto recordPhoto : recordPhotos) {
-                record.addPhotoList(recordPhoto);
-            }
-        }
-        //Tag 추가
-        List<Tag> tags = recordGetReq.getTags();
-        for (Tag tag : tags) {
-            record.addTagList(tag);
-            tag.createUser(record.getUser());
-        }
-        recordPhotoService.saveRecordPhoto(recordPhotos);
-        tagService.saveTag(tags);
-        return new BaseResponse<>(record.getUser().getUserId());
+       try{
+           return new BaseResponse<>(recordService.saveRecord(recordGetReq));
+       } catch (BaseException exception){
+           return new BaseResponse<>(exception.getStatus());
+       }
     }
 
     /**
      * Record, 사진, 태그 조회 (날짜 기준)
      */
-    @GetMapping("/record")
-    public BaseResponse<RecordGetRes> getRecord(@Param("date") String date){
-        User user = userRepository.findById(JwtService.getUserId()).get();
-        Record record = recordService.findRecordByDay(date);
-        RecordGetRes recordGetRes = new RecordGetRes(record,user);
+    @GetMapping("/record/{date}")
+    public BaseResponse<RecordGetRes> getRecord(@PathVariable String date) throws BaseException {
+        RecordGetRes recordGetRes = recordService.findRecordByDay(date);
         return new BaseResponse<>(recordGetRes);
     }
 }
