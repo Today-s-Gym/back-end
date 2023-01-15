@@ -35,10 +35,14 @@ public enum BaseResponseStatus {
     // report
     REPORT_USER_SELF(false, 2100, "자신을 신고할 수 없습니다."),
     REPORT_POST_SELF(false, 2101, "자신의 게시글을 신고할 수 없습니다."),
+    REPORT_COMMENT_SELF(false, 2102, "자신의 댓글을 신고할 수 없습니다."),
 
     // posts
     EMPTY_CATEGORY(false, 2200, "해당 카테고리에 게시글이 없습니다."),
     INVALID_POST(false, 2201, "유효하지 않은 게시글입니다."),
+
+    // comment
+    INVALID_COMMENT(false, 2300, "유효하지 않은 댓글입니다."),
 
     /**
      * 3000 : Response 오류
