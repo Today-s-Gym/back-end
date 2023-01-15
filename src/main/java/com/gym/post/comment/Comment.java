@@ -38,4 +38,9 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
+
+    //==메서드추가==//
+    public void addReportCount() {
+        this.report++;
+    }
 }
