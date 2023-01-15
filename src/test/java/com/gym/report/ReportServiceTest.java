@@ -70,6 +70,22 @@ class ReportServiceTest {
     }
 
     @Test
+    @DisplayName("자신을 신고할 경우 예외처리한다.")
+    @Transactional
+    void saveReportUser_self_exception() throws BaseException {
+        //given
+        Integer reporterId = 1;
+        Integer reportedUserId = 1;
+        User reporter = utilService.findByUserIdWithValidation(reporterId);
+        User reportedUser = utilService.findByUserIdWithValidation(reportedUserId);
+
+        // when, then
+        Assertions.assertThatThrownBy(() -> reportService.saveReportUser(reporter, reportedUser))
+                .isInstanceOf(BaseException.class)
+                .extracting("status").isEqualTo(BaseResponseStatus.REPORT_USER_SELF);
+    }
+
+    @Test
     @DisplayName("게시글 신고 report 확인 테스트")
     @Transactional
     void saveReportPostTest() throws BaseException {
