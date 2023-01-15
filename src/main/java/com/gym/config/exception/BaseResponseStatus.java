@@ -40,6 +40,9 @@ public enum BaseResponseStatus {
     EMPTY_CATEGORY(false, 2200, "해당 카테고리에 게시글이 없습니다."),
     INVALID_POST(false, 2201, "유효하지 않은 게시글입니다."),
 
+    // comment
+    INVALID_COMMENT(false, 2300, "유효하지 않은 댓글입니다."),
+
     /**
      * 3000 : Response 오류
      */

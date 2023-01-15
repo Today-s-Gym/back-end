@@ -4,6 +4,8 @@ import com.gym.config.exception.BaseException;
 import com.gym.config.exception.BaseResponseStatus;
 import com.gym.post.Post;
 import com.gym.post.PostRepository;
+import com.gym.post.comment.Comment;
+import com.gym.post.comment.CommentRepository;
 import com.gym.user.User;
 import com.gym.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ public class UtilService {
     public static final int MONTH = 12;
     private final UserRepository userRepository;
     private final PostRepository postRepository;
+    private final CommentRepository commentRepository;
 
 
     public User findByUserIdWithValidation(Integer userId) throws BaseException {
@@ -35,6 +38,12 @@ public class UtilService {
         Post post = postRepository.getByPostId(postId).orElse(null);
         if(post == null) throw new BaseException(BaseResponseStatus.INVALID_POST);
         return post;
+    }
+
+    public Comment findByCommentIdWithValidation(Integer commentId) throws BaseException {
+        Comment comment = commentRepository.getByCommentId(commentId).orElse(null);
+        if(comment==null) throw new BaseException(BaseResponseStatus.INVALID_COMMENT);
+        return comment;
     }
 
     // 게시글에 첨부된 기록에 사진이 없을 시에 기본으로 뜨는 이미지를 나타냄!!!
