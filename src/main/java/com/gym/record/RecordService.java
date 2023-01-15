@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 
+import static com.gym.config.exception.BaseResponseStatus.EMPTY_RECORD;
 import static com.gym.config.exception.BaseResponseStatus.RECORD_DATE_EXISTS;
 
 @Service
@@ -32,7 +33,7 @@ public class RecordService {
 
 
     /**
-     * Record 저장
+     * Record, photo, tag 저장
      */
     @Transactional
     public Integer saveRecord(RecordGetReq recordGetReq) throws BaseException {
@@ -78,9 +79,28 @@ public class RecordService {
      * y-m-d에 따라 기록 조회
      */
     public RecordGetRes findRecordByDay(String date) throws BaseException {
-        User user = utilService.findByUserIdWithValidation(JwtService.getUserId());
-        Record record = recordRepository.findAllByUserId(user.getUserId(), date);
-        RecordGetRes recordGetRes = new RecordGetRes(record,user);
-        return recordGetRes;
+        try {
+            User user = utilService.findByUserIdWithValidation(JwtService.getUserId());
+            Record record = recordRepository.findAllByDay(user.getUserId(), date);
+            RecordGetRes recordGetRes = new RecordGetRes(record, user);
+            return recordGetRes;
+        } catch (NullPointerException e){
+            throw new BaseException(EMPTY_RECORD);
+        }
     }
+
+    /**
+     * y-m에 따라 기록 조회
+     */
+    public RecordGetRes findRecordByMonth(String month) throws BaseException {
+        try {
+            User user = utilService.findByUserIdWithValidation(JwtService.getUserId());
+            Record record = recordRepository.findAllByMonth(user.getUserId(), month);
+            RecordGetRes recordGetRes = new RecordGetRes(record, user);
+            return recordGetRes;
+        }catch(NullPointerException e){
+            throw new BaseException(EMPTY_RECORD);
+        }
+    }
+
 }
