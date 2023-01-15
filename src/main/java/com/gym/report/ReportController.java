@@ -3,6 +3,7 @@ package com.gym.report;
 import com.gym.config.exception.BaseException;
 import com.gym.config.exception.BaseResponse;
 import com.gym.post.Post;
+import com.gym.post.comment.Comment;
 import com.gym.report.dto.ReportReq;
 import com.gym.user.User;
 import com.gym.user.UserRepository;
@@ -34,6 +35,13 @@ public class ReportController {
         User reporter = utilService.findByUserIdWithValidation(JwtService.getUserId());
         Post reportedPost = utilService.findByPostIdWithValidation(reportReq.getReportedId());
         return new BaseResponse<>(reportService.saveReportPost(reporter, reportedPost));
+    }
+
+    @PostMapping("/report/comment")
+    public BaseResponse<Integer> reportComment(@RequestBody ReportReq reportReq) throws BaseException {
+        User reporter = utilService.findByUserIdWithValidation(JwtService.getUserId());
+        Comment reportedComment = utilService.findByCommentIdWithValidation(reportReq.getReportedId());
+        return new BaseResponse<>(reportService.saveReportComment(reporter, reportedComment));
     }
 
     private void validateReportedUser(Integer userId, Integer reportedId) throws BaseException {
