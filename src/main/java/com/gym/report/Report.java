@@ -1,5 +1,6 @@
 package com.gym.report;
 
+import com.gym.post.Post;
 import com.gym.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -52,6 +53,15 @@ public class Report {
         report.setReported(reportedUser.getUserId());
         report.setType(ReportType.USER);
         reportedUser.addReportCount();
+        return report;
+    }
+
+    public static Report createReportPost(User reporter, Post reportedPost) {
+        Report report = new Report();
+        report.setReporter(reporter.getUserId());
+        report.setReported(reportedPost.getPostId());
+        report.setType(ReportType.POST);
+        reportedPost.addReportCount();
         return report;
     }
 }
