@@ -21,14 +21,17 @@ public class ReportService {
     private final UserRepository userRepository;
 
     @Transactional
-    public Integer saveReportUser(User user, Integer reportedUserId) throws BaseException {
-        Optional<User> reportedUser = userRepository.findById(reportedUserId);
-        if (reportedUser.isEmpty()) {
-            throw new BaseException(INVALID_USER);
-        }
-        Report report = Report.createReportUser(user, reportedUser.get());
+    public Integer saveReportUser(User user, User reportedUser) throws BaseException {
+        validateReportedUser(user, reportedUser);
+        Report report = Report.createReportUser(user, reportedUser);
         reportRepository.save(report);
         return report.getReportId();
+    }
+
+    private void validateReportedUser(User user, User reportedUser) throws BaseException {
+        if (user.equals(reportedUser)) {
+            throw new BaseException(REPORT_USER_SELF);
+        }
     }
 
     @Transactional
