@@ -4,6 +4,7 @@ import com.gym.config.exception.BaseException;
 import com.gym.record.dto.RecordGetReq;
 import com.gym.record.dto.RecordGetRes;
 import com.gym.record.photo.RecordPhoto;
+import com.gym.record.photo.RecordPhotoRepository;
 import com.gym.record.photo.RecordPhotoService;
 import com.gym.tag.Tag;
 import com.gym.tag.TagService;
@@ -27,10 +28,10 @@ import static com.gym.config.exception.BaseResponseStatus.RECORD_DATE_EXISTS;
 public class RecordService {
 
     private final RecordRepository recordRepository;
-    private final UserRepository userRepository;
     private final UtilService utilService;
     private final RecordPhotoService recordPhotoService;
     private final TagService tagService;
+
 
 
     /**
@@ -42,28 +43,12 @@ public class RecordService {
         //엔티티 조회
         User user = utilService.findByUserIdWithValidation(JwtService.getUserId());
         Record record = Record.createRecord(recordGetReq.getContent(), user);
+        record = utilService.findByRecordIdWithValidation(record.getRecordId());
         recordRepository.save(record);
         //Record 사진 추가
-        List<RecordPhoto> recordPhotos = recordGetReq.getRecordPhotos();
-        if(recordPhotos.isEmpty()){ //사진 없으면 기본사진 추가
-            String str = UtilService.returnRecordBaseImage();
-            RecordPhoto recordPhoto = new RecordPhoto(str, record);
-            record.addPhotoList(recordPhoto);
-        }
-        else {
-            for (RecordPhoto recordPhoto : recordPhotos) {
-                record.addPhotoList(recordPhoto);
-            }
-        }
+        recordPhotoService.saveAllRecordPhotoByRecord(recordGetReq, record);
         //Tag 추가
-        List<Tag> tags = recordGetReq.getTags();
-        for (Tag tag : tags) {
-            if(record.getTagList().contains(tag)) continue;
-            record.addTagList(tag);
-            tag.createUser(record.getUser());
-        }
-        recordPhotoService.saveRecordPhoto(recordPhotos);
-        tagService.saveTag(tags);
+        tagService.saveAllTagByRecord(recordGetReq, record);
         return record.getRecordId();
     }
 
@@ -84,6 +69,7 @@ public class RecordService {
         try {
             User user = utilService.findByUserIdWithValidation(JwtService.getUserId());
             Record record = recordRepository.findAllByDay(user.getUserId(), date);
+            record = utilService.findByRecordIdWithValidation(record.getRecordId());
             RecordGetRes recordGetRes = new RecordGetRes(record, user);
             return recordGetRes;
         } catch (NullPointerException e){
@@ -105,6 +91,25 @@ public class RecordService {
         }catch(NullPointerException e){
             throw new BaseException(EMPTY_RECORD);
         }
+    }
+
+    /**
+     * 기록 업데이트
+     */
+    @Transactional
+    public Integer updateRecord(String date, RecordGetReq recordGetReq) throws BaseException {
+        //User, Record 조회 및 update
+        User user = utilService.findByUserIdWithValidation(JwtService.getUserId());
+        Record record = recordRepository.findAllByDay(user.getUserId(), date);
+        record = utilService.findByRecordIdWithValidation(record.getRecordId());
+        record.updateRecord(recordGetReq.getContent());
+        //RecordPhoto update
+        recordPhotoService.deleteAllRecordPhotoByRecord(record);
+        recordPhotoService.saveAllRecordPhotoByRecord(recordGetReq, record);
+        //Tag update
+        tagService.deleteAllTagByRecord(record);
+        tagService.saveAllTagByRecord(recordGetReq,record);
+        return record.getRecordId();
     }
 
 }
