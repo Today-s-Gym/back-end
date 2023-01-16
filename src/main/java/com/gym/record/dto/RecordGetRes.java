@@ -6,6 +6,7 @@ import com.gym.record.photo.RecordPhotoGetRes;
 import com.gym.tag.Tag;
 import com.gym.tag.dto.TagGetRes;
 import com.gym.user.User;
+import com.gym.utils.UtilService;
 import lombok.Data;
 
 import java.time.LocalDateTime;

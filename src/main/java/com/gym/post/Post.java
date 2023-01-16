@@ -57,4 +57,8 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<PostPhoto> photoList;
 
+    //==메서드 추가==//
+    public void addReportCount() {
+        this.report++;
+    }
 }

@@ -25,6 +25,11 @@ public class RecordPhoto {
     @JoinColumn(name = "record_id")
     private Record record;
 
+    public RecordPhoto(String imgUrl, Record record) {
+        this.imgUrl = imgUrl;
+        this.record = record;
+    }
+
     //==객체 생성 메서드==//
     public void createRecord(Record record){
         this.record = record;
