@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
+import com.gym.record.Record;
 import java.util.List;
 
 public interface TagRepository extends JpaRepository<Tag, Integer> {
@@ -16,4 +16,6 @@ public interface TagRepository extends JpaRepository<Tag, Integer> {
 
     @Query("select distinct t.name from Tag t where t.user.userId = :userId")
     Page<String> findByRecord(@Param("userId") Integer userId, Pageable pageable);
+
+    Integer deleteAllByRecord(Record record);
 }

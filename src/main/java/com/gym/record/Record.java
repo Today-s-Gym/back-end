@@ -1,6 +1,7 @@
 package com.gym.record;
 
 import com.gym.post.Post;
+import com.gym.record.dto.RecordGetReq;
 import com.gym.record.photo.RecordPhoto;
 import com.gym.tag.Tag;
 import com.gym.user.User;
@@ -73,6 +74,11 @@ public class Record {
         record.createContent(content);
         record.setUser(user);
         return record;
+    }
+
+    //==비즈니스 로직==//
+    public void updateRecord(String content){
+        this.content = content;
     }
 
 }
