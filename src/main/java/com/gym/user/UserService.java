@@ -11,7 +11,6 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 @Service
-@RequiredArgsConstructor
 public class UserService {
 
 
@@ -46,6 +45,13 @@ public class UserService {
                 });
 
         return findUser;
+    }
+
+    @Transactional
+    public Integer changeAccountPrivacy(Integer userId, boolean locked) {
+        User user = userRepository.findById(userId).get();
+        user.changeAccountPrivacy(locked);
+        return user.getUserId();
     }
 
 }

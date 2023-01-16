@@ -33,6 +33,9 @@ public class KaKaoController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private JwtController jwtController;
+
 
 
 
@@ -48,7 +51,7 @@ public class KaKaoController {
 
     @ResponseBody
     @GetMapping("/oauth/kakao")
-    public String kakaoCallback(String code){
+    public String kakaoCallback(String code) throws Exception {
         String accessToken = kaKaoLoginService.getAccessToken(code);
         Gson gsonObj = new Gson();
         Map<?, ?> data = gsonObj.fromJson(accessToken, Map.class);
@@ -78,12 +81,22 @@ public class KaKaoController {
 
         User findUser = userService.getUserByEmail(kakaoUser.getEmail());
         if(findUser.getEmail() == null){
+            String kakaorefreshToken = jwtController.createRefreshToken(String.valueOf(kakaoUser.getUserId()));
+            //System.out.println("refreshToken = " + refreshToken);
+            kakaoUser.setRefreshToken(refreshToken);
             userService.insertUser(kakaoUser);
+        }
+        else{
+            String loginToken = jwtController.createToken(String.valueOf(kakaoUser.getUserId()));
+            System.out.println("loginToken = " + loginToken);
+            kakaoUser.setDeviceToken(loginToken);
+            return loginToken;
+
         }
         
 
 
-        return atoken;
+        return null;
 
 
     }
