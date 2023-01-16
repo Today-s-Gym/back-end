@@ -14,7 +14,6 @@ import java.util.function.Supplier;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final UserRepository userRepository;
 
     /**
      * 사용자 공개 계정 전환
