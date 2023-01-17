@@ -14,9 +14,11 @@ import java.util.function.Supplier;
 
 @Service
 public class UserService {
+    @Autowired
+    private UserRepository userRepository;
 
-    private final UserRepository userRepository;
-    private final UtilService utilService;
+    @Autowired
+    private UtilService utilService;
 
     /**
      * 사용자 공개 계정 전환
@@ -37,8 +39,7 @@ public class UserService {
         return user.getEmail();
     }
 
-    @Autowired
-    private UserRepository userRepository;
+
 
     @Transactional
     public void insertUser(User user)
@@ -60,11 +61,5 @@ public class UserService {
         return findUser;
     }
 
-    @Transactional
-    public Integer changeAccountPrivacy(Integer userId, boolean locked) {
-        User user = userRepository.findById(userId).get();
-        user.changeAccountPrivacy(locked);
-        return user.getUserId();
-    }
 
 }
