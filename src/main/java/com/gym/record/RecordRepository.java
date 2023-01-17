@@ -2,6 +2,7 @@ package com.gym.record;
 
 import org.hibernate.annotations.BatchSize;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -20,4 +21,9 @@ public interface RecordRepository extends JpaRepository<Record, Integer> {
 
     @Query("select count(r) from Record r where date_format(r.createdAt, '%Y-%m-%d') = :date")
     Integer findByRecordDate(@Param("date") String date);
+
+
+    @Modifying
+    @Query("delete from Record r where r.recordId = :recordId")
+    Integer deleteAllByRecordId(@Param("recordId") Integer recordId);
 }

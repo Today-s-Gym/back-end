@@ -48,8 +48,15 @@ public class RecordPhotoService {
      * 기록과 연관된 모든 recordPhoto 삭제
      */
     @Transactional
-    public void deleteAllRecordPhotoByRecord(Record record){
-        recordPhotoRepository.deleteAllByRecord(record);
+    public void deleteAllRecordPhotoByRecord(List<Integer> ids){
+        recordPhotoRepository.deleteAllByRecord(ids);
+    }
+
+    /**
+     * record와 연관된 모든 id 조회
+     */
+    public List<Integer> findAllId(int recordId){
+        return recordPhotoRepository.findAllId(recordId);
     }
 
 }

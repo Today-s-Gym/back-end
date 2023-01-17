@@ -13,6 +13,7 @@ import com.gym.user.UserRepository;
 import com.gym.utils.JwtService;
 import com.gym.utils.UtilService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,7 +44,6 @@ public class RecordService {
         //엔티티 조회
         User user = utilService.findByUserIdWithValidation(JwtService.getUserId());
         Record record = Record.createRecord(recordGetReq.getContent(), user);
-        record = utilService.findByRecordIdWithValidation(record.getRecordId());
         recordRepository.save(record);
         //Record 사진 추가
         recordPhotoService.saveAllRecordPhotoByRecord(recordGetReq, record);
@@ -97,6 +97,7 @@ public class RecordService {
      * 기록 업데이트
      */
     @Transactional
+    @Modifying
     public Integer updateRecord(String date, RecordGetReq recordGetReq) throws BaseException {
         //User, Record 조회 및 update
         User user = utilService.findByUserIdWithValidation(JwtService.getUserId());
@@ -104,12 +105,33 @@ public class RecordService {
         record = utilService.findByRecordIdWithValidation(record.getRecordId());
         record.updateRecord(recordGetReq.getContent());
         //RecordPhoto update
-        recordPhotoService.deleteAllRecordPhotoByRecord(record);
+        List<Integer> phIds = recordPhotoService.findAllId(record.getRecordId());
+        recordPhotoService.deleteAllRecordPhotoByRecord(phIds);
         recordPhotoService.saveAllRecordPhotoByRecord(recordGetReq, record);
         //Tag update
-        tagService.deleteAllTagByRecord(record);
+        List<Integer> tIds = tagService.findAllId(record.getRecordId());
+        tagService.deleteAllTagByRecord(tIds);
         tagService.saveAllTagByRecord(recordGetReq,record);
         return record.getRecordId();
+    }
+
+    /**
+     * 기록 삭제하기 연관된 사진, 태그도 모두 삭제
+     * (태그를 삭제하면 최근 사용한 태그를 조회 불가)
+     */
+    @Transactional
+    @Modifying
+    public String deleteRecord(Integer recordId){
+        Record record = recordRepository.findById(recordId).get();
+        //recordPhoto 삭제
+        List<Integer> ids = recordPhotoService.findAllId(record.getRecordId());
+        recordPhotoService.deleteAllRecordPhotoByRecord(ids);
+        //태그 삭제
+        List<Integer> tIds = tagService.findAllId(record.getRecordId());
+        tagService.deleteAllTagByRecord(tIds);
+        //Record 삭제
+        recordRepository.deleteAllByRecordId(record.getRecordId());
+        return "기록을 삭제했습니다.";
     }
 
 }

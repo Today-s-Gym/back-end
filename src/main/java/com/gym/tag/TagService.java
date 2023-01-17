@@ -59,8 +59,15 @@ public class TagService {
      * 태그 record 연관 전체 삭제
      */
     @Transactional
-    public void deleteAllTagByRecord(Record record){
-        tagRepository.deleteAllByRecord(record);
+    public void deleteAllTagByRecord(List<Integer> ids){
+        tagRepository.deleteAllByRecord(ids);
+    }
+
+    /**
+     * record와 연관된 모든 id 조회
+     */
+    public List<Integer> findAllId(int recordId){
+        return tagRepository.findAllId(recordId);
     }
 
 }
