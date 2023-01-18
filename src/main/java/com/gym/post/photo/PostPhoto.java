@@ -30,4 +30,5 @@ public class PostPhoto {
     public void createPost(Post post){
         this.post = post;
     }
+
 }

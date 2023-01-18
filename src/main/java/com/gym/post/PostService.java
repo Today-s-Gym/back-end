@@ -65,7 +65,9 @@ public class PostService {
     }
 
     public List<GetPostsListRes> getPostsByCategoryId(Integer userId, Integer categoryId) throws BaseException {
-        List<Post> posts = postRepository.findByCategoryId(categoryId, PageRequest.of(0, 10)).orElse(null);
+        Category category = utilService.findByCategoryIdWithValidation(categoryId);
+
+        List<Post> posts = postRepository.findByCategoryId(category, PageRequest.of(0, 10)).orElse(null);
         if(posts == null) {
             throw new BaseException(BaseResponseStatus.EMPTY_CATEGORY);
         }
@@ -82,7 +84,7 @@ public class PostService {
 
             //해당 게시물에 첨부된 기록이 없을 수도 있기에 default 값 지정
             Integer recordId = 0;
-            String recordPhotoImgUrl = "기록이 없습니다.";
+            String recordPhotoImgUrl = returnRecordBaseImage();
             String recordCreatedAt = "기록이 없습니다.";
             String recordContent = "기록이 없습니다.";
 
@@ -96,7 +98,7 @@ public class PostService {
             }
 
             GetPostsListRes res = GetPostsListRes.builder()
-                    .categoryName(post.getCategory().getName())
+                    .categoryName(category.getName())
                     .postId(post.getPostId())
                     .postPhotoList(postPhotoService.findAllPhotosByPostId(post.getPostId()))
                     .title(post.getTitle())

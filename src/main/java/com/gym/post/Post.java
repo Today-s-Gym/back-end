@@ -15,6 +15,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -53,10 +54,10 @@ public class Post {
     private Category category;
 
     @OneToMany(mappedBy = "post", cascade = {CascadeType.ALL}, orphanRemoval = true)
-    private List<Comment> commentList;
+    private List<Comment> commentList = new ArrayList<>();;
 
     @OneToMany(mappedBy = "post", cascade = {CascadeType.ALL}, orphanRemoval = true)
-    private List<PostPhoto> photoList;
+    private List<PostPhoto> photoList = new ArrayList<>();;
 
     //==메서드 추가==//
     public void addReportCount() {

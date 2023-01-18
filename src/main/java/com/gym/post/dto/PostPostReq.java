@@ -5,9 +5,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
-@Builder
 @Getter
 @RequiredArgsConstructor
 public class PostPostReq {
@@ -17,5 +17,5 @@ public class PostPostReq {
 
     private Integer recordId; // null 일 수도 있음
 
-    private List<PostPhoto> postPhotos;
+    private List<String> postPhotos = new ArrayList<>();;
 }
