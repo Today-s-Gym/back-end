@@ -35,4 +35,6 @@ public class RecordPhoto {
         this.record = record;
     }
 
+
+
 }

@@ -1,6 +1,7 @@
 package com.gym.record;
 
 
+import com.fasterxml.jackson.databind.ser.Serializers;
 import com.gym.config.exception.BaseException;
 import com.gym.config.exception.BaseResponse;
 import com.gym.record.dto.RecordGetReq;
@@ -51,6 +52,22 @@ public class RecordController {
         }catch (BaseException exception){
             return new BaseResponse<>(exception.getStatus());
         }
+    }
+
+    /**
+     * 기록 수정하기
+     */
+    @PostMapping("/record/update")
+    public BaseResponse<Integer> updateRecord(@Param("date") String date, @RequestBody RecordGetReq recordGetReq) throws BaseException {
+            return new BaseResponse<>(recordService.updateRecord(date, recordGetReq));
+    }
+
+    /**
+     * 기록 삭제하기
+     */
+    @PostMapping("/record/delete")
+    public BaseResponse<String> deleteRecord(@Param("recordId") Integer recordId){
+        return new BaseResponse<>(recordService.deleteRecord(recordId));
     }
 
 }
