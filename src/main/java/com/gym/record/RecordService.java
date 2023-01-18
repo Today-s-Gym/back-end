@@ -1,6 +1,7 @@
 package com.gym.record;
 
 import com.gym.config.exception.BaseException;
+import com.gym.record.dto.RecordGetRecentRes;
 import com.gym.record.dto.RecordGetReq;
 import com.gym.record.dto.RecordGetRes;
 import com.gym.record.photo.RecordPhoto;
@@ -13,6 +14,9 @@ import com.gym.user.UserRepository;
 import com.gym.utils.JwtService;
 import com.gym.utils.UtilService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -132,6 +136,16 @@ public class RecordService {
         //Record 삭제
         recordRepository.deleteAllByRecordId(record.getRecordId());
         return "기록을 삭제했습니다.";
+    }
+
+    /**
+     * 최근 기록 조회
+     */
+    public Page<RecordGetRecentRes> findAllRecent() throws BaseException {
+        User user = utilService.findByUserIdWithValidation(JwtService.getUserId());
+        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "id"));
+        Page<RecordGetRecentRes> records = recordRepository.findAllByUserId(user.getUserId(), pageRequest);
+        return records;
     }
 
 }
