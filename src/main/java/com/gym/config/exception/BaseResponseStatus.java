@@ -46,9 +46,13 @@ public enum BaseResponseStatus {
 
     // record
     INVALID_RECORD(false,2400,"유호하지 않은 기록입니다."),
-
     RECORD_DATE_EXISTS(false, 2401, "기록 추가는 하루에 한번입니다"),
     EMPTY_RECORD(false, 2402, "기록이 존재하지 않습니다."),
+
+
+    // category
+    INVALID_CATEGORY(false,2500,"유호하지 않은 카테고리입니다."),
+
     /**
      * 3000 : Response 오류
      */
