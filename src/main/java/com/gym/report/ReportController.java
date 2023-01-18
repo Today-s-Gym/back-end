@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.gym.config.exception.BaseResponseStatus.REPORT_USER_SELF;
-
 @RestController
 @RequiredArgsConstructor
 public class ReportController {
@@ -24,23 +22,36 @@ public class ReportController {
     private final UtilService utilService;
 
     @PostMapping("/report/user")
-    public BaseResponse<Integer> reportUser(@RequestBody ReportReq reportReq) throws BaseException {
-        User reporter = utilService.findByUserIdWithValidation(JwtService.getUserId());
-        User reportedUser = utilService.findByUserIdWithValidation(reportReq.getReportedId());
-        return new BaseResponse<>(reportService.saveReportUser(reporter, reportedUser));
+    public BaseResponse<Integer> reportUser(@RequestBody ReportReq reportReq) {
+        try {
+            User reporter = utilService.findByUserIdWithValidation(JwtService.getUserId());
+            User reportedUser = utilService.findByUserIdWithValidation(reportReq.getReportedId());
+            return new BaseResponse<>(reportService.saveReportUser(reporter, reportedUser));
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
     }
 
     @PostMapping("/report/post")
-    public BaseResponse<Integer> reportPost(@RequestBody ReportReq reportReq) throws BaseException {
-        User reporter = utilService.findByUserIdWithValidation(JwtService.getUserId());
-        Post reportedPost = utilService.findByPostIdWithValidation(reportReq.getReportedId());
-        return new BaseResponse<>(reportService.saveReportPost(reporter, reportedPost));
+    public BaseResponse<Integer> reportPost(@RequestBody ReportReq reportReq) {
+        try {
+            User reporter = utilService.findByUserIdWithValidation(JwtService.getUserId());
+            Post reportedPost = utilService.findByPostIdWithValidation(reportReq.getReportedId());
+            return new BaseResponse<>(reportService.saveReportPost(reporter, reportedPost));
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+
     }
 
     @PostMapping("/report/comment")
-    public BaseResponse<Integer> reportComment(@RequestBody ReportReq reportReq) throws BaseException {
-        User reporter = utilService.findByUserIdWithValidation(JwtService.getUserId());
-        Comment reportedComment = utilService.findByCommentIdWithValidation(reportReq.getReportedId());
-        return new BaseResponse<>(reportService.saveReportComment(reporter, reportedComment));
+    public BaseResponse<Integer> reportComment(@RequestBody ReportReq reportReq) {
+        try {
+            User reporter = utilService.findByUserIdWithValidation(JwtService.getUserId());
+            Comment reportedComment = utilService.findByCommentIdWithValidation(reportReq.getReportedId());
+            return new BaseResponse<>(reportService.saveReportComment(reporter, reportedComment));
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
     }
 }
