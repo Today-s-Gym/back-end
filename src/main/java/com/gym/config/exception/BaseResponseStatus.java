@@ -71,10 +71,17 @@ public enum BaseResponseStatus {
     MODIFY_FAIL_USERNAME(false,4014,"유저네임 수정 실패"),
 
     PASSWORD_ENCRYPTION_ERROR(false, 4011, "비밀번호 암호화에 실패하였습니다."),
-    PASSWORD_DECRYPTION_ERROR(false, 4012, "비밀번호 복호화에 실패하였습니다.");
+    PASSWORD_DECRYPTION_ERROR(false, 4012, "비밀번호 복호화에 실패하였습니다."),
 
 
-    // 5000 : 필요시 만들어서 쓰세요
+    /**
+     * 5000 : 로그인 시 닉네임, 한줄 소개, 운동 설정 시 오류
+     */
+    NICKNAME_ERROR(false, 5000, "이미 존재하는 닉네임입니다."),
+    INTRODUCE_ERROR(false, 5001, "한줄 소개는 0~30자이어야 합니다."),
+    SPORTS_ERROR(false, 5002, "운동 ");
+
+
     // 6000 : 필요시 만들어서 쓰세요
 
 

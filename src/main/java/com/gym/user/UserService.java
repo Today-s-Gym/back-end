@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +18,32 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UtilService utilService;
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private UtilService utilService;
+
+    /**
+     * 사용자 공개 계정 전환
+     */
+    @Transactional
+    public Integer changeAccountPrivacy(Integer userId, boolean locked) {
+        User user = userRepository.findById(userId).get();
+        user.changeAccountPrivacy(locked);
+        return user.getUserId();
+    }
+
+    /**
+     * 사용자 이메일 조회
+     */
+    @Transactional
+    public String findUserEmailByUserId(Integer userId) throws BaseException {
+        User user = utilService.findByUserIdWithValidation(userId);
+        return user.getEmail();
+    }
+
+
 
     @Transactional
     public void insertUser(User user)
@@ -38,20 +65,5 @@ public class UserService {
         return findUser;
     }
 
-    @Transactional
-    public Integer changeAccountPrivacy(Integer userId, boolean locked) {
-        User user = userRepository.findById(userId).get();
-        user.changeAccountPrivacy(locked);
-        return user.getUserId();
-    }
-
-    /**
-     * 사용자 이메일 조회
-     */
-    @Transactional
-    public String findUserEmailByUserId(Integer userId) throws BaseException {
-        User user = utilService.findByUserIdWithValidation(userId);
-        return user.getEmail();
-    }
 
 }

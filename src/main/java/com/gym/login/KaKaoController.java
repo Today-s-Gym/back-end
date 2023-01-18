@@ -89,7 +89,7 @@ public class KaKaoController {
         else{
             String loginToken = jwtController.createToken(String.valueOf(kakaoUser.getUserId()));
             System.out.println("loginToken = " + loginToken);
-            kakaoUser.setDeviceToken(loginToken);
+            //kakaoUser.setDeviceToken(loginToken);
             return loginToken;
 
         }
