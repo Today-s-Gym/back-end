@@ -4,6 +4,7 @@ import com.gym.category.Category;
 import com.gym.post.comment.Comment;
 import com.gym.post.photo.PostPhoto;
 import com.gym.record.Record;
+import com.gym.record.photo.RecordPhoto;
 import com.gym.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -60,5 +61,11 @@ public class Post {
     //==메서드 추가==//
     public void addReportCount() {
         this.report++;
+    }
+
+    //==연관관계 메서드==//
+    public void addPhotoList(PostPhoto postPhoto){
+        photoList.add(postPhoto);
+        postPhoto.createPost(this);
     }
 }

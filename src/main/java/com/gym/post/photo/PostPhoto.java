@@ -1,6 +1,7 @@
 package com.gym.post.photo;
 
 import com.gym.post.Post;
+import com.gym.record.Record;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,4 +25,9 @@ public class PostPhoto {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
+
+    //==객체 생성 메서드==//
+    public void createPost(Post post){
+        this.post = post;
+    }
 }

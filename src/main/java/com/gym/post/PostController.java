@@ -3,11 +3,12 @@ package com.gym.post;
 import com.gym.config.exception.BaseException;
 import com.gym.config.exception.BaseResponse;
 import com.gym.post.dto.GetPostsListRes;
+import com.gym.post.dto.PostPostReq;
 import com.gym.utils.JwtService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,6 +27,16 @@ public class PostController {
     public BaseResponse<List<GetPostsListRes>> getPostsByCategoryId(@PathVariable("categoryId") Integer categoryId) throws BaseException {
         Integer userId = jwtService.getUserId();
         return new BaseResponse<>(postService.getPostsByCategoryId(userId, categoryId));
+    }
+
+    /**
+     * 게시글 생성
+     * [POST] /post
+     */
+    @PostMapping("/post")
+    public BaseResponse<Integer> createPost(@RequestBody PostPostReq postPostReq) throws BaseException {
+        Integer userId = jwtService.getUserId();
+        return new BaseResponse<>(postService.createPost(userId, postPostReq));
     }
 
 }

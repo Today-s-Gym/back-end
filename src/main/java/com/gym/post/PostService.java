@@ -1,9 +1,12 @@
 package com.gym.post;
 
+import com.gym.category.Category;
 import com.gym.config.exception.BaseException;
 import com.gym.config.exception.BaseResponseStatus;
 import com.gym.post.dto.GetPostsListRes;
+import com.gym.post.dto.PostPostReq;
 import com.gym.post.like.LikeService;
+import com.gym.post.photo.PostPhotoService;
 import com.gym.record.Record;
 import com.gym.user.User;
 import com.gym.user.UserRepository;
@@ -12,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +30,39 @@ public class PostService {
     private final UserRepository userRepository;
     private final LikeService likeService;
     private final UtilService utilService;
+    private final PostPhotoService postPhotoService;
+
+
+    @Transactional
+    public void save(Post post) {
+        postRepository.save(post);
+    }
+
+    @Transactional
+    public Integer createPost(Integer userId, PostPostReq postPostReq) throws BaseException {
+        User user = utilService.findByUserIdWithValidation(userId);
+        Category category = utilService.findByCategoryIdWithValidation(postPostReq.getCategoryId());
+
+        Record record = null;
+        //첨부된 기록이 있으면
+        if(postPostReq.getRecordId() != null) {
+            record = utilService.findByRecordIdWithValidation(postPostReq.getRecordId());
+        }
+
+        Post post = Post.builder()
+                .category(category)
+                .title(postPostReq.getTitle())
+                .content(postPostReq.getContent())
+                .record(record)
+                .user(user)
+                .build();
+
+        save(post);
+
+        postPhotoService.saveAllPostPhotoByPost(postPostReq, post);
+
+        return post.getPostId();
+    }
 
     public List<GetPostsListRes> getPostsByCategoryId(Integer userId, Integer categoryId) throws BaseException {
         List<Post> posts = postRepository.findByCategoryId(categoryId, PageRequest.of(0, 10)).orElse(null);
@@ -60,6 +98,7 @@ public class PostService {
             GetPostsListRes res = GetPostsListRes.builder()
                     .categoryName(post.getCategory().getName())
                     .postId(post.getPostId())
+                    .postPhotoList(postPhotoService.findAllPhotosByPostId(post.getPostId()))
                     .title(post.getTitle())
                     .content(post.getContent())
                     .createdAt(convertLocalDateTimeToTime(post.getCreatedAt()))
@@ -78,5 +117,6 @@ public class PostService {
 
         return postsListRes;
     }
+
 
 }
