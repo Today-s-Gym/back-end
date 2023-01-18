@@ -15,9 +15,6 @@ import java.util.function.Supplier;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-
-    private final UserRepository userRepository;
-    private final UtilService utilService;
     @Autowired
     private UserRepository userRepository;
 
