@@ -2,6 +2,7 @@ package com.gym.tag;
 
 import com.gym.config.exception.BaseException;
 import com.gym.record.dto.RecordGetReq;
+import com.gym.tag.dto.TagGetRecentRes;
 import com.gym.tag.dto.TagGetRes;
 import com.gym.user.User;
 import com.gym.utils.JwtService;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gym.record.Record;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,11 +37,12 @@ public class TagService {
     /**
      * 최근 사용한 태그 조회(Paging 처리 10개 탐색)
      */
-    public Page<String> findRecentTag() throws BaseException {
+    public List<TagGetRecentRes> findRecentTag(int page) throws BaseException {
         User user = utilService.findByUserIdWithValidation(JwtService.getUserId());
-        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "id"));
+        PageRequest pageRequest = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "id"));
         Page<String> pages = tagRepository.findByRecord(user.getUserId(), pageRequest);
-        return pages;
+        List<TagGetRecentRes> tagList = pages.stream().map(s -> new TagGetRecentRes(s)).collect(Collectors.toList());
+        return tagList;
     }
 
     /**

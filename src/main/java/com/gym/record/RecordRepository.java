@@ -30,6 +30,7 @@ public interface RecordRepository extends JpaRepository<Record, Integer> {
     @Query("delete from Record r where r.recordId = :recordId")
     Integer deleteAllByRecordId(@Param("recordId") Integer recordId);
 
-    @Query("select r.content, r.createdAt from Record r where r.user.userId = :userId")
-    Page<RecordGetRecentRes> findAllByUserId(@Param("userId") Integer userId, PageRequest pageRequest);
+    @Query("select r from Record r where r.user.userId = :userId")
+    Page<Record> findAllByUserId(@Param("userId") Integer userId, PageRequest pageRequest);
+
 }
