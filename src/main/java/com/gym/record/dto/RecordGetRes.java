@@ -10,6 +10,7 @@ import com.gym.utils.UtilService;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,9 +20,15 @@ public class RecordGetRes {
         this.content = record.getContent();
         this.createdAt = record.getCreatedAt();
         this.userName = user.getNickName();
-        this.recordPhotos = record.getPhotoList().stream()
-                .map(recordPhoto -> new RecordPhotoGetRes(recordPhoto))
-                .collect(Collectors.toList());
+        if(record.getPhotoList().isEmpty()){
+            this.recordPhotos = new ArrayList<>();
+            this.recordPhotos.add(new RecordPhotoGetRes(UtilService.returnRecordBaseImage()));
+        }
+        else {
+            this.recordPhotos = record.getPhotoList().stream()
+                    .map(recordPhoto -> new RecordPhotoGetRes(recordPhoto))
+                    .collect(Collectors.toList());
+        }
         this.tags = record.getTagList().stream()
                 .map(tag -> new TagGetRes(tag))
                 .collect(Collectors.toList());

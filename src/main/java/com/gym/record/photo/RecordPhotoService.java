@@ -32,14 +32,8 @@ public class RecordPhotoService {
     @Transactional
     public void saveAllRecordPhotoByRecord(RecordGetReq recordGetReq, Record record) {
         List<RecordPhoto> recordPhotos = recordGetReq.getRecordPhotos();
-        if (recordPhotos.isEmpty()) { //사진 없으면 기본사진 추가
-            String str = UtilService.returnRecordBaseImage();
-            RecordPhoto recordPhoto = new RecordPhoto(str, record);
+        for (RecordPhoto recordPhoto : recordPhotos) {
             record.addPhotoList(recordPhoto);
-        } else {
-            for (RecordPhoto recordPhoto : recordPhotos) {
-                record.addPhotoList(recordPhoto);
-            }
         }
         saveRecordPhoto(recordPhotos);
     }

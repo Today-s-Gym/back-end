@@ -77,7 +77,7 @@ public class RecordService {
             record = utilService.findByRecordIdWithValidation(record.getRecordId());
             RecordGetRes recordGetRes = new RecordGetRes(record, user);
             return recordGetRes;
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             throw new BaseException(EMPTY_RECORD);
         }
     }
