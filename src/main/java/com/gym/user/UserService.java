@@ -18,11 +18,6 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UtilService utilService;
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private UtilService utilService;
 
     /**
      * 사용자 공개 계정 전환
