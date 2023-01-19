@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.gym.config.exception.BaseResponseStatus.EMPTY_RECORD;
 import static com.gym.config.exception.BaseResponseStatus.RECORD_DATE_EXISTS;
@@ -141,11 +142,14 @@ public class RecordService {
     /**
      * 최근 기록 조회
      */
-    public Page<RecordGetRecentRes> findAllRecent() throws BaseException {
+    public  List<RecordGetRecentRes> findAllRecent(int page) throws BaseException {
         User user = utilService.findByUserIdWithValidation(JwtService.getUserId());
-        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "id"));
-        Page<RecordGetRecentRes> records = recordRepository.findAllByUserId(user.getUserId(), pageRequest);
-        return records;
+        PageRequest pageRequest = PageRequest.of(page, 6, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Page<Record> records = recordRepository.findAllByUserId(user.getUserId(), pageRequest);
+        List<RecordGetRecentRes> recordGetRecentResStream = records.stream()
+                .map(r -> new RecordGetRecentRes(r.getContent(), r.getCreatedAt(), r.getPhotoList().get(0).getImgUrl()))
+                .collect(Collectors.toList());
+        return recordGetRecentResStream;
     }
 
 }

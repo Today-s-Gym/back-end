@@ -13,6 +13,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 
 @RestController
@@ -76,8 +77,8 @@ public class RecordController {
      * 최근 기록 조회하기
      */
     @GetMapping("/record/recent")
-    public BaseResponse<Page<RecordGetRecentRes>> findRecentRecord() throws BaseException {
-        return new BaseResponse<>(recordService.findAllRecent());
+    public BaseResponse<List<RecordGetRecentRes>> findRecentRecord(@Param("page") int page) throws BaseException {
+        return new BaseResponse<>(recordService.findAllRecent(page));
     }
 
 }
