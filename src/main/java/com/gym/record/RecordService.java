@@ -146,8 +146,9 @@ public class RecordService {
         User user = utilService.findByUserIdWithValidation(JwtService.getUserId());
         PageRequest pageRequest = PageRequest.of(page, 6, Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<Record> records = recordRepository.findAllByUserId(user.getUserId(), pageRequest);
+
         List<RecordGetRecentRes> recordGetRecentResStream = records.stream()
-                .map(r -> new RecordGetRecentRes(r.getContent(), r.getCreatedAt(), r.getPhotoList().get(0).getImgUrl()))
+                .map(r -> new RecordGetRecentRes(r.getContent(), r.getCreatedAt(), r.getPhotoList()))
                 .collect(Collectors.toList());
         return recordGetRecentResStream;
     }
