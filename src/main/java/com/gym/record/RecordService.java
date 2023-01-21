@@ -126,8 +126,10 @@ public class RecordService {
      */
     @Transactional
     @Modifying
-    public String deleteRecord(Integer recordId){
-        Record record = recordRepository.findById(recordId).get();
+    public String deleteRecord(String date) throws BaseException {
+        try {
+        User user = utilService.findByUserIdWithValidation(JwtService.getUserId());
+        Record record = recordRepository.findAllByDay(user.getUserId(), date);
         //recordPhoto 삭제
         List<Integer> ids = recordPhotoService.findAllId(record.getRecordId());
         recordPhotoService.deleteAllRecordPhotoByRecord(ids);
@@ -137,6 +139,9 @@ public class RecordService {
         //Record 삭제
         recordRepository.deleteAllByRecordId(record.getRecordId());
         return "기록을 삭제했습니다.";
+        }catch(NullPointerException e){
+            throw new BaseException(EMPTY_RECORD);
+        }
     }
 
     /**
@@ -146,11 +151,12 @@ public class RecordService {
         User user = utilService.findByUserIdWithValidation(JwtService.getUserId());
         PageRequest pageRequest = PageRequest.of(page, 6, Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<Record> records = recordRepository.findAllByUserId(user.getUserId(), pageRequest);
-
+        if (records.getTotalElements() == 0) {
+            throw new BaseException(EMPTY_RECORD);
+        }
         List<RecordGetRecentRes> recordGetRecentResStream = records.stream()
                 .map(r -> new RecordGetRecentRes(r.getContent(), r.getCreatedAt(), r.getPhotoList()))
                 .collect(Collectors.toList());
         return recordGetRecentResStream;
     }
-
 }

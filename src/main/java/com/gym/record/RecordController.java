@@ -69,16 +69,24 @@ public class RecordController {
      * 기록 삭제하기
      */
     @PostMapping("/record/delete")
-    public BaseResponse<String> deleteRecord(@Param("recordId") Integer recordId){
-        return new BaseResponse<>(recordService.deleteRecord(recordId));
+    public BaseResponse<String> deleteRecord(@Param("date") String date){
+        try {
+            return new BaseResponse<>(recordService.deleteRecord(date));
+        }catch (BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
     }
 
     /**
      * 최근 기록 조회하기
      */
     @GetMapping("/record/recent")
-    public BaseResponse<List<RecordGetRecentRes>> findRecentRecord(@Param("page") int page) throws BaseException {
-        return new BaseResponse<>(recordService.findAllRecent(page));
+    public BaseResponse<List<RecordGetRecentRes>> findRecentRecord(@Param("page") int page){
+        try {
+            return new BaseResponse<>(recordService.findAllRecent(page));
+        }catch (BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
     }
 
 }
