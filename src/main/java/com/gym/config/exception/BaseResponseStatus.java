@@ -31,6 +31,8 @@ public enum BaseResponseStatus {
     POST_USERS_EMPTY_EMAIL(false, 2015, "이메일을 입력해주세요."),
     POST_USERS_INVALID_EMAIL(false, 2016, "이메일 형식을 확인해주세요."),
     POST_USERS_EXISTS_EMAIL(false,2017,"중복된 이메일입니다."),
+    DUPLICATED_NICKNAME(false, 2018, "중복된 닉네임입니다."),
+    LENGTH_OVER_INTRODUCE(false, 2019, "한 줄 소개는 30글자 이하로 입력해주세요"),
 
     // report
     REPORT_USER_SELF(false, 2100, "자신을 신고할 수 없습니다."),
