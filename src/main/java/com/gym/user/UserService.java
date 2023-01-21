@@ -1,20 +1,24 @@
 package com.gym.user;
 
 import com.gym.config.exception.BaseException;
+import com.gym.config.exception.BaseResponse;
 import com.gym.utils.UtilService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.function.Supplier;
+
+import static com.gym.config.exception.BaseResponseStatus.DUPLICATED_NICKNAME;
+import static com.gym.config.exception.BaseResponseStatus.LENGTH_OVER_INTRODUCE;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
+
+    private static int INTRODUCE_MAX_LENGTH = 30;
+
     @Autowired
     private UserRepository userRepository;
 
@@ -60,6 +64,35 @@ public class UserService {
                 });
 
         return findUser;
+    }
+
+
+    /**
+     * 마이페이지 수정
+    */
+    @Transactional
+    public BaseResponse<Integer> editMyPage(Integer userId, String newNickname, String newIntroduce) throws BaseException {
+        User user = utilService.findByUserIdWithValidation(userId);
+        editNickName(newNickname, user);
+        editIntroduce(newIntroduce, user);
+        return new BaseResponse<>(user.getUserId());
+    }
+
+    private void editNickName(String newNickname, User user) throws BaseException {
+        if (user.getNickName().equals(newNickname)) {
+            return;
+        }
+        if (userRepository.findByNickName(newNickname).isPresent()) {
+            throw new BaseException(DUPLICATED_NICKNAME);
+        }
+        user.changeNickname(newNickname);
+    }
+
+    private static void editIntroduce(String newIntroduce, User user) throws BaseException {
+        if (newIntroduce.length() > INTRODUCE_MAX_LENGTH) {
+            throw new BaseException(LENGTH_OVER_INTRODUCE);
+        }
+        user.editIntroduce(newIntroduce);
     }
 
 

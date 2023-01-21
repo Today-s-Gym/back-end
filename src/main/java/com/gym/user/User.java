@@ -69,4 +69,12 @@ public class User {
     public void addReportCount() {
         this.report++;
     }
+
+    public void editIntroduce(String introduce) {
+        this.introduce = introduce;
+    }
+
+    public void changeNickname(String newNickName) {
+        this.nickName = newNickName;
+    }
 }
