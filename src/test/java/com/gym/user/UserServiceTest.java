@@ -52,4 +52,37 @@ class UserServiceTest {
         // then
         Assertions.assertThat(email).isEqualTo("user2@gmail.com");
     }
+
+    @Test
+    @DisplayName("마이페이지 변경")
+    @Transactional
+    void editMyPage() throws BaseException {
+        // given
+        Integer userId = 2;
+
+        // when
+        String newNickname = "유저2";
+        String newIntroduce = "안녕하세요. 여러분. 반갑습니다.";
+        userService.editMyPage(userId, newNickname, newIntroduce);
+
+        // then
+        User findByIdUser = userRepository.findById(userId).get();
+        Assertions.assertThat(findByIdUser.getNickName()).isEqualTo(newNickname);
+        Assertions.assertThat(findByIdUser.getIntroduce()).isEqualTo(newIntroduce);
+    }
+
+    @Test
+    @DisplayName("마이페이지 변경_닉네임 중복")
+    @Transactional
+    void editMyPage_nickname_duplicated() throws BaseException {
+        // given
+        Integer userId = 2;
+
+        // when
+        String newNickname = "보라";
+        String newIntroduce = "안녕하세요. 여러분. 반갑습니다.";
+        Assertions.assertThatThrownBy(() -> userService.editMyPage(userId, newNickname, newIntroduce))
+                .isInstanceOf(BaseException.class);
+
+    }
 }
