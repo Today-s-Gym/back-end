@@ -73,4 +73,8 @@ public class User {
     public void editIntroduce(String introduce) {
         this.introduce = introduce;
     }
+
+    public void changeNickname(String newNickName) {
+        this.nickName = newNickName;
+    }
 }
