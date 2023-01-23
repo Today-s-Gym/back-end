@@ -1,12 +1,11 @@
-package com.gym.login;
+package com.gym.tag.config.login;
 
-import com.gym.config.exception.BaseResponse;
-import com.gym.config.exception.BaseResponseStatus;
+import com.gym.tag.config.exception.BaseResponse;
+import com.gym.tag.config.exception.BaseResponseStatus;
 import com.gym.user.User;
 import com.gym.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 

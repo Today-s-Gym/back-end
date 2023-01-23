@@ -1,15 +1,11 @@
 package com.gym.record;
 
-import com.gym.config.exception.BaseException;
+import com.gym.tag.config.exception.BaseException;
 import com.gym.record.dto.RecordGetReq;
 import com.gym.record.dto.RecordGetRes;
-import com.gym.record.photo.RecordPhoto;
-import com.gym.record.photo.RecordPhotoRepository;
 import com.gym.record.photo.RecordPhotoService;
-import com.gym.tag.Tag;
 import com.gym.tag.TagService;
 import com.gym.user.User;
-import com.gym.user.UserRepository;
 import com.gym.utils.JwtService;
 import com.gym.utils.UtilService;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +17,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.gym.config.exception.BaseResponseStatus.EMPTY_RECORD;
-import static com.gym.config.exception.BaseResponseStatus.RECORD_DATE_EXISTS;
+import static com.gym.tag.config.exception.BaseResponseStatus.EMPTY_RECORD;
+import static com.gym.tag.config.exception.BaseResponseStatus.RECORD_DATE_EXISTS;
 
 @Service
 @RequiredArgsConstructor

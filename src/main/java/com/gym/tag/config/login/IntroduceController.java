@@ -1,8 +1,8 @@
-package com.gym.login;
+package com.gym.tag.config.login;
 
 
-import com.gym.config.exception.BaseResponse;
-import com.gym.config.exception.BaseResponseStatus;
+import com.gym.tag.config.exception.BaseResponse;
+import com.gym.tag.config.exception.BaseResponseStatus;
 import com.gym.user.User;
 import com.gym.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,9 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Controller
@@ -22,14 +21,15 @@ public class IntroduceController {
     private UserRepository userRepository;
 
     @PutMapping("/login/introduce")
-    public @ResponseBody BaseResponse<String> updateIntroduce(@RequestBody User user, String nickname, String introduce)
+    @ResponseBody
+    public BaseResponse<?> updateIntroduce(@RequestBody User user, @RequestParam("nickname") String nickname, @RequestParam("introduce") String introduce)
     {
 
         if((introduce.length() >= 0) && (introduce.length() <= 30)){
             user.setNickName(nickname);
             user.setIntroduce(introduce);
             userRepository.save(user);
-            return new BaseResponse<>("성공");
+            return new BaseResponse<>(BaseResponseStatus.SUCCESS);
 
         }
         else{

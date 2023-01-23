@@ -1,11 +1,10 @@
 package com.gym.user;
 
-import com.gym.config.exception.BaseException;
-import com.gym.config.exception.BaseResponse;
+import com.gym.tag.config.exception.BaseException;
+import com.gym.tag.config.exception.BaseResponse;
 import com.gym.user.dto.AccountPrivacyReq;
 import com.gym.user.dto.UserEmailRes;
 import com.gym.utils.JwtService;
-import com.gym.utils.UtilService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;

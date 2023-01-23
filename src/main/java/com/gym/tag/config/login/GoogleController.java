@@ -1,4 +1,4 @@
-package com.gym.login;
+package com.gym.tag.config.login;
 
 import com.google.gson.Gson;
 import com.gym.user.User;
@@ -51,7 +51,7 @@ public class GoogleController {
         else{
             String loginToken = jwtController.createToken(String.valueOf(googleUser.getUserId()));
             //System.out.println("loginToken = " + loginToken);
-            //googleUser.setDeviceToken(loginToken);
+            googleUser.setDeviceToken(loginToken);
             return loginToken;
 
 

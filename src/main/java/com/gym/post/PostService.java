@@ -1,7 +1,7 @@
 package com.gym.post;
 
-import com.gym.config.exception.BaseException;
-import com.gym.config.exception.BaseResponseStatus;
+import com.gym.tag.config.exception.BaseException;
+import com.gym.tag.config.exception.BaseResponseStatus;
 import com.gym.post.dto.GetPostsListRes;
 import com.gym.post.like.LikeService;
 import com.gym.record.Record;

@@ -1,7 +1,7 @@
 package com.gym.report;
 
-import com.gym.config.exception.BaseException;
-import com.gym.config.exception.BaseResponseStatus;
+import com.gym.tag.config.exception.BaseException;
+import com.gym.tag.config.exception.BaseResponseStatus;
 import com.gym.post.Post;
 import com.gym.post.comment.Comment;
 import com.gym.user.User;
@@ -15,8 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class ReportServiceTest {

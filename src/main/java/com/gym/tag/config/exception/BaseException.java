@@ -1,4 +1,4 @@
-package com.gym.config.exception;
+package com.gym.tag.config.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.gym.config.exception;
+package com.gym.tag.config.exception;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import static com.gym.config.exception.BaseResponseStatus.SUCCESS;
+import static com.gym.tag.config.exception.BaseResponseStatus.SUCCESS;
 
 @Getter
 @AllArgsConstructor

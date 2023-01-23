@@ -1,6 +1,6 @@
 package com.gym.user;
 
-import com.gym.config.exception.BaseException;
+import com.gym.tag.config.exception.BaseException;
 import com.gym.user.dto.AccountPrivacyReq;
 import com.gym.utils.JwtService;
 import org.assertj.core.api.Assertions;

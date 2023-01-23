@@ -1,7 +1,7 @@
 package com.gym.utils;
 
-import com.gym.config.exception.BaseException;
-import com.gym.config.exception.BaseResponseStatus;
+import com.gym.tag.config.exception.BaseException;
+import com.gym.tag.config.exception.BaseResponseStatus;
 import com.gym.post.Post;
 import com.gym.post.PostRepository;
 import com.gym.post.comment.Comment;

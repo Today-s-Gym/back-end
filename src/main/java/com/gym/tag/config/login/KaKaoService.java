@@ -1,4 +1,4 @@
-package com.gym.login;
+package com.gym.tag.config.login;
 
 
 import com.google.gson.Gson;

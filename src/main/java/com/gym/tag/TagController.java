@@ -1,8 +1,7 @@
 package com.gym.tag;
 
-import com.gym.config.exception.BaseException;
-import com.gym.config.exception.BaseResponse;
-import com.gym.tag.dto.TagGetRes;
+import com.gym.tag.config.exception.BaseException;
+import com.gym.tag.config.exception.BaseResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
