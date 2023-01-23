@@ -153,4 +153,20 @@ public class RecordService {
         Page<RecordGetRecentRes> results = records.map(r -> new RecordGetRecentRes(r.getContent(), r.getCreatedAt(), r.getPhotoList()));
         return results;
     }
+
+    /**
+     * 기록 카운트
+     */
+    public Integer findCount() throws BaseException {
+        User user = utilService.findByUserIdWithValidation(JwtService.getUserId());
+        return recordRepository.countByUserId(user.getUserId());
+    }
+
+    /**
+     * 기록 카운트 달기준
+     */
+    public Integer findCountMonth(String month) throws BaseException {
+        User user = utilService.findByUserIdWithValidation(JwtService.getUserId());
+        return recordRepository.countByUserIdMonth(user.getUserId(), month);
+    }
 }
