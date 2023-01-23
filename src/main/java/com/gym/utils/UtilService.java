@@ -1,7 +1,9 @@
 package com.gym.utils;
 
-import com.gym.tag.config.exception.BaseException;
-import com.gym.tag.config.exception.BaseResponseStatus;
+import com.gym.category.Category;
+import com.gym.category.CategoryRepository;
+import com.gym.config.exception.BaseException;
+import com.gym.config.exception.BaseResponseStatus;
 import com.gym.post.Post;
 import com.gym.post.PostRepository;
 import com.gym.post.comment.Comment;
@@ -29,6 +31,7 @@ public class UtilService {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final RecordRepository recordRepository;
+    private final CategoryRepository categoryRepository;
 
 
     public User findByUserIdWithValidation(Integer userId) throws BaseException {
@@ -53,6 +56,12 @@ public class UtilService {
         Record record = recordRepository.getByRecordId(recordId).orElse(null);
         if(record==null) throw new BaseException(BaseResponseStatus.INVALID_RECORD);
         return record;
+    }
+
+    public Category findByCategoryIdWithValidation(Integer categoryId) throws BaseException {
+        Category category = categoryRepository.getByCategoryId(categoryId).orElse(null);
+        if(category == null) throw new BaseException(BaseResponseStatus.INVALID_CATEGORY);
+        return category;
     }
 
     // 게시글에 첨부된 기록에 사진이 없을 시에 기본으로 뜨는 이미지를 나타냄!!!

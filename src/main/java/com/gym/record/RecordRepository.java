@@ -1,6 +1,9 @@
 package com.gym.record;
 
+import com.gym.record.dto.RecordGetRecentRes;
 import org.hibernate.annotations.BatchSize;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -26,4 +29,8 @@ public interface RecordRepository extends JpaRepository<Record, Integer> {
     @Modifying
     @Query("delete from Record r where r.recordId = :recordId")
     Integer deleteAllByRecordId(@Param("recordId") Integer recordId);
+
+    @Query("select r from Record r where r.user.userId = :userId")
+    Page<Record> findAllByUserId(@Param("userId") Integer userId, PageRequest pageRequest);
+
 }

@@ -31,6 +31,8 @@ public enum BaseResponseStatus {
     POST_USERS_EMPTY_EMAIL(false, 2015, "이메일을 입력해주세요."),
     POST_USERS_INVALID_EMAIL(false, 2016, "이메일 형식을 확인해주세요."),
     POST_USERS_EXISTS_EMAIL(false,2017,"중복된 이메일입니다."),
+    DUPLICATED_NICKNAME(false, 2018, "중복된 닉네임입니다."),
+    LENGTH_OVER_INTRODUCE(false, 2019, "한 줄 소개는 30글자 이하로 입력해주세요"),
 
     // report
     REPORT_USER_SELF(false, 2100, "자신을 신고할 수 없습니다."),
@@ -46,9 +48,16 @@ public enum BaseResponseStatus {
 
     // record
     INVALID_RECORD(false,2400,"유호하지 않은 기록입니다."),
-
     RECORD_DATE_EXISTS(false, 2401, "기록 추가는 하루에 한번입니다"),
     EMPTY_RECORD(false, 2402, "기록이 존재하지 않습니다."),
+
+
+    // category
+    INVALID_CATEGORY(false,2500,"유호하지 않은 카테고리입니다."),
+
+    //Tag
+    EMPTY_TAG(false, 2602, "최근 사용한 태그가 존재하지 않습니다."),
+
     /**
      * 3000 : Response 오류
      */

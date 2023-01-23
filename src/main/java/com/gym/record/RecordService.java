@@ -9,6 +9,9 @@ import com.gym.user.User;
 import com.gym.utils.JwtService;
 import com.gym.utils.UtilService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.gym.tag.config.exception.BaseResponseStatus.EMPTY_RECORD;
 import static com.gym.tag.config.exception.BaseResponseStatus.RECORD_DATE_EXISTS;
@@ -68,7 +72,7 @@ public class RecordService {
             record = utilService.findByRecordIdWithValidation(record.getRecordId());
             RecordGetRes recordGetRes = new RecordGetRes(record, user);
             return recordGetRes;
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             throw new BaseException(EMPTY_RECORD);
         }
     }
@@ -117,8 +121,10 @@ public class RecordService {
      */
     @Transactional
     @Modifying
-    public String deleteRecord(Integer recordId){
-        Record record = recordRepository.findById(recordId).get();
+    public String deleteRecord(String date) throws BaseException {
+        try {
+        User user = utilService.findByUserIdWithValidation(JwtService.getUserId());
+        Record record = recordRepository.findAllByDay(user.getUserId(), date);
         //recordPhoto 삭제
         List<Integer> ids = recordPhotoService.findAllId(record.getRecordId());
         recordPhotoService.deleteAllRecordPhotoByRecord(ids);
@@ -128,6 +134,22 @@ public class RecordService {
         //Record 삭제
         recordRepository.deleteAllByRecordId(record.getRecordId());
         return "기록을 삭제했습니다.";
+        }catch(NullPointerException e){
+            throw new BaseException(EMPTY_RECORD);
+        }
     }
 
+    /**
+     * 최근 기록 조회
+     */
+    public  Page<RecordGetRecentRes> findAllRecent(int page) throws BaseException {
+        User user = utilService.findByUserIdWithValidation(JwtService.getUserId());
+        PageRequest pageRequest = PageRequest.of(page, 6, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Page<Record> records = recordRepository.findAllByUserId(user.getUserId(), pageRequest);
+        if (records.getTotalElements() == 0) {
+            throw new BaseException(EMPTY_RECORD);
+        }
+        Page<RecordGetRecentRes> results = records.map(r -> new RecordGetRecentRes(r.getContent(), r.getCreatedAt(), r.getPhotoList()));
+        return results;
+    }
 }
