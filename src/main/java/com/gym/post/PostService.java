@@ -13,6 +13,7 @@ import com.gym.user.UserRepository;
 import com.gym.utils.UtilService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -120,5 +121,16 @@ public class PostService {
         return postsListRes;
     }
 
+    @Transactional
+    @Modifying
+    public String deletePost(Integer postId) throws BaseException {
+        Post post = utilService.findByPostIdWithValidation(postId);
+        //postPhoto 삭제
+        List<Integer> ids = postPhotoService.findAllId(post.getPostId());
+        postPhotoService.deleteAllPostPhotoByPost(ids);
+        //post 삭제
+        postRepository.deleteAllByPostId(post.getPostId());
+        return "게시글을 삭제했습니다.";
+    }
 
 }

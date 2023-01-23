@@ -64,9 +64,12 @@ public class Post {
         this.report++;
     }
 
+    public void setDeleted() {this.deleted = true;}
+
     //==연관관계 메서드==//
     public void addPhotoList(PostPhoto postPhoto){
         photoList.add(postPhoto);
         postPhoto.createPost(this);
     }
+
 }
