@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -21,9 +22,9 @@ public class Category {
 
     @JsonIgnore
     @OneToMany(mappedBy = "category", cascade = {CascadeType.ALL}, orphanRemoval = true)
-    private List<User> userList;
+    private List<User> userList = new ArrayList<>();
 
     @OneToMany(mappedBy = "category", cascade = {CascadeType.ALL}, orphanRemoval = true)
-    private List<Post> postList;
+    private List<Post> postList = new ArrayList<>();
 
 }

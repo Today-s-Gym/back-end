@@ -12,6 +12,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -47,19 +48,19 @@ public class User {
     private Category category;
 
     @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL}, orphanRemoval = true)
-    private List<Record> recordList;
+    private List<Record> recordList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL}, orphanRemoval = true)
-    private List<Post> postList;
+    private List<Post> postList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL}, orphanRemoval = true)
-    private List<Comment> commentList;
+    private List<Comment> commentList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL}, orphanRemoval = true)
-    private List<MyAvatar> myAvatarList;
+    private List<MyAvatar> myAvatarList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL}, orphanRemoval = true)
-    private List<Tag> tagList;
+    private List<Tag> tagList = new ArrayList<>();
 
     // == 메서드 추가 == //
     public void changeAccountPrivacy(boolean locked) {

@@ -44,7 +44,7 @@ public class Record {
     private User user;
 
     @OneToMany(mappedBy = "record", cascade = {CascadeType.ALL}, orphanRemoval = true)
-    private List<Post> postList ;
+    private List<Post> postList = new ArrayList<>();
 
     @OneToMany(mappedBy = "record", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<RecordPhoto> photoList = new ArrayList<>();
