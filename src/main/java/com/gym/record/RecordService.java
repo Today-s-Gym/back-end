@@ -1,5 +1,6 @@
 package com.gym.record;
 
+import com.gym.record.dto.RecordGetRecentRes;
 import com.gym.tag.config.exception.BaseException;
 import com.gym.record.dto.RecordGetReq;
 import com.gym.record.dto.RecordGetRes;

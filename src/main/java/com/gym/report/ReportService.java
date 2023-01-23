@@ -1,6 +1,6 @@
 package com.gym.report;
 
-import com.gym.config.exception.BaseException;
+import com.gym.tag.config.exception.BaseException;
 import com.gym.post.Post;
 import com.gym.post.comment.Comment;
 import com.gym.user.User;
@@ -9,9 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
-import static com.gym.config.exception.BaseResponseStatus.*;
+import static com.gym.tag.config.exception.BaseResponseStatus.*;
 
 @Service
 @RequiredArgsConstructor

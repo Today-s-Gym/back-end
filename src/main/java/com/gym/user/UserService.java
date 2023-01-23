@@ -1,7 +1,8 @@
 package com.gym.user;
 
-import com.gym.config.exception.BaseException;
-import com.gym.config.exception.BaseResponse;
+
+import com.gym.tag.config.exception.BaseException;
+import com.gym.tag.config.exception.BaseResponse;
 import com.gym.utils.UtilService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.function.Supplier;
 
-import static com.gym.config.exception.BaseResponseStatus.DUPLICATED_NICKNAME;
-import static com.gym.config.exception.BaseResponseStatus.LENGTH_OVER_INTRODUCE;
+import static com.gym.tag.config.exception.BaseResponseStatus.DUPLICATED_NICKNAME;
+import static com.gym.tag.config.exception.BaseResponseStatus.LENGTH_OVER_INTRODUCE;
+
 
 @Service
 @RequiredArgsConstructor

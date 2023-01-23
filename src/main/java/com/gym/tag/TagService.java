@@ -1,8 +1,9 @@
 package com.gym.tag;
 
-import com.gym.config.exception.BaseException;
-import com.gym.config.exception.BaseResponseStatus;
+
 import com.gym.record.dto.RecordGetReq;
+import com.gym.tag.config.exception.BaseException;
+import com.gym.tag.config.exception.BaseResponseStatus;
 import com.gym.tag.dto.TagGetRecentRes;
 import com.gym.tag.dto.TagGetRes;
 import com.gym.user.User;

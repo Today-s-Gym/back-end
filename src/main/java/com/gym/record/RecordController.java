@@ -1,12 +1,11 @@
 package com.gym.record;
 
 
+import com.gym.record.dto.RecordGetRecentRes;
 import com.gym.tag.config.exception.BaseException;
 import com.gym.tag.config.exception.BaseResponse;
 import com.fasterxml.jackson.databind.ser.Serializers;
-import com.gym.config.exception.BaseException;
-import com.gym.config.exception.BaseResponse;
-import com.gym.record.dto.RecordGetRecentRes;
+
 import com.gym.record.dto.RecordGetReq;
 import com.gym.record.dto.RecordGetRes;
 import lombok.RequiredArgsConstructor;

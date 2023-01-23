@@ -1,4 +1,4 @@
-package com.gym.tag.config.login;
+package com.gym.login;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Header;

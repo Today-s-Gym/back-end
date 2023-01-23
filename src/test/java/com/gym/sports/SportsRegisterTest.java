@@ -1,6 +1,6 @@
 package com.gym.sports;
 
-import com.gym.tag.config.login.SportsController;
+import com.gym.login.SportsController;
 import com.gym.user.UserRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
