@@ -33,4 +33,10 @@ public interface RecordRepository extends JpaRepository<Record, Integer> {
     @Query("select r from Record r where r.user.userId = :userId")
     Page<Record> findAllByUserId(@Param("userId") Integer userId, PageRequest pageRequest);
 
+    @Query("select count(r) from Record r where r.user.userId = :userId")
+    Integer countByUserId(@Param("userId") Integer userId);
+
+    @Query("select count(r) from Record r where r.user.userId = :userId and date_format(r.createdAt, '%Y-%m') = :month")
+    Integer countByUserIdMonth(@Param("userId") Integer userId, @Param("month") String month);
+
 }

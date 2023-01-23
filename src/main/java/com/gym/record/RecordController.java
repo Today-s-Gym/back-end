@@ -89,4 +89,21 @@ public class RecordController {
         }
     }
 
+    /**
+     * 기록 count
+     * Test 할려고 만듬
+     */
+    @GetMapping("/record/count")
+    public BaseResponse<Integer> findRecordCount() throws BaseException {
+        return new BaseResponse<>(recordService.findCount());
+    }
+
+    /**
+     * 기록 count Month
+     * Test 할려고 만듬
+     */
+    @GetMapping("/record/count/month")
+    public BaseResponse<Integer> findRecordCountMonth(@Param("month") String month) throws BaseException {
+        return new BaseResponse<>(recordService.findCountMonth(month));
+    }
 }
