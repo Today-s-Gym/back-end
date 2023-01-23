@@ -123,14 +123,22 @@ public class PostService {
 
     @Transactional
     @Modifying
-    public String deletePost(Integer postId) throws BaseException {
+    public String deletePost(Integer userId, Integer postId) throws BaseException {
         Post post = utilService.findByPostIdWithValidation(postId);
-        //postPhoto 삭제
-        List<Integer> ids = postPhotoService.findAllId(post.getPostId());
-        postPhotoService.deleteAllPostPhotoByPost(ids);
-        //post 삭제
-        postRepository.deleteAllByPostId(post.getPostId());
-        return "게시글을 삭제했습니다.";
+        //게시글을 작성한 유저
+        User writer = post.getUser();
+        //수정하려는 유저
+        User viewer = utilService.findByUserIdWithValidation(userId);
+        if(writer.getUserId() == viewer.getUserId()) {
+            //postPhoto 삭제
+            List<Integer> ids = postPhotoService.findAllId(post.getPostId());
+            postPhotoService.deleteAllPostPhotoByPost(ids);
+            //post 삭제
+            postRepository.deleteAllByPostId(post.getPostId());
+            return "게시글을 삭제했습니다.";
+        } else {
+            return "자신의 게시글만 삭제할 수 있습니다.";
+        }
     }
 
 }

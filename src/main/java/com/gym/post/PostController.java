@@ -58,7 +58,7 @@ public class PostController {
     public BaseResponse<String> deletePost(@Param("postId") Integer postId) throws BaseException {
         try {
             Integer userId = jwtService.getUserId();
-            return new BaseResponse<>(postService.deletePost(postId));
+            return new BaseResponse<>(postService.deletePost(userId, postId));
         }
         catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
