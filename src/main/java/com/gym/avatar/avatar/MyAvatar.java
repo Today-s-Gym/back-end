@@ -33,4 +33,9 @@ public class MyAvatar {
     private LocalDateTime updatedAt = LocalDateTime.now();
 
     private boolean deleted = false;
+
+    public int getRemainUpgradeCount(int recordCount) {
+        return this.avatarStep.getRemainUpgradeCount(recordCount);
+    }
+
 }
