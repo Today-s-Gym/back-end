@@ -39,7 +39,7 @@ public class PostService {
     }
 
     @Transactional
-    public Integer createPost(Integer userId, PostPostReq postPostReq) throws BaseException {
+    public String createPost(Integer userId, PostPostReq postPostReq) throws BaseException {
         User user = utilService.findByUserIdWithValidation(userId);
         Category category = utilService.findByCategoryIdWithValidation(postPostReq.getCategoryId());
 
@@ -61,7 +61,7 @@ public class PostService {
 
         postPhotoService.saveAllPostPhotoByPost(postPostReq, post);
 
-        return post.getPostId();
+        return "postId: " + post.getPostId() + "인 게시글을 생성했습니다.";
     }
 
     public List<GetPostsListRes> getPostsByCategoryId(Integer userId, Integer categoryId) throws BaseException {
@@ -164,7 +164,7 @@ public class PostService {
             List<Integer> ids = postPhotoService.findAllId(post.getPostId());
             postPhotoService.deleteAllPostPhotoByPost(ids);
             //post 삭제
-            postRepository.deleteAllByPostId(post.getPostId());
+            postRepository.deleteByPostId(post.getPostId());
             return "postId: " + post.getPostId() + "인 게시글을 삭제했습니다.";
         } else {
             return "자신의 게시글만 삭제할 수 있습니다.";

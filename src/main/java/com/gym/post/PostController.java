@@ -40,7 +40,7 @@ public class PostController {
      * [POST] /post
      */
     @PostMapping("/post")
-    public BaseResponse<Integer> createPost(@RequestBody PostPostReq postPostReq) throws BaseException {
+    public BaseResponse<String> createPost(@RequestBody PostPostReq postPostReq) throws BaseException {
         try {
             Integer userId = jwtService.getUserId();
             return new BaseResponse<>(postService.createPost(userId, postPostReq));

@@ -19,5 +19,5 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
 
     @Modifying
     @Query("delete from Post p where p.postId = :postId")
-    Integer deleteAllByPostId(Integer postId);
+    Integer deleteByPostId(Integer postId);
 }
