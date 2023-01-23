@@ -1,6 +1,6 @@
 package com.gym.user;
 
-import com.gym.avatar.my_avatar.MyAvatar;
+import com.gym.avatar.avatar.MyAvatar;
 import com.gym.category.Category;
 import com.gym.post.Post;
 import com.gym.post.comment.Comment;
@@ -47,6 +47,10 @@ public class User {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "my_avatar_id")
+    private MyAvatar myAvatar;
+
     @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<Record> recordList = new ArrayList<>();
 
@@ -55,9 +59,6 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<Comment> commentList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL}, orphanRemoval = true)
-    private List<MyAvatar> myAvatarList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<Tag> tagList = new ArrayList<>();
