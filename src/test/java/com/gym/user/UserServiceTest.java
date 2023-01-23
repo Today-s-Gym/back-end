@@ -121,4 +121,11 @@ class UserServiceTest {
         System.out.println("Locked() = " + mypage.isLocked());
     }
 
+    @Test
+    @DisplayName("현재 내 아바타 이미지 조회")
+    @Transactional
+    void getNowAvatar() throws BaseException {
+        String nowAvatar = userService.getNowAvatarImg(1);
+        Assertions.assertThat(nowAvatar).isEqualTo("AVATAR2_IMG1");
+    }
 }
