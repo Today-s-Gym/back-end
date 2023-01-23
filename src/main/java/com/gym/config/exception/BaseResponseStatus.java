@@ -55,6 +55,9 @@ public enum BaseResponseStatus {
     // category
     INVALID_CATEGORY(false,2500,"유호하지 않은 카테고리입니다."),
 
+    //Tag
+    EMPTY_TAG(false, 2602, "최근 사용한 태그가 존재하지 않습니다."),
+
     /**
      * 3000 : Response 오류
      */

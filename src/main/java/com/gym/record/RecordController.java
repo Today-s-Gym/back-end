@@ -81,7 +81,7 @@ public class RecordController {
      * 최근 기록 조회하기
      */
     @GetMapping("/record/recent")
-    public BaseResponse<List<RecordGetRecentRes>> findRecentRecord(@Param("page") int page){
+    public BaseResponse<Page<RecordGetRecentRes>> findRecentRecord(@Param("page") int page){
         try {
             return new BaseResponse<>(recordService.findAllRecent(page));
         }catch (BaseException exception){

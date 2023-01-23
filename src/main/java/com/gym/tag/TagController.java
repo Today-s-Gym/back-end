@@ -2,6 +2,7 @@ package com.gym.tag;
 
 import com.gym.config.exception.BaseException;
 import com.gym.config.exception.BaseResponse;
+import com.gym.config.exception.BaseResponseStatus;
 import com.gym.tag.dto.TagGetRecentRes;
 import com.gym.tag.dto.TagGetRes;
 import lombok.RequiredArgsConstructor;
@@ -22,10 +23,11 @@ public class TagController {
      * 최근 사용한 태그 조회
      */
     @GetMapping("tag/recent")
-    public BaseResponse<List<TagGetRecentRes>> findRecentTag(@Param("page") int page) throws BaseException {
-        return new BaseResponse<>(tagService.findRecentTag(page));
+    public BaseResponse<Page<TagGetRecentRes>> findRecentTag(@Param("page") int page) throws BaseException {
+        try {
+            return new BaseResponse<>(tagService.findRecentTag(page));
+        }catch (BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
     }
-
-
-
 }
