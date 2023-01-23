@@ -33,4 +33,8 @@ public enum AvatarStep {
     public int getRemainUpgradeCount(int recordCount) {
         return this.maxRecordCount-recordCount;
     }
+
+    public static String findAvatarImg(AvatarStep avatarStep) {
+        return avatarStep.imgUrl;
+    }
 }
