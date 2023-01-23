@@ -1,6 +1,7 @@
 package com.gym.tag;
 
 import com.gym.config.exception.BaseException;
+import com.gym.config.exception.BaseResponseStatus;
 import com.gym.record.dto.RecordGetReq;
 import com.gym.tag.dto.TagGetRecentRes;
 import com.gym.tag.dto.TagGetRes;
@@ -37,11 +38,14 @@ public class TagService {
     /**
      * 최근 사용한 태그 조회(Paging 처리 10개 탐색)
      */
-    public List<TagGetRecentRes> findRecentTag(int page) throws BaseException {
+    public Page<TagGetRecentRes> findRecentTag(int page) throws BaseException {
         User user = utilService.findByUserIdWithValidation(JwtService.getUserId());
         PageRequest pageRequest = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "id"));
         Page<String> pages = tagRepository.findByRecord(user.getUserId(), pageRequest);
-        List<TagGetRecentRes> tagList = pages.stream().map(s -> new TagGetRecentRes(s)).collect(Collectors.toList());
+        if(pages.getTotalElements() == 0){
+            throw new BaseException(BaseResponseStatus.EMPTY_TAG);
+        }
+        Page<TagGetRecentRes> tagList = pages.map(s -> new TagGetRecentRes(s));
         return tagList;
     }
 

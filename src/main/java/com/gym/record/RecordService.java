@@ -147,16 +147,14 @@ public class RecordService {
     /**
      * 최근 기록 조회
      */
-    public  List<RecordGetRecentRes> findAllRecent(int page) throws BaseException {
+    public  Page<RecordGetRecentRes> findAllRecent(int page) throws BaseException {
         User user = utilService.findByUserIdWithValidation(JwtService.getUserId());
         PageRequest pageRequest = PageRequest.of(page, 6, Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<Record> records = recordRepository.findAllByUserId(user.getUserId(), pageRequest);
         if (records.getTotalElements() == 0) {
             throw new BaseException(EMPTY_RECORD);
         }
-        List<RecordGetRecentRes> recordGetRecentResStream = records.stream()
-                .map(r -> new RecordGetRecentRes(r.getContent(), r.getCreatedAt(), r.getPhotoList()))
-                .collect(Collectors.toList());
-        return recordGetRecentResStream;
+        Page<RecordGetRecentRes> results = records.map(r -> new RecordGetRecentRes(r.getContent(), r.getCreatedAt(), r.getPhotoList()));
+        return results;
     }
 }
