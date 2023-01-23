@@ -29,4 +29,8 @@ public enum AvatarStep {
         this.minRecordCount = minRecordCount;
         this.maxRecordCount = maxRecordCount;
     }
+
+    public int getRemainUpgradeCount(int recordCount) {
+        return this.maxRecordCount-recordCount;
+    }
 }

@@ -7,12 +7,18 @@ import com.gym.avatar.myAvatarCollection.MyAvatarCollection;
 import com.gym.avatar.myAvatarCollection.MyAvatarCollectionRepository;
 import com.gym.config.exception.BaseException;
 import com.gym.config.exception.BaseResponse;
+import com.gym.record.RecordRepository;
+import com.gym.user.dto.GetMyPageRes;
+import com.gym.user.dto.UserRecordCount;
 import com.gym.utils.UtilService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -36,6 +42,7 @@ public class UserService {
     @Autowired
     private UtilService utilService;
     private final MyAvatarCollectionRepository myAvatarCollectionRepository;
+    private final RecordRepository recordRepository;
 
     /**
      * 사용자 공개 계정 전환
@@ -107,6 +114,7 @@ public class UserService {
         user.editIntroduce(newIntroduce);
     }
 
+    @Transactional(readOnly = true)
     public List<MyAvatarDto> getMyCollection(User user) {
         List<MyAvatarCollection> myAvatarCollections = myAvatarCollectionRepository.findByUser(user);
         Map<Avatar, MyAvatar> collect = myAvatarCollections.stream()
@@ -118,4 +126,18 @@ public class UserService {
         return collect.values().stream().map(MyAvatarDto::new).collect(toList());
     }
 
+    @Transactional
+    public GetMyPageRes getMyPage(User user) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+        String thisMonth = LocalDate.now().format(formatter);
+
+        int thisMonthRecordCount = recordRepository.countByUserIdMonth(user.getUserId(), thisMonth);
+        int totalRecordCount = recordRepository.countByUserId(user.getUserId());
+        GetMyPageRes myPageInfo = userRepository.findMyPageInfo(user.getUserId());
+        UserRecordCount userRecordCount = new UserRecordCount(thisMonthRecordCount,
+                user.getMyAvatar().getRemainUpgradeCount(totalRecordCount),
+                totalRecordCount);
+        myPageInfo.setUserRecordCount(userRecordCount);
+        return myPageInfo;
+    }
 }

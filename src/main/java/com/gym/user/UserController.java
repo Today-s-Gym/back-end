@@ -5,6 +5,7 @@ import com.gym.config.exception.BaseException;
 import com.gym.config.exception.BaseResponse;
 import com.gym.user.dto.AccountPrivacyReq;
 import com.gym.user.dto.EditMyPageReq;
+import com.gym.user.dto.GetMyPageRes;
 import com.gym.user.dto.UserEmailRes;
 import com.gym.utils.JwtService;
 import com.gym.utils.UtilService;
@@ -59,6 +60,19 @@ public class UserController {
         try {
             User user = utilService.findByUserIdWithValidation(JwtService.getUserId());
             return new BaseResponse<>(userService.getMyCollection(user));
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    /**
+     * 마이 페이지 조회
+     */
+    @GetMapping("/user/mypage")
+    public BaseResponse<GetMyPageRes> getMyPage() {
+        try {
+            User user = utilService.findByUserIdWithValidation(JwtService.getUserId());
+            return new BaseResponse<>(userService.getMyPage(user));
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
