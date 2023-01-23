@@ -1,6 +1,7 @@
 package com.gym.user;
 
 import com.gym.avatar.avatar.Avatar;
+import com.gym.avatar.avatar.AvatarStep;
 import com.gym.avatar.avatar.MyAvatar;
 import com.gym.avatar.avatar.dto.MyAvatarDto;
 import com.gym.avatar.myAvatarCollection.MyAvatarCollection;
@@ -139,5 +140,14 @@ public class UserService {
                 totalRecordCount);
         myPageInfo.setUserRecordCount(userRecordCount);
         return myPageInfo;
+    }
+
+    /**
+     * 현재 내 아바타 이미지 조회
+     */
+    @Transactional(readOnly = true)
+    public String getNowAvatarImg(Integer userId) throws BaseException {
+        User user = utilService.findByUserIdWithValidation(userId);
+        return AvatarStep.findAvatarImg(user.getMyAvatar().getAvatarStep());
     }
 }
