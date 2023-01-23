@@ -1,5 +1,6 @@
 package com.gym.user;
 
+import com.gym.avatar.avatar.dto.MyAvatarDto;
 import com.gym.config.exception.BaseException;
 import com.gym.user.dto.AccountPrivacyReq;
 import com.gym.utils.JwtService;
@@ -13,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 
 @SpringBootTest
 class UserServiceTest {
@@ -84,5 +86,21 @@ class UserServiceTest {
         Assertions.assertThatThrownBy(() -> userService.editMyPage(userId, newNickname, newIntroduce))
                 .isInstanceOf(BaseException.class);
 
+    }
+
+    @Test
+    @DisplayName("내 아바타 조회 테스트")
+    @Transactional
+    void getAvatarCollection() {
+        User user = userRepository.getByUserId(1).get();
+
+        List<MyAvatarDto> myCollection = userService.getMyCollection(user);
+        for (MyAvatarDto myAvatarDto : myCollection) {
+            System.out.println("====");
+            System.out.println("myAvatarId: " + myAvatarDto.getMyAvatarId());
+            System.out.println("avatarName: " + myAvatarDto.getAvatarName());
+            System.out.println("avatarLevel: " + myAvatarDto.getLevel());
+            System.out.println("avatarImg: " + myAvatarDto.getImgUrl());
+        }
     }
 }
