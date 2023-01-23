@@ -51,6 +51,21 @@ public class PostController {
     }
 
     /**
+     * 게시글 수정
+     * [PATCH] /post
+     */
+    @PatchMapping("/post")
+    public BaseResponse<String> updatePost(@Param("postId") Integer postId, @RequestBody PostPostReq postPostReq) throws BaseException {
+        try {
+            Integer userId = jwtService.getUserId();
+            return new BaseResponse<>(postService.updatePost(userId, postId, postPostReq));
+        }
+        catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    /**
      * 게시글 삭제
      * [PATCH] /post/delete
      */
