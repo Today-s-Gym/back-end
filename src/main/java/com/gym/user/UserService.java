@@ -1,5 +1,10 @@
 package com.gym.user;
 
+import com.gym.avatar.avatar.Avatar;
+import com.gym.avatar.avatar.MyAvatar;
+import com.gym.avatar.avatar.dto.MyAvatarDto;
+import com.gym.avatar.myAvatarCollection.MyAvatarCollection;
+import com.gym.avatar.myAvatarCollection.MyAvatarCollectionRepository;
 import com.gym.config.exception.BaseException;
 import com.gym.config.exception.BaseResponse;
 import com.gym.utils.UtilService;
@@ -8,10 +13,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static com.gym.config.exception.BaseResponseStatus.DUPLICATED_NICKNAME;
 import static com.gym.config.exception.BaseResponseStatus.LENGTH_OVER_INTRODUCE;
+import static java.util.Comparator.comparingInt;
+import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +35,7 @@ public class UserService {
 
     @Autowired
     private UtilService utilService;
+    private final MyAvatarCollectionRepository myAvatarCollectionRepository;
 
     /**
      * 사용자 공개 계정 전환
@@ -95,5 +107,15 @@ public class UserService {
         user.editIntroduce(newIntroduce);
     }
 
+    public List<MyAvatarDto> getMyCollection(User user) {
+        List<MyAvatarCollection> myAvatarCollections = myAvatarCollectionRepository.findByUser(user);
+        Map<Avatar, MyAvatar> collect = myAvatarCollections.stream()
+                .map(MyAvatarCollection::getMyAvatar)
+                .collect(groupingBy(MyAvatar::getAvatar,
+                        collectingAndThen(
+                                maxBy(comparingInt(r -> r.getAvatarStep().getMaxRecordCount())),
+                                Optional::get)));
+        return collect.values().stream().map(MyAvatarDto::new).collect(toList());
+    }
 
 }
