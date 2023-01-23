@@ -43,4 +43,5 @@ public class Comment {
     public void addReportCount() {
         this.report++;
     }
+
 }
