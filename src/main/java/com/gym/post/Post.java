@@ -64,9 +64,17 @@ public class Post {
         this.report++;
     }
 
+    //==비즈니스 로직==//
+    public void updatePost(String title, String content){
+        this.title = title;
+        this.content = content;
+        this.updatedAt = LocalDateTime.now();
+    }
+
     //==연관관계 메서드==//
     public void addPhotoList(PostPhoto postPhoto){
         photoList.add(postPhoto);
         postPhoto.createPost(this);
     }
+
 }

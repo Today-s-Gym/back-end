@@ -1,18 +1,37 @@
 package com.gym.user;
 
+import com.gym.avatar.avatar.Avatar;
+import com.gym.avatar.avatar.AvatarStep;
+import com.gym.avatar.avatar.MyAvatar;
+import com.gym.avatar.avatar.MyAvatarRepository;
+import com.gym.avatar.avatar.dto.MyAvatarDto;
+import com.gym.avatar.myAvatarCollection.MyAvatarCollection;
+import com.gym.avatar.myAvatarCollection.MyAvatarCollectionRepository;
 
 import com.gym.config.exception.BaseException;
 import com.gym.config.exception.BaseResponse;
+import com.gym.record.RecordRepository;
+import com.gym.user.dto.GetMyPageRes;
+import com.gym.user.dto.UserRecordCount;
 import com.gym.utils.UtilService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static com.gym.config.exception.BaseResponseStatus.DUPLICATED_NICKNAME;
 import static com.gym.config.exception.BaseResponseStatus.LENGTH_OVER_INTRODUCE;
+import static java.util.Comparator.comparingInt;
+import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.toList;
 
 
 @Service
@@ -26,6 +45,9 @@ public class UserService {
 
     @Autowired
     private UtilService utilService;
+    private final MyAvatarCollectionRepository myAvatarCollectionRepository;
+    private final RecordRepository recordRepository;
+    private final MyAvatarRepository myAvatarRepository;
 
     /**
      * 사용자 공개 계정 전환
@@ -97,5 +119,61 @@ public class UserService {
         user.editIntroduce(newIntroduce);
     }
 
+    @Transactional(readOnly = true)
+    public List<MyAvatarDto> getMyCollection(User user) {
+        List<MyAvatarCollection> myAvatarCollections = myAvatarCollectionRepository.findByUser(user);
+        Map<Avatar, MyAvatar> collect = myAvatarCollections.stream()
+                .map(MyAvatarCollection::getMyAvatar)
+                .collect(groupingBy(MyAvatar::getAvatar,
+                        collectingAndThen(
+                                maxBy(comparingInt(r -> r.getAvatarStep().getMaxRecordCount())),
+                                Optional::get)));
+        return collect.values().stream().map(MyAvatarDto::new).collect(toList());
+    }
 
+    @Transactional
+    public GetMyPageRes getMyPage(User user) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+        String thisMonth = LocalDate.now().format(formatter);
+
+        int thisMonthRecordCount = recordRepository.countByUserIdMonth(user.getUserId(), thisMonth);
+        int totalRecordCount = recordRepository.countByUserId(user.getUserId());
+        GetMyPageRes myPageInfo = userRepository.findMyPageInfo(user.getUserId());
+        UserRecordCount userRecordCount = new UserRecordCount(thisMonthRecordCount,
+                user.getMyAvatar().getRemainUpgradeCount(totalRecordCount),
+                totalRecordCount);
+        myPageInfo.setUserRecordCount(userRecordCount);
+        return myPageInfo;
+    }
+
+    /**
+     * 현재 내 아바타 이미지 조회
+     */
+    @Transactional(readOnly = true)
+    public String getNowAvatarImg(Integer userId) throws BaseException {
+        User user = utilService.findByUserIdWithValidation(userId);
+        return AvatarStep.findAvatarImg(user.getMyAvatar().getAvatarStep());
+    }
+    @Transactional
+    public boolean checkAndMyAvatarLevelUp(Integer userId) {
+        int recordCount = recordRepository.countByUserId(userId);
+        AvatarStep avatarStep = AvatarStep.findByRecordCount(recordCount);
+
+        User user = userRepository.findWithMyAvatarByUserId(userId);
+
+        if (!user.getMyAvatar().getAvatarStep().equals(avatarStep)) {
+            MyAvatar levelUpAvatar = myAvatarRepository.findByAvatarStep(avatarStep).get(0);
+            saveMyAvatarInCollection(user, levelUpAvatar);
+            user.changeAvatarStep(levelUpAvatar);
+            return true;
+        }
+        return false;
+    }
+
+    private void saveMyAvatarInCollection(User user, MyAvatar myAvatar) {
+        MyAvatarCollection myAvatarCollection = new MyAvatarCollection();
+        myAvatarCollection.setUser(user);
+        myAvatarCollection.setMyAvatar(myAvatar);
+        myAvatarCollectionRepository.save(myAvatarCollection);
+    }
 }

@@ -59,4 +59,11 @@ public class PostPhotoService {
     public List<String> findAllPhotosByPostId(int postId){
         return postPhotoRepository.findAllPhotos(postId);
     }
+
+    /**
+     * 게시글와 연관된 모든 id 조회
+     */
+    public List<Integer> findAllId(int postId){
+        return postPhotoRepository.findAllId(postId);
+    }
 }

@@ -1,7 +1,9 @@
 package com.gym.user;
 
+import com.gym.avatar.avatar.dto.MyAvatarDto;
 import com.gym.config.exception.BaseException;
 import com.gym.user.dto.AccountPrivacyReq;
+import com.gym.user.dto.GetMyPageRes;
 import com.gym.utils.JwtService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -13,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 
 @SpringBootTest
 class UserServiceTest {
@@ -84,5 +87,53 @@ class UserServiceTest {
         Assertions.assertThatThrownBy(() -> userService.editMyPage(userId, newNickname, newIntroduce))
                 .isInstanceOf(BaseException.class);
 
+    }
+
+    @Test
+    @DisplayName("내 아바타 조회 테스트")
+    @Transactional
+    void getAvatarCollection() {
+        User user = userRepository.getByUserId(1).get();
+
+        List<MyAvatarDto> myCollection = userService.getMyCollection(user);
+        for (MyAvatarDto myAvatarDto : myCollection) {
+            System.out.println("====");
+            System.out.println("myAvatarId: " + myAvatarDto.getMyAvatarId());
+            System.out.println("avatarName: " + myAvatarDto.getAvatarName());
+            System.out.println("avatarLevel: " + myAvatarDto.getLevel());
+            System.out.println("avatarImg: " + myAvatarDto.getImgUrl());
+        }
+    }
+
+    @Test
+    @DisplayName("마이 페이지 조회 테스트")
+    @Transactional
+    void testGetMyPage(){
+        User user = userRepository.getByUserId(1).get();
+        GetMyPageRes mypage = userService.getMyPage(user);
+        System.out.println("AvatarImgUrl() = " + mypage.getAvatarImgUrl());
+        System.out.println("Nickname() = " + mypage.getNickname());
+        System.out.println("CategoryName() = " + mypage.getCategoryName());
+        System.out.println("Introduce() = " + mypage.getIntroduce());
+        System.out.println("ThisMonthRecord() = " + mypage.getUserRecordCount().getThisMonthRecord());
+        System.out.println("RemainUpgradeCount() = " + mypage.getUserRecordCount().getRemainUpgradeCount());
+        System.out.println("CumulativeCount() = " + mypage.getUserRecordCount().getCumulativeCount());
+        System.out.println("Locked() = " + mypage.isLocked());
+    }
+
+    @Test
+    @DisplayName("현재 내 아바타 이미지 조회")
+    @Transactional
+    void getNowAvatar() throws BaseException {
+        String nowAvatar = userService.getNowAvatarImg(1);
+        Assertions.assertThat(nowAvatar).isEqualTo("AVATAR2_IMG1");
+    }
+
+    @Test
+    @DisplayName("레벨업 테스트")
+    @Transactional
+    void levelUpTest() {
+        boolean result = userService.checkAndMyAvatarLevelUp(1);
+        Assertions.assertThat(result).isFalse();
     }
 }
