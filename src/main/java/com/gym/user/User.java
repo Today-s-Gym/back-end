@@ -1,6 +1,7 @@
 package com.gym.user;
 
 import com.gym.avatar.avatar.MyAvatar;
+import com.gym.avatar.myAvatarCollection.MyAvatarCollection;
 import com.gym.category.Category;
 import com.gym.post.Post;
 import com.gym.post.comment.Comment;
@@ -78,5 +79,9 @@ public class User {
 
     public void changeNickname(String newNickName) {
         this.nickName = newNickName;
+    }
+
+    public void changeAvatarStep(MyAvatar myAvatar) {
+        this.myAvatar = myAvatar;
     }
 }

@@ -3,6 +3,7 @@ package com.gym.user;
 import com.gym.avatar.avatar.Avatar;
 import com.gym.avatar.avatar.AvatarStep;
 import com.gym.avatar.avatar.MyAvatar;
+import com.gym.avatar.avatar.MyAvatarRepository;
 import com.gym.avatar.avatar.dto.MyAvatarDto;
 import com.gym.avatar.myAvatarCollection.MyAvatarCollection;
 import com.gym.avatar.myAvatarCollection.MyAvatarCollectionRepository;
@@ -44,6 +45,7 @@ public class UserService {
     private UtilService utilService;
     private final MyAvatarCollectionRepository myAvatarCollectionRepository;
     private final RecordRepository recordRepository;
+    private final MyAvatarRepository myAvatarRepository;
 
     /**
      * 사용자 공개 계정 전환
@@ -149,5 +151,27 @@ public class UserService {
     public String getNowAvatarImg(Integer userId) throws BaseException {
         User user = utilService.findByUserIdWithValidation(userId);
         return AvatarStep.findAvatarImg(user.getMyAvatar().getAvatarStep());
+    }
+    @Transactional
+    public boolean checkAndMyAvatarLevelUp(Integer userId) {
+        int recordCount = recordRepository.countByUserId(userId);
+        AvatarStep avatarStep = AvatarStep.findByRecordCount(recordCount);
+
+        User user = userRepository.findWithMyAvatarByUserId(userId);
+
+        if (!user.getMyAvatar().getAvatarStep().equals(avatarStep)) {
+            MyAvatar levelUpAvatar = myAvatarRepository.findByAvatarStep(avatarStep).get(0);
+            saveMyAvatarInCollection(user, levelUpAvatar);
+            user.changeAvatarStep(levelUpAvatar);
+            return true;
+        }
+        return false;
+    }
+
+    private void saveMyAvatarInCollection(User user, MyAvatar myAvatar) {
+        MyAvatarCollection myAvatarCollection = new MyAvatarCollection();
+        myAvatarCollection.setUser(user);
+        myAvatarCollection.setMyAvatar(myAvatar);
+        myAvatarCollectionRepository.save(myAvatarCollection);
     }
 }

@@ -20,4 +20,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query("select new com.gym.user.dto.GetMyPageRes(u.myAvatar, u.nickName, c.name, u.introduce, u.locked)" +
             " from User u join u.category c where u.userId=:id")
     GetMyPageRes findMyPageInfo(@Param("id") Integer id);
+
+    @Query("select u from User u join fetch u.myAvatar where u.userId=:id")
+    User findWithMyAvatarByUserId(@Param("id") Integer id);
 }
