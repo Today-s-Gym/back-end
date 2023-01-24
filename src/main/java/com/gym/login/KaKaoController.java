@@ -1,23 +1,16 @@
 package com.gym.login;
 
 import com.google.gson.Gson;
-import com.gym.config.exception.BaseException;
 import com.gym.user.User;
 import com.gym.user.UserRepository;
 import com.gym.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.io.IOException;
-import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 
 @Controller
 public class KaKaoController {
@@ -89,7 +82,7 @@ public class KaKaoController {
         else{
             String loginToken = jwtController.createToken(String.valueOf(kakaoUser.getUserId()));
             System.out.println("loginToken = " + loginToken);
-            //kakaoUser.setDeviceToken(loginToken);
+            kakaoUser.setDeviceToken(loginToken);
             return loginToken;
 
         }

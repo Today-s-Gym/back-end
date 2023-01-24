@@ -1,10 +1,10 @@
 package com.gym.tag;
 
+
+import com.gym.record.dto.RecordGetReq;
 import com.gym.config.exception.BaseException;
 import com.gym.config.exception.BaseResponseStatus;
-import com.gym.record.dto.RecordGetReq;
 import com.gym.tag.dto.TagGetRecentRes;
-import com.gym.tag.dto.TagGetRes;
 import com.gym.user.User;
 import com.gym.utils.JwtService;
 import com.gym.utils.UtilService;
@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gym.record.Record;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

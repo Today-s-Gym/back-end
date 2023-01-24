@@ -1,10 +1,10 @@
 package com.gym.record;
 
 
-import com.fasterxml.jackson.databind.ser.Serializers;
+import com.gym.record.dto.RecordGetRecentRes;
 import com.gym.config.exception.BaseException;
 import com.gym.config.exception.BaseResponse;
-import com.gym.record.dto.RecordGetRecentRes;
+
 import com.gym.record.dto.RecordGetReq;
 import com.gym.record.dto.RecordGetRes;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 
 @RestController

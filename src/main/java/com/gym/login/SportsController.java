@@ -2,29 +2,50 @@ package com.gym.login;
 
 
 import com.gym.category.Category;
-import com.gym.category.CategoryService;
+import com.gym.config.exception.BaseException;
+import com.gym.config.exception.BaseResponse;
+import com.gym.config.exception.BaseResponseStatus;
 import com.gym.user.User;
 import com.gym.user.UserRepository;
-import lombok.RequiredArgsConstructor;
+import com.gym.utils.UtilService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-
 @RestController
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class SportsController {
 
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private UtilService utilService;
+
     @PutMapping("/login/sports")
-    public @ResponseBody void uploadSports(@RequestBody User user, int categoryid)
+    @ResponseBody
+    public BaseResponse<?> uploadSports(@RequestParam("userid") int userid, @RequestParam("categoryid") int categoryid)
+
     {
+        try{
+            User user = utilService.findByUserIdWithValidation(userid);
+            Category category = new Category();
+            category.setCategoryId(categoryid);
+            user.setCategory(category);
+            userRepository.save(user);
+            return new BaseResponse<>(BaseResponseStatus.SUCCESS);
+        } catch(BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+
+/*    public void uploadSports(int userid, int categoryid)
+    {
+        User user = userRepository.findById(userid).get();
         Category category = new Category();
         category.setCategoryId(categoryid);
         user.setCategory(category);
         userRepository.save(user);
 
-    }
+    }*/
 }

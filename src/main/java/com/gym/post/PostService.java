@@ -1,8 +1,8 @@
 package com.gym.post;
 
-import com.gym.category.Category;
 import com.gym.config.exception.BaseException;
 import com.gym.config.exception.BaseResponseStatus;
+import com.gym.category.Category;
 import com.gym.post.dto.GetPostsListRes;
 import com.gym.post.dto.PostPostReq;
 import com.gym.post.like.LikeService;

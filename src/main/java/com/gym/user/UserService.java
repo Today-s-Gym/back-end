@@ -7,6 +7,7 @@ import com.gym.avatar.avatar.MyAvatarRepository;
 import com.gym.avatar.avatar.dto.MyAvatarDto;
 import com.gym.avatar.myAvatarCollection.MyAvatarCollection;
 import com.gym.avatar.myAvatarCollection.MyAvatarCollectionRepository;
+
 import com.gym.config.exception.BaseException;
 import com.gym.config.exception.BaseResponse;
 import com.gym.record.RecordRepository;
@@ -31,6 +32,7 @@ import static com.gym.config.exception.BaseResponseStatus.LENGTH_OVER_INTRODUCE;
 import static java.util.Comparator.comparingInt;
 import static java.util.stream.Collectors.*;
 import static java.util.stream.Collectors.toList;
+
 
 @Service
 @RequiredArgsConstructor

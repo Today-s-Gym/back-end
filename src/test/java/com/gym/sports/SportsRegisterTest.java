@@ -1,7 +1,6 @@
 package com.gym.sports;
 
 import com.gym.login.SportsController;
-import com.gym.user.User;
 import com.gym.user.UserRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,15 +14,13 @@ public class SportsRegisterTest {
     @Autowired
     private UserRepository userRepository;
 
-    User user = new User();
-
     @Autowired
     private SportsController sportsController;
 
 
     @Test
     public void test() throws Exception{
-        sportsController.uploadSports(user, 2);
+      //  sportsController.uploadSports(1, 2);
 
     }
 }

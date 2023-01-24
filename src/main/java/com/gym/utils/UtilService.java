@@ -2,13 +2,13 @@ package com.gym.utils;
 
 import com.gym.category.Category;
 import com.gym.category.CategoryRepository;
-import com.gym.config.exception.BaseException;
-import com.gym.config.exception.BaseResponseStatus;
 import com.gym.post.Post;
 import com.gym.post.PostRepository;
 import com.gym.post.comment.Comment;
 import com.gym.post.comment.CommentRepository;
 import com.gym.record.RecordRepository;
+import com.gym.config.exception.BaseException;
+import com.gym.config.exception.BaseResponseStatus;
 import com.gym.user.User;
 import com.gym.user.UserRepository;
 import lombok.RequiredArgsConstructor;
