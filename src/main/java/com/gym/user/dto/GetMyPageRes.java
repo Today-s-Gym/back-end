@@ -30,11 +30,6 @@ public class GetMyPageRes {
         return new GetMyPageRes(true);
     }
 
-
-    public void setAvatarImgUrl(String avatarImgUrl) {
-        this.avatarImgUrl = avatarImgUrl;
-    }
-
     public void setUserRecordCount(UserRecordCount userRecordCount) {
         this.userRecordCount = userRecordCount;
     }
