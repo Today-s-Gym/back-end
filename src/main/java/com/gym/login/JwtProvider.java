@@ -1,9 +1,6 @@
 package com.gym.login;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Header;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -17,30 +14,33 @@ public class JwtProvider {
     private String secretKey;
 
     //==토큰 생성 메소드==//
-    public String createToken(String subject) {
+    public String createToken(String userid) {
         Date now = new Date();
         Date expiration = new Date(now.getTime() + Duration.ofDays(1).toMillis()); // 만료기간 1일
 
         return Jwts.builder()
-                .setHeaderParam(Header.TYPE, Header.JWT_TYPE) // (1)
-                .setIssuer("test") // 토큰발급자(iss)
+                //.setHeaderParam(Header.TYPE, Header.JWT_TYPE) // (1)
+                .setHeaderParam("type", "jwt")
+                .claim("userid", userid)
+                //.setIssuer("test") // 토큰발급자(iss)
                 .setIssuedAt(now) // 발급시간(iat)
                 .setExpiration(expiration) // 만료시간(exp)
-                .setSubject(subject) //  토큰 제목(subject)
+                //.setSubject(subject) //  토큰 제목(subject)
                 .signWith(SignatureAlgorithm.HS256, Base64.getEncoder().encodeToString(secretKey.getBytes())) // 알고리즘, 시크릿 키
                 .compact();
     }
 
-    public String createRefreshToken(String subject) {
+    public String createRefreshToken(String userid) {
         Date now = new Date();
         Date expiration = new Date(now.getTime() + Duration.ofDays(365).toMillis()); // 만료기간 365일
 
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE) // (1)
+                //.claim("userid", userid)
                 .setIssuer("test") // 토큰발급자(iss)
                 .setIssuedAt(now) // 발급시간(iat)
                 .setExpiration(expiration) // 만료시간(exp)
-                .setSubject(subject) //  토큰 제목(subject)
+                .setSubject(userid) //  토큰 제목(subject)
                 .signWith(SignatureAlgorithm.HS256, Base64.getEncoder().encodeToString(secretKey.getBytes())) // 알고리즘, 시크릿 키
                 .compact();
     }
