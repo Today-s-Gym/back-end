@@ -174,4 +174,12 @@ public class UserService {
         myAvatarCollection.setMyAvatar(myAvatar);
         myAvatarCollectionRepository.save(myAvatarCollection);
     }
+
+    @Transactional
+    public GetMyPageRes getUserProfile(User user) {
+        if (user.isLocked()) {
+            return GetMyPageRes.lockedMyPageInfo();
+        }
+        return getMyPage(user);
+    }
 }
