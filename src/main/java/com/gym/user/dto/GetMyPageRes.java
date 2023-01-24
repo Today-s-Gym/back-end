@@ -22,6 +22,14 @@ public class GetMyPageRes {
         this.locked = locked;
     }
 
+    private GetMyPageRes(boolean locked) {
+        this.locked = locked;
+    }
+
+    public static GetMyPageRes lockedMyPageInfo() {
+        return new GetMyPageRes(true);
+    }
+
 
     public void setAvatarImgUrl(String avatarImgUrl) {
         this.avatarImgUrl = avatarImgUrl;

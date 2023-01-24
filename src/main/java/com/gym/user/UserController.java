@@ -77,4 +77,17 @@ public class UserController {
             return new BaseResponse<>(exception.getStatus());
         }
     }
+
+    /**
+     * 상대방 프로필 조회
+     */
+    @GetMapping("/user/profile/{userId}")
+    public BaseResponse<GetMyPageRes> getUserProfile(@PathVariable("userId") Integer userId) {
+        try {
+            User user = utilService.findByUserIdWithValidation(userId);
+            return new BaseResponse<>(userService.getUserProfile(user));
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
 }
