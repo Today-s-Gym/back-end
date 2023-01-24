@@ -136,11 +136,21 @@ public class UserService {
 
         int thisMonthRecordCount = recordRepository.countByUserIdMonth(user.getUserId(), thisMonth);
         int totalRecordCount = recordRepository.countByUserId(user.getUserId());
-        GetMyPageRes myPageInfo = userRepository.findMyPageInfo(user.getUserId());
-        UserRecordCount userRecordCount = new UserRecordCount(thisMonthRecordCount,
+
+        GetMyPageRes myPageInfo = new GetMyPageRes(
+                user.getMyAvatar(),
+                user.getNickName(),
+                user.getCategory().getName(),
+                user.getIntroduce(),
+                user.isLocked());
+
+        UserRecordCount userRecordCount = new UserRecordCount(
+                thisMonthRecordCount,
                 user.getMyAvatar().getRemainUpgradeCount(totalRecordCount),
                 totalRecordCount);
+
         myPageInfo.setUserRecordCount(userRecordCount);
+
         return myPageInfo;
     }
 
