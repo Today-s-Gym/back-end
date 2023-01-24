@@ -1,7 +1,7 @@
 package com.gym.user;
 
-import com.gym.tag.config.exception.BaseException;
-import com.gym.tag.config.exception.BaseResponse;
+import com.gym.config.exception.BaseException;
+import com.gym.config.exception.BaseResponse;
 import com.gym.user.dto.AccountPrivacyReq;
 import com.gym.user.dto.EditMyPageReq;
 import com.gym.user.dto.UserEmailRes;

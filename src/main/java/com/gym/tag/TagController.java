@@ -1,17 +1,14 @@
 package com.gym.tag;
 
 
-import com.gym.tag.config.exception.BaseException;
-import com.gym.tag.config.exception.BaseResponse;
+import com.gym.config.exception.BaseException;
+import com.gym.config.exception.BaseResponse;
 import com.gym.tag.dto.TagGetRecentRes;
-import com.gym.tag.dto.TagGetRes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor

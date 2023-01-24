@@ -1,7 +1,7 @@
 package com.gym.post.like;
 
-import com.gym.tag.config.exception.BaseException;
-import com.gym.tag.config.exception.BaseResponse;
+import com.gym.config.exception.BaseException;
+import com.gym.config.exception.BaseResponse;
 import com.gym.post.like.dto.PushLikeRes;
 import com.gym.utils.JwtService;
 import lombok.RequiredArgsConstructor;

@@ -1,13 +1,11 @@
 package com.gym.post;
 
-import com.gym.tag.config.exception.BaseException;
-import com.gym.tag.config.exception.BaseResponse;
+import com.gym.config.exception.BaseException;
+import com.gym.config.exception.BaseResponse;
 import com.gym.post.dto.GetPostsListRes;
 import com.gym.post.dto.PostPostReq;
 import com.gym.utils.JwtService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

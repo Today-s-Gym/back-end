@@ -1,7 +1,7 @@
 package com.gym.post;
 
-import com.gym.tag.config.exception.BaseException;
-import com.gym.tag.config.exception.BaseResponseStatus;
+import com.gym.config.exception.BaseException;
+import com.gym.config.exception.BaseResponseStatus;
 import com.gym.category.Category;
 import com.gym.post.dto.GetPostsListRes;
 import com.gym.post.dto.PostPostReq;
@@ -16,7 +16,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 

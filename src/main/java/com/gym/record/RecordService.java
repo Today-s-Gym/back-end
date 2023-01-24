@@ -1,7 +1,7 @@
 package com.gym.record;
 
 import com.gym.record.dto.RecordGetRecentRes;
-import com.gym.tag.config.exception.BaseException;
+import com.gym.config.exception.BaseException;
 import com.gym.record.dto.RecordGetReq;
 import com.gym.record.dto.RecordGetRes;
 import com.gym.record.photo.RecordPhotoService;
@@ -20,10 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import static com.gym.tag.config.exception.BaseResponseStatus.EMPTY_RECORD;
-import static com.gym.tag.config.exception.BaseResponseStatus.RECORD_DATE_EXISTS;
+import static com.gym.config.exception.BaseResponseStatus.EMPTY_RECORD;
+import static com.gym.config.exception.BaseResponseStatus.RECORD_DATE_EXISTS;
 
 @Service
 @RequiredArgsConstructor

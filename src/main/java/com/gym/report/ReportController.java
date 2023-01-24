@@ -1,7 +1,7 @@
 package com.gym.report;
 
-import com.gym.tag.config.exception.BaseException;
-import com.gym.tag.config.exception.BaseResponse;
+import com.gym.config.exception.BaseException;
+import com.gym.config.exception.BaseResponse;
 import com.gym.post.Post;
 import com.gym.post.comment.Comment;
 import com.gym.report.dto.ReportReq;
