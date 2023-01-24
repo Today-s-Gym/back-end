@@ -2,6 +2,9 @@ package com.gym.avatar.avatar;
 
 import lombok.Getter;
 
+import java.util.Arrays;
+import java.util.Comparator;
+
 @Getter
 public enum AvatarStep {
     NONE(0, "none", -1, -1),
@@ -36,5 +39,18 @@ public enum AvatarStep {
 
     public static String findAvatarImg(AvatarStep avatarStep) {
         return avatarStep.imgUrl;
+    }
+
+    public static AvatarStep findByRecordCount(int recordCount) {
+        return Arrays.stream(values())
+                .filter(step -> step.minRecordCount<=recordCount && step.maxRecordCount>recordCount)
+                .findFirst()
+                .orElseGet(AvatarStep::getMaxAvatarStep);
+    }
+
+    private static AvatarStep getMaxAvatarStep() {
+        return Arrays.stream(values())
+                .max(Comparator.comparingInt(AvatarStep::getMaxRecordCount))
+                .orElse(NONE);
     }
 }
