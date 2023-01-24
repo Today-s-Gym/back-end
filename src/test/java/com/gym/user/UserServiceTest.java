@@ -128,4 +128,12 @@ class UserServiceTest {
         String nowAvatar = userService.getNowAvatarImg(1);
         Assertions.assertThat(nowAvatar).isEqualTo("AVATAR2_IMG1");
     }
+
+    @Test
+    @DisplayName("레벨업 테스트")
+    @Transactional
+    void levelUpTest() {
+        boolean result = userService.checkAndMyAvatarLevelUp(1);
+        Assertions.assertThat(result).isFalse();
+    }
 }
