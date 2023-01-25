@@ -9,6 +9,7 @@ import com.gym.user.dto.GetMyPageRes;
 import com.gym.user.dto.UserEmailRes;
 import com.gym.utils.JwtService;
 import com.gym.utils.UtilService;
+import io.jsonwebtoken.Jwt;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,7 +64,8 @@ public class UserController {
     @PatchMapping("/user/mypage")
     public BaseResponse<Integer> editMyPage(@RequestBody EditMyPageReq editMyPageReq) {
         try {
-            return userService.editMyPage(JwtService.getUserId(), editMyPageReq.getNewNickname(), editMyPageReq.getNewIntroduce());
+            Integer userId = JwtService.getUserId();
+            return userService.editMyPage(userId, editMyPageReq.getNewNickname(), editMyPageReq.getNewIntroduce());
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
