@@ -27,18 +27,16 @@ class UserServiceTest {
 
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    JwtService jwtService;
+
 
     @ParameterizedTest
     @ValueSource(booleans = {true, false})
     @Transactional
-    void changeAccountPrivacy(boolean locked) {
-        // given
-        AccountPrivacyReq accountPrivacyReq = new AccountPrivacyReq(locked);
+    void changeAccountPrivacy(boolean locked) throws BaseException {
+        Integer userId = userService.changeAccountPrivacy(jwtService.getUserIdx(), locked);
 
-        // when
-        Integer userId = userService.changeAccountPrivacy(JwtService.getUserId(), accountPrivacyReq.isLocked());
-
-        // then
         User findUser = userRepository.findById(userId).get();
         Assertions.assertThat(findUser.isLocked()).isEqualTo(locked);
     }
@@ -108,7 +106,7 @@ class UserServiceTest {
     @Test
     @DisplayName("마이 페이지 조회 테스트")
     @Transactional
-    void testGetMyPage(){
+    void testGetMyPage() {
         User user = userRepository.getByUserId(1).get();
         GetMyPageRes mypage = userService.getMyPage(user);
         System.out.println("AvatarImgUrl() = " + mypage.getAvatarImgUrl());
