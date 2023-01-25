@@ -1,19 +1,15 @@
 package com.gym.post.dto;
 
-import lombok.AllArgsConstructor;
+import com.gym.post.comment.dto.GetCommentsRes;
+import com.gym.record.dto.RecordGetRecentRes;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Data;
 
 import java.util.List;
 
+@Data
 @Builder
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor
-public class GetPostsListRes {
-    private String categoryName;
-
+public class GetPostRes {
     //게시글 관련
     private Integer postId;                 // 해당 게시글의 Id
     private String title;                   // 게시글 제목
@@ -25,7 +21,7 @@ public class GetPostsListRes {
     private Integer commentCounts;          // 댓글 개수
 
     //작성자(유저) 관련
-    private String writerAvatarImgUrl;    // 글 작성자의 아바타 이미지
+    //private String writerAvatarImgUrl;    // 글 작성자의 아바타 이미지
     private String writerNickName;          // 글 작성자의 닉네임
 
     //첨부된 기록 관련
@@ -33,4 +29,7 @@ public class GetPostsListRes {
     private String recordPhotoImgUrl;       // 첨부된 기록의 이미지 -> 없을 경우 대표 이미지
     private String recordCreatedAt;         // 기록 날짜 ex) 2022/12/25
     private String recordContent;           // 기록 내용 미리 보기
+
+    //댓글 관련
+    private List<GetCommentsRes> commentList;
 }

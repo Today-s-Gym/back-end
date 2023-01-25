@@ -10,6 +10,7 @@ import com.gym.post.photo.PostPhotoService;
 import com.gym.record.Record;
 import com.gym.user.User;
 import com.gym.user.UserRepository;
+import com.gym.user.UserService;
 import com.gym.utils.UtilService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -30,6 +31,7 @@ public class PostService {
     private final UserRepository userRepository;
     private final LikeService likeService;
     private final UtilService utilService;
+    private final UserService userService;
     private final PostPhotoService postPhotoService;
 
 
@@ -104,6 +106,7 @@ public class PostService {
                     .title(post.getTitle())
                     .content(post.getContent())
                     .createdAt(convertLocalDateTimeToTime(post.getCreatedAt()))
+                    .writerAvatarImgUrl(userService.getNowAvatarImg(post.getUser().getUserId()))
                     .writerNickName(post.getUser().getNickName())
                     .recordId(recordId)
                     .recordPhotoImgUrl(recordPhotoImgUrl)
