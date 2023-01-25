@@ -47,10 +47,14 @@ public class UserController {
      * 사용자 이메일 조회
      */
     @GetMapping("/user/email")
-    public BaseResponse<UserEmailRes> getUserEmail() throws BaseException {
-        String userEmail = userService.findUserEmailByUserId(JwtService.getUserId());
-        UserEmailRes userEmailRes = new UserEmailRes(userEmail);
-        return new BaseResponse<>(userEmailRes);
+    public BaseResponse<UserEmailRes> getUserEmail() {
+        try {
+            String userEmail = userService.findUserEmailByUserId(jwtService.getUserIdx());
+            UserEmailRes userEmailRes = new UserEmailRes(userEmail);
+            return new BaseResponse<>(userEmailRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
     }
 
     /**
