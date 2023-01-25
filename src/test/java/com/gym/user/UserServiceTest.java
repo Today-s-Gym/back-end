@@ -45,13 +45,13 @@ class UserServiceTest {
     @DisplayName("사용자 이메일 조회 테스트")
     void findUserEmailByUserId() throws BaseException {
         // given
-        Integer userId = 2;
+        Integer userId = 1;
 
         // when
         String email = userService.findUserEmailByUserId(userId);
 
         // then
-        Assertions.assertThat(email).isEqualTo("user2@gmail.com");
+        Assertions.assertThat(email).isEqualTo("user1@gmail.com");
     }
 
     @Test
