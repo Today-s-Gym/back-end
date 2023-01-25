@@ -66,8 +66,6 @@ public class UserService {
         return user.getEmail();
     }
 
-
-
     @Transactional
     public void insertUser(User user)
     {
