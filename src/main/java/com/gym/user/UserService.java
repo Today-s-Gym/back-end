@@ -12,6 +12,7 @@ import com.gym.config.exception.BaseResponse;
 import com.gym.record.RecordRepository;
 import com.gym.user.dto.GetMyPageRes;
 import com.gym.user.dto.UserRecordCount;
+import com.gym.utils.JwtService;
 import com.gym.utils.UtilService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,7 +117,8 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public List<MyAvatarDto> getMyCollection(User user) {
+    public List<MyAvatarDto> getMyCollection(Integer userId) throws BaseException {
+        User user = utilService.findByUserIdWithValidation(userId);
         List<MyAvatarCollection> myAvatarCollections = myAvatarCollectionRepository.findByUser(user);
         Map<Avatar, MyAvatar> collect = myAvatarCollections.stream()
                 .map(MyAvatarCollection::getMyAvatar)
@@ -128,7 +130,9 @@ public class UserService {
     }
 
     @Transactional
-    public GetMyPageRes getMyPage(User user) {
+    public GetMyPageRes getMyPage(Integer userId) throws BaseException {
+        User user = utilService.findByUserIdWithValidation(userId);
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
         String thisMonth = LocalDate.now().format(formatter);
 
@@ -184,10 +188,11 @@ public class UserService {
     }
 
     @Transactional
-    public GetMyPageRes getUserProfile(User user) {
+    public GetMyPageRes getUserProfile(Integer userId) throws BaseException {
+        User user = utilService.findByUserIdWithValidation(userId);
         if (user.isLocked()) {
             return GetMyPageRes.lockedMyPageInfo();
         }
-        return getMyPage(user);
+        return getMyPage(userId);
     }
 }

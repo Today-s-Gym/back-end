@@ -9,6 +9,7 @@ import com.gym.user.dto.GetMyPageRes;
 import com.gym.user.dto.UserEmailRes;
 import com.gym.utils.JwtService;
 import com.gym.utils.UtilService;
+import io.jsonwebtoken.Jwt;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,6 @@ import static com.gym.config.exception.BaseResponseStatus.REQUEST_ERROR;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-    private final UtilService utilService;
     private final JwtService jwtService;
 
     /**
@@ -63,7 +63,8 @@ public class UserController {
     @PatchMapping("/user/mypage")
     public BaseResponse<Integer> editMyPage(@RequestBody EditMyPageReq editMyPageReq) {
         try {
-            return userService.editMyPage(JwtService.getUserId(), editMyPageReq.getNewNickname(), editMyPageReq.getNewIntroduce());
+            Integer userId = JwtService.getUserId();
+            return userService.editMyPage(userId, editMyPageReq.getNewNickname(), editMyPageReq.getNewIntroduce());
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
@@ -75,8 +76,8 @@ public class UserController {
     @GetMapping("/user/avatar-collection")
     public BaseResponse<List<MyAvatarDto>> getMyCollection(){
         try {
-            User user = utilService.findByUserIdWithValidation(JwtService.getUserId());
-            return new BaseResponse<>(userService.getMyCollection(user));
+            Integer userId = JwtService.getUserId();
+            return new BaseResponse<>(userService.getMyCollection(userId));
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
@@ -88,8 +89,8 @@ public class UserController {
     @GetMapping("/user/mypage")
     public BaseResponse<GetMyPageRes> getMyPage() {
         try {
-            User user = utilService.findByUserIdWithValidation(JwtService.getUserId());
-            return new BaseResponse<>(userService.getMyPage(user));
+            Integer userId = JwtService.getUserId();
+            return new BaseResponse<>(userService.getMyPage(userId));
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
@@ -101,8 +102,7 @@ public class UserController {
     @GetMapping("/user/profile/{userId}")
     public BaseResponse<GetMyPageRes> getUserProfile(@PathVariable("userId") Integer userId) {
         try {
-            User user = utilService.findByUserIdWithValidation(userId);
-            return new BaseResponse<>(userService.getUserProfile(user));
+            return new BaseResponse<>(userService.getUserProfile(userId));
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
