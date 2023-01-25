@@ -3,6 +3,7 @@ package com.gym.post;
 import com.gym.category.Category;
 import com.gym.config.exception.BaseException;
 import com.gym.config.exception.BaseResponseStatus;
+import com.gym.post.dto.GetMyPostsListRes;
 import com.gym.post.dto.GetPostRes;
 import com.gym.post.dto.GetPostsListRes;
 import com.gym.post.dto.PostPostReq;
@@ -58,6 +59,8 @@ public class PostService {
                 .content(postPostReq.getContent())
                 .record(record)
                 .user(user)
+                .photoList(new ArrayList<>())
+                .commentList(new ArrayList<>())
                 .build();
 
         save(post);
@@ -176,6 +179,28 @@ public class PostService {
         return postRes;
     }
 
+    public List<GetMyPostsListRes> getMyPosts(Integer userId) throws BaseException {
+        User user = utilService.findByUserIdWithValidation(userId);
+        List<Post> posts = user.getPostList();
+
+        List<GetMyPostsListRes> myPosts = new ArrayList<>();
+        for(int i=0; i<posts.size(); i++) {
+            Post post = posts.get(i);
+
+            GetMyPostsListRes res = GetMyPostsListRes.builder()
+                    .categoryName(post.getCategory().getName())
+                    .title(post.getTitle())
+                    .content(post.getContent())
+                    .createdAt(convertLocalDateTimeToLocalDate(post.getCreatedAt()))
+                    .liked(likeService.checkLike(userId, post.getPostId()))
+                    .commentCounts(post.getCommentList().size())
+                    .postPhotoImgUrl(postPhotoService.findFirstByPostId(post.getPostId()))
+                    .build();
+
+            myPosts.add(res);
+        }
+        return myPosts;
+    }
     /**
      * 게시글 업데이트
      */

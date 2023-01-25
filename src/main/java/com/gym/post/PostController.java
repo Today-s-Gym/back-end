@@ -2,6 +2,7 @@ package com.gym.post;
 
 import com.gym.config.exception.BaseException;
 import com.gym.config.exception.BaseResponse;
+import com.gym.post.dto.GetMyPostsListRes;
 import com.gym.post.dto.GetPostRes;
 import com.gym.post.dto.GetPostsListRes;
 import com.gym.post.dto.PostPostReq;
@@ -45,6 +46,20 @@ public class PostController {
         try {
             Integer userId = jwtService.getUserIdx();
             return new BaseResponse<>(postService.getPostByPostId(userId, postId));
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    /**
+     * 내 게시글 리스트 조회
+     * [GET] /post/my
+     */
+    @GetMapping("/post/my")
+    public BaseResponse<List<GetMyPostsListRes>> getMyPosts() throws BaseException {
+        try {
+            Integer userId = jwtService.getUserIdx();
+            return new BaseResponse<>(postService.getMyPosts(userId));
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
