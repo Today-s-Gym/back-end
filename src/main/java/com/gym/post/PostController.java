@@ -2,6 +2,7 @@ package com.gym.post;
 
 import com.gym.config.exception.BaseException;
 import com.gym.config.exception.BaseResponse;
+import com.gym.post.dto.GetPostRes;
 import com.gym.post.dto.GetPostsListRes;
 import com.gym.post.dto.PostPostReq;
 import com.gym.utils.JwtService;
@@ -40,7 +41,7 @@ public class PostController {
      * [GET] /post/{postId}
      */
     @GetMapping("/post/{postId}")
-    public BaseResponse<GetPostsListRes> getPostByPostId(@PathVariable("postId") Integer postId) throws BaseException {
+    public BaseResponse<GetPostRes> getPostByPostId(@PathVariable("postId") Integer postId) throws BaseException {
         try {
             Integer userId = jwtService.getUserIdx();
             return new BaseResponse<>(postService.getPostByPostId(userId, postId));
