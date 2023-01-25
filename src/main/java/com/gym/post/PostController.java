@@ -28,8 +28,22 @@ public class PostController {
     @GetMapping("/posts/{categoryId}")
     public BaseResponse<List<GetPostsListRes>> getPostsByCategoryId(@PathVariable("categoryId") Integer categoryId) throws BaseException {
         try {
-            Integer userId = jwtService.getUserId();
+            Integer userId = jwtService.getUserIdx();
             return new BaseResponse<>(postService.getPostsByCategoryId(userId, categoryId));
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    /**
+     * 게시글 상세 조회
+     * [GET] /post/{postId}
+     */
+    @GetMapping("/post/{postId}")
+    public BaseResponse<GetPostsListRes> getPostByPostId(@PathVariable("postId") Integer postId) throws BaseException {
+        try {
+            Integer userId = jwtService.getUserIdx();
+            return new BaseResponse<>(postService.getPostByPostId(userId, postId));
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
@@ -42,7 +56,7 @@ public class PostController {
     @PostMapping("/post")
     public BaseResponse<String> createPost(@RequestBody PostPostReq postPostReq) throws BaseException {
         try {
-            Integer userId = jwtService.getUserId();
+            Integer userId = jwtService.getUserIdx();
             return new BaseResponse<>(postService.createPost(userId, postPostReq));
         }
         catch (BaseException exception) {
@@ -57,7 +71,7 @@ public class PostController {
     @PatchMapping("/post")
     public BaseResponse<String> updatePost(@Param("postId") Integer postId, @RequestBody PostPostReq postPostReq) throws BaseException {
         try {
-            Integer userId = jwtService.getUserId();
+            Integer userId = jwtService.getUserIdx();
             return new BaseResponse<>(postService.updatePost(userId, postId, postPostReq));
         }
         catch (BaseException exception) {
@@ -72,7 +86,7 @@ public class PostController {
     @PatchMapping("/post/delete")
     public BaseResponse<String> deletePost(@Param("postId") Integer postId) throws BaseException {
         try {
-            Integer userId = jwtService.getUserId();
+            Integer userId = jwtService.getUserIdx();
             return new BaseResponse<>(postService.deletePost(userId, postId));
         }
         catch (BaseException exception) {

@@ -25,7 +25,11 @@ public class LikeController {
      */
     @PostMapping("/post/like/{postId}")
     public BaseResponse<PushLikeRes> pushLike(@PathVariable("postId") Integer postId) throws BaseException {
-        Integer userId = jwtService.getUserId();
-        return new BaseResponse<>(likeService.pushLike(userId, postId));
+        try {
+            Integer userId = jwtService.getUserIdx();
+            return new BaseResponse<>(likeService.pushLike(userId, postId));
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
     }
 }
