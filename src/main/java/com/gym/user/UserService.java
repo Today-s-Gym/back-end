@@ -51,8 +51,8 @@ public class UserService {
      * 사용자 공개 계정 전환
      */
     @Transactional
-    public Integer changeAccountPrivacy(Integer userId, boolean locked) {
-        User user = userRepository.findById(userId).get();
+    public Integer changeAccountPrivacy(Integer userId, boolean locked) throws BaseException {
+        User user = utilService.findByUserIdWithValidation(userId);
         user.changeAccountPrivacy(locked);
         return user.getUserId();
     }

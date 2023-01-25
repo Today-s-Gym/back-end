@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class AccountPrivacyReq {
-    private boolean locked;
+    private String locked;
 }

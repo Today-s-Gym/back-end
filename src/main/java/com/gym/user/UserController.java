@@ -10,24 +10,37 @@ import com.gym.user.dto.UserEmailRes;
 import com.gym.utils.JwtService;
 import com.gym.utils.UtilService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
+
+import static com.gym.config.exception.BaseResponseStatus.REQUEST_ERROR;
 
 @RestController
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
     private final UtilService utilService;
+    private final JwtService jwtService;
 
     /**
      * 사용자 공개 계정 전환
      */
     @PutMapping("/user/locked")
     public BaseResponse<Integer> changeAccountPrivacy(@RequestBody AccountPrivacyReq accountPrivacyReq) {
-        Integer userId = JwtService.getUserId();
-        return new BaseResponse<>(userService.changeAccountPrivacy(userId, accountPrivacyReq.isLocked()));
+        try {
+            Integer userId = jwtService.getUserIdx();
+
+            Set<String> values = Set.of("true", "True", "TRUE", "false", "False", "FALSE");
+            if (!values.contains(accountPrivacyReq.getLocked())) {
+                return new BaseResponse<>(REQUEST_ERROR);
+            }
+            return new BaseResponse<>(userService.changeAccountPrivacy(userId,
+                    Boolean.parseBoolean(accountPrivacyReq.getLocked())));
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
     }
 
     /**
