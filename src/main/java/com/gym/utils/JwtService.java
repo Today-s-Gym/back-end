@@ -36,26 +36,24 @@ public class JwtService {
     JWT에서 userId 추출
      */
     public int getUserIdx() throws BaseException {
-        // TODO jwt 구현 후 아래 주석 해제
-        return 1;
 
-//        //1. JWT 추출
-//        String accessToken = getJwt();
-//        if(accessToken == null || accessToken.length() == 0){
-//            throw new BaseException(EMPTY_JWT);
-//        }
-//
-//        // 2. JWT parsing
-//        Jws<Claims> claims;
-//        try{
-//            claims = Jwts.parser()
-//                    .setSigningKey(Secret.JWT_SECRET_KEY)
-//                    .parseClaimsJws(accessToken);
-//        } catch (Exception ignored) {
-//            throw new BaseException(INVALID_JWT);
-//        }
-//
-//        // 3. userId 추출
-//        return claims.getBody().get("userId",Integer.class);
+        //1. JWT 추출
+        String accessToken = getJwt();
+        if(accessToken == null || accessToken.length() == 0){
+            throw new BaseException(EMPTY_JWT);
+        }
+
+        // 2. JWT parsing
+        Jws<Claims> claims;
+        try{
+            claims = Jwts.parser()
+                    .setSigningKey(Secret.JWT_SECRET_KEY)
+                    .parseClaimsJws(accessToken);
+        } catch (Exception ignored) {
+            throw new BaseException(INVALID_JWT);
+        }
+
+        // 3. userId 추출
+        return claims.getBody().get("userId",Integer.class);
     }
 }
