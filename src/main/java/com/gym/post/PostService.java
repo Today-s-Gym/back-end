@@ -189,6 +189,7 @@ public class PostService {
 
             GetMyPostsListRes res = GetMyPostsListRes.builder()
                     .categoryName(post.getCategory().getName())
+                    .postId(post.getPostId())
                     .title(post.getTitle())
                     .content(post.getContent())
                     .createdAt(convertLocalDateTimeToLocalDate(post.getCreatedAt()))

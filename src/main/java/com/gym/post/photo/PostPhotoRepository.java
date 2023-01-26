@@ -12,10 +12,8 @@ public interface PostPhotoRepository  extends JpaRepository<PostPhoto, Integer> 
 
 
     @Query("select p from PostPhoto p where p.post.postId = :postId")
-    List<PostPhoto> findAllByPost(@Param("postId") Integer postId);
+    Optional<List<PostPhoto>> findAllByPostId(@Param("postId") Integer postId);
 
-    @Query("select p from PostPhoto p where p.post.postId = :postId")
-    Optional<PostPhoto> findFirstBy(Integer postId);
 
     @Query("select pp.id from PostPhoto pp where pp.post.postId = :postId")
     List<Integer> findAllId(@Param("postId") Integer postId);
