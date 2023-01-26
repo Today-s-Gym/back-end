@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Map;
+import java.util.Optional;
 
 @Controller
 public class KaKaoController {
@@ -76,13 +77,15 @@ public class KaKaoController {
         if(findUser.getEmail() == null){
             String kakaorefreshToken = jwtController.createRefreshToken(String.valueOf(kakaoUser.getUserId()));
             //System.out.println("refreshToken = " + refreshToken);
-            kakaoUser.setRefreshToken(refreshToken);
+            kakaoUser.setRefreshToken(kakaorefreshToken);
             userService.insertUser(kakaoUser);
         }
         else{
             String loginToken = jwtController.createToken(String.valueOf(kakaoUser.getUserId()));
-            System.out.println("loginToken = " + loginToken);
-            kakaoUser.setDeviceToken(loginToken);
+            //System.out.println("loginToken = " + loginToken);
+            User user = userRepository.findByEmail(findUser.getEmail()).get();
+            user.setDeviceToken(loginToken);
+            //userRepository.save(user);
             return loginToken;
 
         }
