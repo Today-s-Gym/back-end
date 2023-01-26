@@ -3,6 +3,8 @@ package com.gym.post;
 import com.gym.category.Category;
 import com.gym.config.exception.BaseException;
 import com.gym.config.exception.BaseResponseStatus;
+import com.gym.post.dto.GetMyPostsListRes;
+import com.gym.post.dto.GetPostRes;
 import com.gym.post.dto.GetPostsListRes;
 import com.gym.post.dto.PostPostReq;
 import com.gym.post.like.LikeService;
@@ -10,6 +12,7 @@ import com.gym.post.photo.PostPhotoService;
 import com.gym.record.Record;
 import com.gym.user.User;
 import com.gym.user.UserRepository;
+import com.gym.user.UserService;
 import com.gym.utils.UtilService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -30,6 +33,7 @@ public class PostService {
     private final UserRepository userRepository;
     private final LikeService likeService;
     private final UtilService utilService;
+    private final UserService userService;
     private final PostPhotoService postPhotoService;
 
 
@@ -55,6 +59,8 @@ public class PostService {
                 .content(postPostReq.getContent())
                 .record(record)
                 .user(user)
+                .photoList(new ArrayList<>())
+                .commentList(new ArrayList<>())
                 .build();
 
         save(post);
@@ -79,9 +85,6 @@ public class PostService {
         for (int i=0; i<posts.size(); i++) {
             Post post = posts.get(i);
 
-            //삭제된 게시물이라면 넘김
-            if(post.isDeleted())    continue;
-
             //해당 게시물에 첨부된 기록이 없을 수도 있기에 default 값 지정
             Integer recordId = 0;
             String recordPhotoImgUrl = returnRecordBaseImage();
@@ -104,6 +107,7 @@ public class PostService {
                     .title(post.getTitle())
                     .content(post.getContent())
                     .createdAt(convertLocalDateTimeToTime(post.getCreatedAt()))
+                    .writerAvatarImgUrl(userService.getNowAvatarImg(post.getUser().getUserId()))
                     .writerNickName(post.getUser().getNickName())
                     .recordId(recordId)
                     .recordPhotoImgUrl(recordPhotoImgUrl)
@@ -120,6 +124,84 @@ public class PostService {
         return postsListRes;
     }
 
+    public GetPostRes getPostByPostId(Integer userId, Integer postId) throws BaseException {
+        Post post = utilService.findByPostIdWithValidation(postId);
+        //게시글을 보려는 유저
+        User viewer = utilService.findByUserIdWithValidation(userId);
+        //게시글을 작성한 유저
+        User writer = post.getUser();
+
+        //자신의 게시글인지 판단하는 boolean 값
+        boolean isMine = false;
+
+        //같으면 isMine 을 true 로
+        if(checkIsMine(viewer, writer))
+            isMine = true;
+
+        //해당 게시물에 첨부된 기록이 없을 수도 있기에 default 값 지정
+        Integer recordId = 0;
+        String recordPhotoImgUrl = returnRecordBaseImage();
+        String recordCreatedAt = "기록이 없습니다.";
+        String recordContent = "기록이 없습니다.";
+
+        //기록이 첨부되어 있다면
+        if(post.getRecord() != null) {
+            Record record = post.getRecord();
+            recordId = record.getRecordId();
+            recordPhotoImgUrl = returnRecordBaseImage();
+            recordCreatedAt = convertLocalDateTimeToLocalDate(record.getCreatedAt());
+            recordContent = record.getContent();
+        }
+
+        GetPostsListRes res = GetPostsListRes.builder()
+                .categoryName(post.getCategory().getName())
+                .postId(post.getPostId())
+                .postPhotoList(postPhotoService.findAllPhotosByPostId(post.getPostId()))
+                .title(post.getTitle())
+                .content(post.getContent())
+                .createdAt(convertLocalDateTimeToTime(post.getCreatedAt()))
+                .writerAvatarImgUrl(userService.getNowAvatarImg(post.getUser().getUserId()))
+                .writerNickName(post.getUser().getNickName())
+                .recordId(recordId)
+                .recordPhotoImgUrl(recordPhotoImgUrl)
+                .recordCreatedAt(recordCreatedAt)
+                .recordContent(recordContent)
+                .likeCounts(likeService.getLikeCounts(post.getPostId()))
+                .liked(likeService.checkLike(viewer.getUserId(), post.getPostId()))
+                .commentCounts(post.getCommentList().size())
+                .build();
+
+        GetPostRes postRes = GetPostRes.builder()
+                .getPostRes(res)
+                .isMine(isMine)
+                .build();
+
+        return postRes;
+    }
+
+    public List<GetMyPostsListRes> getMyPosts(Integer userId) throws BaseException {
+        User user = utilService.findByUserIdWithValidation(userId);
+        List<Post> posts = user.getPostList();
+
+        List<GetMyPostsListRes> myPosts = new ArrayList<>();
+        for(int i=0; i<posts.size(); i++) {
+            Post post = posts.get(i);
+
+            GetMyPostsListRes res = GetMyPostsListRes.builder()
+                    .categoryName(post.getCategory().getName())
+                    .postId(post.getPostId())
+                    .title(post.getTitle())
+                    .content(post.getContent())
+                    .createdAt(convertLocalDateTimeToLocalDate(post.getCreatedAt()))
+                    .liked(likeService.checkLike(userId, post.getPostId()))
+                    .commentCounts(post.getCommentList().size())
+                    .postPhotoImgUrl(postPhotoService.findFirstByPostId(post.getPostId()))
+                    .build();
+
+            myPosts.add(res);
+        }
+        return myPosts;
+    }
     /**
      * 게시글 업데이트
      */
@@ -133,7 +215,7 @@ public class PostService {
         User viewer = utilService.findByUserIdWithValidation(userId);
 
         //자신의 게시글이 맞다면
-        if(writer.getUserId() == viewer.getUserId()) {
+        if(checkIsMine(viewer, writer)) {
             //게시글 title, content 업데이트
             post.updatePost(postPostReq.getTitle(), postPostReq.getContent());
 
@@ -159,7 +241,8 @@ public class PostService {
         User writer = post.getUser();
         //수정하려는 유저
         User viewer = utilService.findByUserIdWithValidation(userId);
-        if(writer.getUserId() == viewer.getUserId()) {
+
+        if(checkIsMine(viewer, writer)) {
             //postPhoto 삭제
             List<Integer> ids = postPhotoService.findAllId(post.getPostId());
             postPhotoService.deleteAllPostPhotoByPost(ids);
@@ -169,6 +252,11 @@ public class PostService {
         } else {
             return "자신의 게시글만 삭제할 수 있습니다.";
         }
+    }
+
+    public boolean checkIsMine(User viewer, User writer) {
+        if(writer.getUserId() == viewer.getUserId()) return true;
+        else return false;
     }
 
 }
