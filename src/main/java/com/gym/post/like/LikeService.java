@@ -52,17 +52,25 @@ public class LikeService {
         Like like = likeRepository.getLikeByUserIdAndCardId(userId, postId).orElse(null);
 
         String result = "";
+        boolean status;
         // 새로 누르는 좋아요
         if (like == null) {
             createLike(userId, postId);
             result = "좋아요를 누름";
+            status = true;
         }
         // 좋아요 상태 변경
         else {
             like.changeStatus();
             result = "좋아요 상태 변경 성공";
+            //좋아요 누른 상태였으면 취소로 변경, 아니었으면 누른 걸로 변경
+            if(like.isStatus() == true) {
+                status = false;
+            } else {
+                status = true;
+            }
         }
-        return new PushLikeRes(userId, postId, result);
+        return new PushLikeRes(userId, postId, status, result);
     }
 
 }

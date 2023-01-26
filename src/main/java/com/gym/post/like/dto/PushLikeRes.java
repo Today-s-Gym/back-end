@@ -12,5 +12,6 @@ public class PushLikeRes {
 
     private Integer userId;
     private Integer postId;
+    private boolean status;
     private String result;
 }

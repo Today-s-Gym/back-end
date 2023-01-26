@@ -5,6 +5,7 @@ import com.gym.config.exception.BaseResponse;
 import com.gym.post.like.dto.PushLikeRes;
 import com.gym.utils.JwtService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,10 +22,10 @@ public class LikeController {
 
     /**
      * 좋아요 누르기
-     * [POST] /post/like/{postId}
+     * [POST] /post/like
      */
-    @PostMapping("/post/like/{postId}")
-    public BaseResponse<PushLikeRes> pushLike(@PathVariable("postId") Integer postId) throws BaseException {
+    @PostMapping("/post/like")
+    public BaseResponse<PushLikeRes> pushLike(@Param("postId") Integer postId) throws BaseException {
         try {
             Integer userId = jwtService.getUserIdx();
             return new BaseResponse<>(likeService.pushLike(userId, postId));
