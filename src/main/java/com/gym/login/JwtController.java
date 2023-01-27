@@ -15,7 +15,7 @@ public class JwtController {
 
     //==토큰 생성 컨트롤러==//
 
-    public String createToken(String userId) throws Exception {
+    public String createToken(Integer userId) throws Exception {
         String token = jwtProvider.createToken(userId); // 토큰 생성
         Claims claims = jwtProvider.parseJwtToken("Bearer "+ token); // 토큰 검증
 
@@ -25,7 +25,7 @@ public class JwtController {
         return tokenDataResponse.token;
     }
 
-    public String createRefreshToken(String userId) throws Exception {
+    public String createRefreshToken(Integer userId) throws Exception {
         String token = jwtProvider.createRefreshToken(userId); // 토큰 생성
         Claims claims = jwtProvider.parseJwtToken("Bearer "+ token); // 토큰 검증
 

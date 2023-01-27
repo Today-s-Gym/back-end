@@ -30,8 +30,6 @@ public class GoogleController {
     public String GoogleCallback(String code) throws Exception {
         String accessToken = googleService.getAccessToken(code);
 
-
-
         Gson gsonObj = new Gson();
         Map<?, ?> data = gsonObj.fromJson(accessToken, Map.class);
 
@@ -40,28 +38,20 @@ public class GoogleController {
         User googleUser = googleService.getUserInfo(atoken);
 
         User findUser = userService.getUserByEmail(googleUser.getEmail());
-        if(findUser.getEmail() == null){
+        if (findUser.getEmail() == null) {
 
-            String refreshToken = jwtController.createRefreshToken(String.valueOf(googleUser.getUserId()));
+            String refreshToken = jwtController.createRefreshToken(googleUser.getUserId());
             //System.out.println("refreshToken = " + refreshToken);
             googleUser.setRefreshToken(refreshToken);
             userService.insertUser(googleUser);
             //System.out.println(googleUser.getUserId());
-        }
-        else{
-            String loginToken = jwtController.createToken(String.valueOf(googleUser.getUserId()));
+        } else {
+            String loginToken = jwtController.createToken(googleUser.getUserId());
             //System.out.println("loginToken = " + loginToken);
             googleUser.setDeviceToken(loginToken);
             return loginToken;
-
-
         }
         return null;
 
-
-
-
     }
-
-
 }

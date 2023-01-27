@@ -2,12 +2,10 @@ package com.gym.login;
 
 
 import com.google.gson.Gson;
-import com.gym.config.secret.Secret;
 import com.gym.user.User;
 import com.gym.user.UserRepository;
 import com.gym.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -16,16 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
-import java.util.List;
 import java.util.Map;
+
+import static com.gym.secret.Secret.Kakao_SECRET_KEY;
 
 @Service
 public class KaKaoService {
@@ -43,7 +34,7 @@ public class KaKaoService {
 
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
-        body.add("client_id", Secret.Kakao_SECRET_KEY);
+        body.add("client_id", Kakao_SECRET_KEY);
         body.add("redirect_uri" , "http://localhost:8000/oauth/kakao");
         body.add("code", code);
 
