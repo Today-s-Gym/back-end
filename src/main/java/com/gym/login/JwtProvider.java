@@ -1,5 +1,6 @@
 package com.gym.login;
 
+import com.gym.config.secret.Secret;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -10,8 +11,8 @@ import java.util.Date;
 
 @Component
 public class JwtProvider {
-    @Value("testpassword")
-    private String secretKey;
+/*    @Value("testpassword")
+    private static String secretKey;*/
 
     //==토큰 생성 메소드==//
     public String createToken(String userid) {
@@ -26,7 +27,7 @@ public class JwtProvider {
                 .setIssuedAt(now) // 발급시간(iat)
                 .setExpiration(expiration) // 만료시간(exp)
                 //.setSubject(subject) //  토큰 제목(subject)
-                .signWith(SignatureAlgorithm.HS256, Base64.getEncoder().encodeToString(secretKey.getBytes())) // 알고리즘, 시크릿 키
+                .signWith(SignatureAlgorithm.HS256, Base64.getEncoder().encodeToString(Secret.JWT_SECRET_KEY.getBytes())) // 알고리즘, 시크릿 키
                 .compact();
     }
 
@@ -41,7 +42,7 @@ public class JwtProvider {
                 .setIssuedAt(now) // 발급시간(iat)
                 .setExpiration(expiration) // 만료시간(exp)
                 .setSubject(userid) //  토큰 제목(subject)
-                .signWith(SignatureAlgorithm.HS256, Base64.getEncoder().encodeToString(secretKey.getBytes())) // 알고리즘, 시크릿 키
+                .signWith(SignatureAlgorithm.HS256, Base64.getEncoder().encodeToString(Secret.JWT_SECRET_KEY.getBytes())) // 알고리즘, 시크릿 키
                 .compact();
     }
 
@@ -49,7 +50,7 @@ public class JwtProvider {
     public Claims parseJwtToken(String token) {
         token = BearerRemove(token); // Bearer 제거
         return Jwts.parser()
-                .setSigningKey(Base64.getEncoder().encodeToString(secretKey.getBytes()))
+                .setSigningKey(Base64.getEncoder().encodeToString(Secret.JWT_SECRET_KEY.getBytes()))
                 .parseClaimsJws(token)
                 .getBody();
     }

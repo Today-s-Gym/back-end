@@ -2,6 +2,7 @@ package com.gym.login;
 
 
 import com.google.gson.Gson;
+import com.gym.config.secret.Secret;
 import com.gym.user.User;
 import com.gym.user.UserRepository;
 import com.gym.user.UserService;
@@ -42,7 +43,7 @@ public class KaKaoService {
 
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
-        body.add("client_id", "5ad77a01169ec3d9832a0f099bb505b7");
+        body.add("client_id", Secret.Kakao_SECRET_KEY);
         body.add("redirect_uri" , "http://localhost:8000/oauth/kakao");
         body.add("code", code);
 

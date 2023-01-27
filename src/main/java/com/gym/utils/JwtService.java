@@ -53,6 +53,6 @@ public class JwtService {
         }
 
         // 3. userId 추출
-        return claims.getBody().get("userId",Integer.class);
+        return claims.getBody().get("userid",Integer.class);
     }
 }

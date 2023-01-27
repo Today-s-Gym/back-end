@@ -3,6 +3,7 @@ package com.gym.login;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.gym.config.secret.Secret;
 import com.gym.user.User;
 import com.gym.user.UserRepository;
 import com.gym.user.UserService;
@@ -38,8 +39,8 @@ public class GoogleService {
 
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
-        body.add("client_id", "429955294987-388f8t5sfg593faspeftn44nkrthu8mc.apps.googleusercontent.com");
-        body.add("client_secret", "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");
+        body.add("client_id", Secret.Google_Client_Id);
+        body.add("client_secret", Secret.Google_Secret_Password);
         body.add("redirect_uri" , "http://localhost:8000/login/google");
         body.add("code", code);
 
