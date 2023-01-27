@@ -25,6 +25,7 @@ public class TagService {
     private final TagRepository tagRepository;
     private final UtilService utilService;
 
+    private final JwtService jwtService;
     /**
      * 태크 여러개 저장
      */
@@ -38,7 +39,7 @@ public class TagService {
      * 최근 사용한 태그 조회(Paging 처리 10개 탐색)
      */
     public Page<TagGetRecentRes> findRecentTag(int page) throws BaseException {
-        User user = utilService.findByUserIdWithValidation(JwtService.getUserId());
+        User user = utilService.findByUserIdWithValidation(jwtService.getUserIdx());
         PageRequest pageRequest = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "id"));
         Page<String> pages = tagRepository.findByRecord(user.getUserId(), pageRequest);
         if(pages.getTotalElements() == 0){

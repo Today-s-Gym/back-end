@@ -9,35 +9,52 @@ import com.gym.user.dto.GetMyPageRes;
 import com.gym.user.dto.UserEmailRes;
 import com.gym.utils.JwtService;
 import com.gym.utils.UtilService;
+import io.jsonwebtoken.Jwt;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
+
+import static com.gym.config.exception.BaseResponseStatus.REQUEST_ERROR;
 
 @RestController
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-    private final UtilService utilService;
+    private final JwtService jwtService;
 
     /**
      * 사용자 공개 계정 전환
      */
     @PutMapping("/user/locked")
     public BaseResponse<Integer> changeAccountPrivacy(@RequestBody AccountPrivacyReq accountPrivacyReq) {
-        Integer userId = JwtService.getUserId();
-        return new BaseResponse<>(userService.changeAccountPrivacy(userId, accountPrivacyReq.isLocked()));
+        try {
+            Integer userId = jwtService.getUserIdx();
+
+            Set<String> values = Set.of("true", "True", "TRUE", "false", "False", "FALSE");
+            if (!values.contains(accountPrivacyReq.getLocked())) {
+                return new BaseResponse<>(REQUEST_ERROR);
+            }
+            return new BaseResponse<>(userService.changeAccountPrivacy(userId,
+                    Boolean.parseBoolean(accountPrivacyReq.getLocked())));
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
     }
 
     /**
      * 사용자 이메일 조회
      */
     @GetMapping("/user/email")
-    public BaseResponse<UserEmailRes> getUserEmail() throws BaseException {
-        String userEmail = userService.findUserEmailByUserId(JwtService.getUserId());
-        UserEmailRes userEmailRes = new UserEmailRes(userEmail);
-        return new BaseResponse<>(userEmailRes);
+    public BaseResponse<UserEmailRes> getUserEmail() {
+        try {
+            String userEmail = userService.findUserEmailByUserId(jwtService.getUserIdx());
+            UserEmailRes userEmailRes = new UserEmailRes(userEmail);
+            return new BaseResponse<>(userEmailRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
     }
 
     /**
@@ -46,7 +63,8 @@ public class UserController {
     @PatchMapping("/user/mypage")
     public BaseResponse<Integer> editMyPage(@RequestBody EditMyPageReq editMyPageReq) {
         try {
-            return userService.editMyPage(JwtService.getUserId(), editMyPageReq.getNewNickname(), editMyPageReq.getNewIntroduce());
+            Integer userId = JwtService.getUserId();
+            return userService.editMyPage(userId, editMyPageReq.getNewNickname(), editMyPageReq.getNewIntroduce());
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
@@ -58,8 +76,8 @@ public class UserController {
     @GetMapping("/user/avatar-collection")
     public BaseResponse<List<MyAvatarDto>> getMyCollection(){
         try {
-            User user = utilService.findByUserIdWithValidation(JwtService.getUserId());
-            return new BaseResponse<>(userService.getMyCollection(user));
+            Integer userId = JwtService.getUserId();
+            return new BaseResponse<>(userService.getMyCollection(userId));
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
@@ -71,8 +89,20 @@ public class UserController {
     @GetMapping("/user/mypage")
     public BaseResponse<GetMyPageRes> getMyPage() {
         try {
-            User user = utilService.findByUserIdWithValidation(JwtService.getUserId());
-            return new BaseResponse<>(userService.getMyPage(user));
+            Integer userId = JwtService.getUserId();
+            return new BaseResponse<>(userService.getMyPage(userId));
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    /**
+     * 상대방 프로필 조회
+     */
+    @GetMapping("/user/profile/{userId}")
+    public BaseResponse<GetMyPageRes> getUserProfile(@PathVariable("userId") Integer userId) {
+        try {
+            return new BaseResponse<>(userService.getUserProfile(userId));
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }

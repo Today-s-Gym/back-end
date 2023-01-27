@@ -5,6 +5,7 @@ import com.gym.post.Post;
 import com.gym.post.comment.dto.GetCommentsRes;
 import com.gym.post.comment.dto.PostCommentReq;
 import com.gym.user.User;
+import com.gym.user.UserService;
 import com.gym.utils.UtilService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.util.List;
 public class CommentService {
 
     private final UtilService utilService;
+    private final UserService userService;
     private final CommentRepository commentRepository;
 
     @Transactional
@@ -64,7 +66,7 @@ public class CommentService {
                 isMine = true;
             }
 
-            res.add(new GetCommentsRes(comment.getCommentId(), comment.getContent(), writer.getNickName(), "댓글 작성자의 임시 아바타 img", isMine));
+            res.add(new GetCommentsRes(comment.getCommentId(), comment.getContent(), writer.getNickName(), userService.getNowAvatarImg(writer.getUserId()), isMine));
         }
         return res;
     }

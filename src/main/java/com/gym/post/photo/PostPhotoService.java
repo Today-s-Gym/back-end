@@ -66,4 +66,14 @@ public class PostPhotoService {
     public List<Integer> findAllId(int postId){
         return postPhotoRepository.findAllId(postId);
     }
+
+    public String findFirstByPostId(Integer postId) {
+        List<PostPhoto> pp = postPhotoRepository.findAllByPostId(postId).orElse(null);
+
+        if(pp.size() == 0) {
+            return "첨부된 사진이 없습니다.";
+        } else {
+            return pp.get(0).getImgUrl();
+        }
+    }
 }

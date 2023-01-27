@@ -2,6 +2,8 @@ package com.gym.post;
 
 import com.gym.config.exception.BaseException;
 import com.gym.config.exception.BaseResponse;
+import com.gym.post.dto.GetMyPostsListRes;
+import com.gym.post.dto.GetPostRes;
 import com.gym.post.dto.GetPostsListRes;
 import com.gym.post.dto.PostPostReq;
 import com.gym.utils.JwtService;
@@ -28,8 +30,36 @@ public class PostController {
     @GetMapping("/posts/{categoryId}")
     public BaseResponse<List<GetPostsListRes>> getPostsByCategoryId(@PathVariable("categoryId") Integer categoryId) throws BaseException {
         try {
-            Integer userId = jwtService.getUserId();
+            Integer userId = jwtService.getUserIdx();
             return new BaseResponse<>(postService.getPostsByCategoryId(userId, categoryId));
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    /**
+     * 게시글 상세 조회
+     * [GET] /post/{postId}
+     */
+    @GetMapping("/post/{postId}")
+    public BaseResponse<GetPostRes> getPostByPostId(@PathVariable("postId") Integer postId) throws BaseException {
+        try {
+            Integer userId = jwtService.getUserIdx();
+            return new BaseResponse<>(postService.getPostByPostId(userId, postId));
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    /**
+     * 내 게시글 리스트 조회
+     * [GET] /post/my
+     */
+    @GetMapping("/post/my")
+    public BaseResponse<List<GetMyPostsListRes>> getMyPosts() throws BaseException {
+        try {
+            Integer userId = jwtService.getUserIdx();
+            return new BaseResponse<>(postService.getMyPosts(userId));
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
@@ -42,7 +72,7 @@ public class PostController {
     @PostMapping("/post")
     public BaseResponse<String> createPost(@RequestBody PostPostReq postPostReq) throws BaseException {
         try {
-            Integer userId = jwtService.getUserId();
+            Integer userId = jwtService.getUserIdx();
             return new BaseResponse<>(postService.createPost(userId, postPostReq));
         }
         catch (BaseException exception) {
@@ -57,7 +87,7 @@ public class PostController {
     @PatchMapping("/post")
     public BaseResponse<String> updatePost(@Param("postId") Integer postId, @RequestBody PostPostReq postPostReq) throws BaseException {
         try {
-            Integer userId = jwtService.getUserId();
+            Integer userId = jwtService.getUserIdx();
             return new BaseResponse<>(postService.updatePost(userId, postId, postPostReq));
         }
         catch (BaseException exception) {
@@ -72,7 +102,7 @@ public class PostController {
     @PatchMapping("/post/delete")
     public BaseResponse<String> deletePost(@Param("postId") Integer postId) throws BaseException {
         try {
-            Integer userId = jwtService.getUserId();
+            Integer userId = jwtService.getUserIdx();
             return new BaseResponse<>(postService.deletePost(userId, postId));
         }
         catch (BaseException exception) {

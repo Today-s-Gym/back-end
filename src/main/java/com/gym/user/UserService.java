@@ -13,6 +13,7 @@ import com.gym.config.exception.BaseResponse;
 import com.gym.record.RecordRepository;
 import com.gym.user.dto.GetMyPageRes;
 import com.gym.user.dto.UserRecordCount;
+import com.gym.utils.JwtService;
 import com.gym.utils.UtilService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,8 +54,8 @@ public class UserService {
      * 사용자 공개 계정 전환
      */
     @Transactional
-    public Integer changeAccountPrivacy(Integer userId, boolean locked) {
-        User user = userRepository.findById(userId).get();
+    public Integer changeAccountPrivacy(Integer userId, boolean locked) throws BaseException {
+        User user = utilService.findByUserIdWithValidation(userId);
         user.changeAccountPrivacy(locked);
         return user.getUserId();
     }
@@ -67,8 +68,6 @@ public class UserService {
         User user = utilService.findByUserIdWithValidation(userId);
         return user.getEmail();
     }
-
-
 
     @Transactional
     public void insertUser(User user)
@@ -120,7 +119,8 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public List<MyAvatarDto> getMyCollection(User user) {
+    public List<MyAvatarDto> getMyCollection(Integer userId) throws BaseException {
+        User user = utilService.findByUserIdWithValidation(userId);
         List<MyAvatarCollection> myAvatarCollections = myAvatarCollectionRepository.findByUser(user);
         Map<Avatar, MyAvatar> collect = myAvatarCollections.stream()
                 .map(MyAvatarCollection::getMyAvatar)
@@ -132,17 +132,29 @@ public class UserService {
     }
 
     @Transactional
-    public GetMyPageRes getMyPage(User user) {
+    public GetMyPageRes getMyPage(Integer userId) throws BaseException {
+        User user = utilService.findByUserIdWithValidation(userId);
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
         String thisMonth = LocalDate.now().format(formatter);
 
         int thisMonthRecordCount = recordRepository.countByUserIdMonth(user.getUserId(), thisMonth);
         int totalRecordCount = recordRepository.countByUserId(user.getUserId());
-        GetMyPageRes myPageInfo = userRepository.findMyPageInfo(user.getUserId());
-        UserRecordCount userRecordCount = new UserRecordCount(thisMonthRecordCount,
+
+        GetMyPageRes myPageInfo = new GetMyPageRes(
+                user.getMyAvatar(),
+                user.getNickName(),
+                user.getCategory().getName(),
+                user.getIntroduce(),
+                user.isLocked());
+
+        UserRecordCount userRecordCount = new UserRecordCount(
+                thisMonthRecordCount,
                 user.getMyAvatar().getRemainUpgradeCount(totalRecordCount),
                 totalRecordCount);
+
         myPageInfo.setUserRecordCount(userRecordCount);
+
         return myPageInfo;
     }
 
@@ -175,5 +187,14 @@ public class UserService {
         myAvatarCollection.setUser(user);
         myAvatarCollection.setMyAvatar(myAvatar);
         myAvatarCollectionRepository.save(myAvatarCollection);
+    }
+
+    @Transactional
+    public GetMyPageRes getUserProfile(Integer userId) throws BaseException {
+        User user = utilService.findByUserIdWithValidation(userId);
+        if (user.isLocked()) {
+            return GetMyPageRes.lockedMyPageInfo();
+        }
+        return getMyPage(userId);
     }
 }

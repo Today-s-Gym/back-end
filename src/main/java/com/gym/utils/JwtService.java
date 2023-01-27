@@ -36,6 +36,7 @@ public class JwtService {
     JWT에서 userId 추출
      */
     public int getUserIdx() throws BaseException {
+
         //1. JWT 추출
         String accessToken = getJwt();
         if(accessToken == null || accessToken.length() == 0){

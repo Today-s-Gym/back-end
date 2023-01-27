@@ -32,6 +32,7 @@ public class RecordService {
     private final UtilService utilService;
     private final RecordPhotoService recordPhotoService;
     private final TagService tagService;
+    private final JwtService jwtService;
 
 
 
@@ -67,7 +68,7 @@ public class RecordService {
      */
     public RecordGetRes findRecordByDay(String date) throws BaseException {
         try {
-            User user = utilService.findByUserIdWithValidation(JwtService.getUserId());
+            User user = utilService.findByUserIdWithValidation(jwtService.getUserIdx());
             Record record = recordRepository.findAllByDay(user.getUserId(), date);
             record = utilService.findByRecordIdWithValidation(record.getRecordId());
             RecordGetRes recordGetRes = new RecordGetRes(record, user);
@@ -82,7 +83,7 @@ public class RecordService {
      */
     public List<RecordGetRes> findRecordByMonth(String month) throws BaseException {
         try {
-            User user = utilService.findByUserIdWithValidation(JwtService.getUserId());
+            User user = utilService.findByUserIdWithValidation(jwtService.getUserIdx());
             List<Record> records = recordRepository.findAllByMonth(user.getUserId(), month);
             List<RecordGetRes> recordGetRes = records.stream()
                     .map(record-> new RecordGetRes(record, user))
@@ -100,7 +101,7 @@ public class RecordService {
     @Modifying
     public Integer updateRecord(String date, RecordGetReq recordGetReq) throws BaseException {
         //User, Record 조회 및 update
-        User user = utilService.findByUserIdWithValidation(JwtService.getUserId());
+        User user = utilService.findByUserIdWithValidation(jwtService.getUserIdx());
         Record record = recordRepository.findAllByDay(user.getUserId(), date);
         record = utilService.findByRecordIdWithValidation(record.getRecordId());
         record.updateRecord(recordGetReq.getContent());
@@ -123,7 +124,7 @@ public class RecordService {
     @Modifying
     public String deleteRecord(String date) throws BaseException {
         try {
-        User user = utilService.findByUserIdWithValidation(JwtService.getUserId());
+        User user = utilService.findByUserIdWithValidation(jwtService.getUserIdx());
         Record record = recordRepository.findAllByDay(user.getUserId(), date);
         //recordPhoto 삭제
         List<Integer> ids = recordPhotoService.findAllId(record.getRecordId());
@@ -143,7 +144,7 @@ public class RecordService {
      * 최근 기록 조회
      */
     public  Page<RecordGetRecentRes> findAllRecent(int page) throws BaseException {
-        User user = utilService.findByUserIdWithValidation(JwtService.getUserId());
+        User user = utilService.findByUserIdWithValidation(jwtService.getUserIdx());
         PageRequest pageRequest = PageRequest.of(page, 6, Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<Record> records = recordRepository.findAllByUserId(user.getUserId(), pageRequest);
         if (records.getTotalElements() == 0) {
@@ -157,7 +158,7 @@ public class RecordService {
      * 기록 카운트
      */
     public Integer findCount() throws BaseException {
-        User user = utilService.findByUserIdWithValidation(JwtService.getUserId());
+        User user = utilService.findByUserIdWithValidation(jwtService.getUserIdx());
         return recordRepository.countByUserId(user.getUserId());
     }
 
@@ -165,7 +166,7 @@ public class RecordService {
      * 기록 카운트 달기준
      */
     public Integer findCountMonth(String month) throws BaseException {
-        User user = utilService.findByUserIdWithValidation(JwtService.getUserId());
+        User user = utilService.findByUserIdWithValidation(jwtService.getUserIdx());
         return recordRepository.countByUserIdMonth(user.getUserId(), month);
     }
 }

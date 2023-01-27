@@ -22,9 +22,12 @@ public class GetMyPageRes {
         this.locked = locked;
     }
 
+    private GetMyPageRes(boolean locked) {
+        this.locked = locked;
+    }
 
-    public void setAvatarImgUrl(String avatarImgUrl) {
-        this.avatarImgUrl = avatarImgUrl;
+    public static GetMyPageRes lockedMyPageInfo() {
+        return new GetMyPageRes(true);
     }
 
     public void setUserRecordCount(UserRecordCount userRecordCount) {
