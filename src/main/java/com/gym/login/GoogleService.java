@@ -3,7 +3,6 @@ package com.gym.login;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.gym.config.secret.Secret;
 import com.gym.user.User;
 import com.gym.user.UserRepository;
 import com.gym.user.UserService;
@@ -24,6 +23,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 
+import static com.gym.secret.Secret.Google_Client_Id;
+import static com.gym.secret.Secret.Google_Secret_Password;
+
 @Service
 public class GoogleService {
     @Autowired
@@ -39,8 +41,8 @@ public class GoogleService {
 
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
-        body.add("client_id", Secret.Google_Client_Id);
-        body.add("client_secret", Secret.Google_Secret_Password);
+        body.add("client_id", Google_Client_Id);
+        body.add("client_secret", Google_Secret_Password);
         body.add("redirect_uri" , "http://localhost:8000/login/google");
         body.add("code", code);
 

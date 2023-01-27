@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Map;
-import java.util.Optional;
 
 @Controller
 public class KaKaoController {
@@ -42,7 +41,6 @@ public class KaKaoController {
     }*/
 
 
-
     @ResponseBody
     @GetMapping("/oauth/kakao")
     public String kakaoCallback(String code) throws Exception {
@@ -62,10 +60,6 @@ public class KaKaoController {
         }*/
 
 
-
-
-
-
         Gson gsonObj2 = new Gson();
         Map<?, ?> data2 = gsonObj.fromJson(accessToken, Map.class);
 
@@ -74,27 +68,18 @@ public class KaKaoController {
         User kakaoUser = kaKaoLoginService.getUserInfo(atoken, refreshToken);
 
         User findUser = userService.getUserByEmail(kakaoUser.getEmail());
-        if(findUser.getEmail() == null){
-            String kakaorefreshToken = jwtController.createRefreshToken(String.valueOf(kakaoUser.getUserId()));
+        if (findUser.getEmail() == null) {
+            String kakaorefreshToken = jwtController.createRefreshToken(kakaoUser.getUserId());
             //System.out.println("refreshToken = " + refreshToken);
             kakaoUser.setRefreshToken(kakaorefreshToken);
             userService.insertUser(kakaoUser);
-        }
-        else{
-            String loginToken = jwtController.createToken(String.valueOf(kakaoUser.getUserId()));
-            //System.out.println("loginToken = " + loginToken);
-            User user = userRepository.findByEmail(findUser.getEmail()).get();
-            user.setDeviceToken(loginToken);
-            //userRepository.save(user);
+
+        } else {
+            String loginToken = jwtController.createToken(kakaoUser.getUserId());
+            System.out.println("loginToken = " + loginToken);
+            //kakaoUser.setDeviceToken(loginToken);
             return loginToken;
-
         }
-        
-
-
         return null;
-
-
     }
-
 }

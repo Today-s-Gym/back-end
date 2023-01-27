@@ -45,3 +45,5 @@ out/
 .vscode/
 /logs/app.log
 /logs/error.log
+
+/src/main/java/com/gym/secret
