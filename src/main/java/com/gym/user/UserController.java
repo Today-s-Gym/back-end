@@ -63,7 +63,7 @@ public class UserController {
     @PatchMapping("/user/mypage")
     public BaseResponse<Integer> editMyPage(@RequestBody EditMyPageReq editMyPageReq) {
         try {
-            Integer userId = JwtService.getUserId();
+            Integer userId = jwtService.getUserIdx();
             return userService.editMyPage(userId, editMyPageReq.getNewNickname(), editMyPageReq.getNewIntroduce());
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
@@ -76,7 +76,7 @@ public class UserController {
     @GetMapping("/user/avatar-collection")
     public BaseResponse<List<MyAvatarDto>> getMyCollection(){
         try {
-            Integer userId = JwtService.getUserId();
+            Integer userId = jwtService.getUserIdx();
             return new BaseResponse<>(userService.getMyCollection(userId));
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
@@ -89,7 +89,7 @@ public class UserController {
     @GetMapping("/user/mypage")
     public BaseResponse<GetMyPageRes> getMyPage() {
         try {
-            Integer userId = JwtService.getUserId();
+            Integer userId = jwtService.getUserIdx();
             return new BaseResponse<>(userService.getMyPage(userId));
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
