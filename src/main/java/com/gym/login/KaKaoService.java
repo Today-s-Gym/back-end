@@ -2,6 +2,7 @@ package com.gym.login;
 
 
 import com.google.gson.Gson;
+import com.gym.config.exception.BaseException;
 import com.gym.user.UserRepository;
 import com.gym.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,6 +96,10 @@ public class KaKaoService {
 
 
 
+
+    }
+
+    public void kakaoLogout(String JwtToken) throws BaseException{
 
     }
 

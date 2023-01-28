@@ -84,10 +84,11 @@ public enum BaseResponseStatus {
 
 
     /**
-     * 5000 : 로그인 시 닉네임, 한줄 소개, 운동 설정 시 오류
+     * 5000 : 로그인 시 닉네임, 한줄 소개, 운동 설정 시 오류, 카카오 로그인 오류
      */
     NICKNAME_ERROR(false, 5000, "이미 존재하는 닉네임입니다."),
-    INTRODUCE_ERROR(false, 5001, "한줄 소개는 0~30자이어야 합니다.");
+    INTRODUCE_ERROR(false, 5001, "한줄 소개는 0~30자이어야 합니다."),
+    KAKAO_ERROR(false, 5002, "카카오 로그아웃에 실패했습니다.");
 
 
 
