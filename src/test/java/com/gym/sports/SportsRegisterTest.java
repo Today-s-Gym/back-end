@@ -20,7 +20,7 @@ public class SportsRegisterTest {
 
     @Test
     public void test() throws Exception{
-      //  sportsController.uploadSports(1, 2);
+        sportsController.uploadSports(10, 2);
 
     }
 }

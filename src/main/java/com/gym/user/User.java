@@ -19,7 +19,6 @@ import java.util.List;
 @Entity
 @Builder
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "user")
@@ -83,5 +82,18 @@ public class User {
 
     public void changeAvatarStep(MyAvatar myAvatar) {
         this.myAvatar = myAvatar;
+    }
+
+    public void update(String nickname, String introduce) {
+        this.nickName = nickname;
+        this.introduce = introduce;
+    }
+
+    public void updateSports(Category category){
+        this.category = category;
+    }
+
+    public void updateRefreshToken(String refreshToken){
+        this.refreshToken = refreshToken;
     }
 }

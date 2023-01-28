@@ -1,9 +1,11 @@
 package com.gym.login;
 
 import com.google.gson.Gson;
+import com.gym.login.dto.UserUpdateRequestDTO;
 import com.gym.user.User;
 import com.gym.user.UserRepository;
 import com.gym.user.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Map;
+import java.util.Optional;
 
 @Controller
 public class KaKaoController {
@@ -28,6 +31,8 @@ public class KaKaoController {
 
     @Autowired
     private JwtController jwtController;
+
+
 
 
 
@@ -65,21 +70,31 @@ public class KaKaoController {
 
         String refreshToken = (String) data.get("refresh_token");
 
-        User kakaoUser = kaKaoLoginService.getUserInfo(atoken, refreshToken);
+        String useremail = kaKaoLoginService.getUserInfo(atoken, refreshToken);
 
-        User findUser = userService.getUserByEmail(kakaoUser.getEmail());
-        if (findUser.getEmail() == null) {
+        Optional<User> findUser = userRepository.findByEmail(useremail);
+        if (findUser.isEmpty()) {
+            UserUpdateRequestDTO userUpdateRequestDTO = new UserUpdateRequestDTO(useremail);
+            User kakaoUser = userService.save(userUpdateRequestDTO);
+
+
+
+
             String kakaorefreshToken = jwtController.createRefreshToken(kakaoUser.getUserId());
+            kakaoUser.updateRefreshToken(kakaorefreshToken);
+            String loginToken = jwtController.createToken(kakaoUser.getUserId());
             //System.out.println("refreshToken = " + refreshToken);
-            kakaoUser.setRefreshToken(kakaorefreshToken);
+
             userService.insertUser(kakaoUser);
+            return loginToken;
 
         } else {
-            String loginToken = jwtController.createToken(kakaoUser.getUserId());
+            User user = findUser.get();
+            String loginToken = jwtController.createToken(user.getUserId());
             System.out.println("loginToken = " + loginToken);
             //kakaoUser.setDeviceToken(loginToken);
             return loginToken;
         }
-        return null;
+
     }
 }

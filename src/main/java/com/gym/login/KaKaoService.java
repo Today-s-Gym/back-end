@@ -2,7 +2,6 @@ package com.gym.login;
 
 
 import com.google.gson.Gson;
-import com.gym.user.User;
 import com.gym.user.UserRepository;
 import com.gym.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +61,7 @@ public class KaKaoService {
 
     }
 
-    public User getUserInfo(String accessToken, String refreshToken) {
+    public String getUserInfo(String accessToken, String refreshToken) {
         //Httpheader 생성
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Authorization", "Bearer " + accessToken);
@@ -92,11 +91,7 @@ public class KaKaoService {
         Double id = (Double)(data.get("id"));
         String email = (String) ((Map<?, ?>)(data.get("kakao_account"))).get("email");
 
-        User user = new User();
-        user.setEmail(email);
-        //user.setRefreshToken(refreshToken);
-
-        return user;
+        return email;
 
 
 

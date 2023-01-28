@@ -2,6 +2,7 @@ package com.gym.post;
 
 import com.gym.config.exception.BaseException;
 import com.gym.config.exception.BaseResponse;
+import com.gym.config.exception.BaseResponseStatus;
 import com.gym.post.dto.GetMyPostsListRes;
 import com.gym.post.dto.GetPostRes;
 import com.gym.post.dto.GetPostsListRes;
@@ -23,10 +24,11 @@ public class PostController {
     private final PostService postService;
     private final JwtService jwtService;
 
-    /**
-     * 특정 카테고리에 대한 게시글 목록 조회
-     * [GET] /posts/{categoryId}
-     */
+
+     // 특정 카테고리에 대한 게시글 목록 조회
+     // [GET] /posts/{categoryId}
+
+
     @GetMapping("/posts/{categoryId}")
     public BaseResponse<List<GetPostsListRes>> getPostsByCategoryId(@PathVariable("categoryId") Integer categoryId) throws BaseException {
         try {
@@ -37,10 +39,11 @@ public class PostController {
         }
     }
 
-    /**
-     * 게시글 상세 조회
-     * [GET] /post/{postId}
-     */
+
+     //게시글 상세 조회
+     // [GET] /post/{postId}
+
+
     @GetMapping("/post/{postId}")
     public BaseResponse<GetPostRes> getPostByPostId(@PathVariable("postId") Integer postId) throws BaseException {
         try {
@@ -51,10 +54,11 @@ public class PostController {
         }
     }
 
-    /**
-     * 내 게시글 리스트 조회
-     * [GET] /post/my
-     */
+
+     // 내 게시글 리스트 조회
+     // [GET] /post/my
+
+
     @GetMapping("/post/my")
     public BaseResponse<List<GetMyPostsListRes>> getMyPosts() throws BaseException {
         try {
@@ -65,10 +69,11 @@ public class PostController {
         }
     }
 
-    /**
-     * 게시글 생성
-     * [POST] /post
-     */
+
+     // 게시글 생성
+     // [POST] /post
+
+
     @PostMapping("/post")
     public BaseResponse<String> createPost(@RequestBody PostPostReq postPostReq) throws BaseException {
         try {
@@ -80,10 +85,11 @@ public class PostController {
         }
     }
 
-    /**
-     * 게시글 수정
-     * [PATCH] /post
-     */
+
+     // 게시글 수정
+     // [PATCH] /post
+
+
     @PatchMapping("/post")
     public BaseResponse<String> updatePost(@Param("postId") Integer postId, @RequestBody PostPostReq postPostReq) throws BaseException {
         try {
@@ -95,10 +101,11 @@ public class PostController {
         }
     }
 
-    /**
-     * 게시글 삭제
-     * [PATCH] /post/delete
-     */
+
+     //게시글 삭제
+     // [PATCH] /post/delete
+
+
     @PatchMapping("/post/delete")
     public BaseResponse<String> deletePost(@Param("postId") Integer postId) throws BaseException {
         try {

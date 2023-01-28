@@ -10,6 +10,8 @@ import com.gym.avatar.myAvatarCollection.MyAvatarCollectionRepository;
 
 import com.gym.config.exception.BaseException;
 import com.gym.config.exception.BaseResponse;
+import com.gym.login.dto.UserUpdateRequestDTO;
+import com.gym.login.dto.UsersaveRequestDTO;
 import com.gym.record.RecordRepository;
 import com.gym.user.dto.GetMyPageRes;
 import com.gym.user.dto.UserRecordCount;
@@ -87,6 +89,11 @@ public class UserService {
                 });
 
         return findUser;
+    }
+
+    @Transactional
+    public User save(UserUpdateRequestDTO requestDTO){
+        return userRepository.save(requestDTO.toEntity());
     }
 
 

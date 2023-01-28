@@ -7,6 +7,7 @@ import com.gym.config.exception.BaseResponseStatus;
 import com.gym.user.User;
 import com.gym.user.UserRepository;
 import com.gym.utils.UtilService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -23,6 +24,9 @@ public class IntroduceController {
     @Autowired
     private UtilService utilService;
 
+    @Autowired(required = false)
+    private ModelMapper modelMapper;
+
     @PutMapping("/login/introduce")
     @ResponseBody
     public BaseResponse<?> updateIntroduce(@RequestParam("userid") int userid, @RequestParam("nickname") String nickname, @RequestParam("introduce") String introduce)
@@ -30,8 +34,7 @@ public class IntroduceController {
         try{
             User user = utilService.findByUserIdWithValidation(userid);
             if((introduce.length() >= 0) && (introduce.length() <= 30)){
-                user.setNickName(nickname);
-                user.setIntroduce(introduce);
+                user.update(nickname, introduce);
                 userRepository.save(user);
                 return new BaseResponse<>(BaseResponseStatus.SUCCESS);
 

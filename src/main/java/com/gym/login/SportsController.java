@@ -8,6 +8,7 @@ import com.gym.config.exception.BaseResponseStatus;
 import com.gym.user.User;
 import com.gym.user.UserRepository;
 import com.gym.utils.UtilService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +22,9 @@ public class SportsController {
     @Autowired
     private UtilService utilService;
 
+    @Autowired(required = false)
+    private ModelMapper modelMapper;
+
     @PutMapping("/login/sports")
     @ResponseBody
     public BaseResponse<?> uploadSports(@RequestParam("userid") int userid, @RequestParam("categoryid") int categoryid)
@@ -30,7 +34,7 @@ public class SportsController {
             User user = utilService.findByUserIdWithValidation(userid);
             Category category = new Category();
             category.setCategoryId(categoryid);
-            user.setCategory(category);
+            user.updateSports(category);
             userRepository.save(user);
             return new BaseResponse<>(BaseResponseStatus.SUCCESS);
         } catch(BaseException exception){

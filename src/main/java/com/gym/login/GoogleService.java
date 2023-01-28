@@ -70,7 +70,7 @@ public class GoogleService {
 
     }
 
-    public User getUserInfo(String access_Token) {
+    public String getUserInfo(String access_Token) {
         //요청하는 클라이언트마다 가진 정보가 다를 수 있기에 HashMap타입으로 선언
         HashMap<String, Object> googleUserInfo = new HashMap<>();
         //String reqURL = "https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token="+access_Token;
@@ -103,12 +103,7 @@ public class GoogleService {
                 String email = element.getAsJsonObject().get("email").getAsString();
                 //String id = "GOOGLE_"+element.getAsJsonObject().get("id").getAsString();
 
-                user = new User();
-                //googleUserInfo.put("name", name);
-                user.setEmail(email);
-                //googleUserInfo.put("id", id);
-
-                return user;
+                return email;
 
 
             }
@@ -116,6 +111,6 @@ public class GoogleService {
             e.printStackTrace();
         }
 
-        return user;
+        return null;
     }
 }
