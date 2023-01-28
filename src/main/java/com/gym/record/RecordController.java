@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -24,9 +25,10 @@ public class RecordController {
      * Record, 사진여러개, 태그여러개 저장
      */
     @PostMapping("/record")
-    public BaseResponse<Integer> createRecord(@RequestBody RecordGetReq recordGetReq){
+    public BaseResponse<Integer> createRecord(@RequestPart(value = "image", required = false) List<MultipartFile> multipartFiles,
+                                              @RequestPart(value = "recordGetReq") RecordGetReq recordGetReq){
        try{
-           return new BaseResponse<>(recordService.saveRecord(recordGetReq));
+           return new BaseResponse<>(recordService.saveRecord(multipartFiles, recordGetReq));
        } catch (BaseException exception){
            return new BaseResponse<>(exception.getStatus());
        }
