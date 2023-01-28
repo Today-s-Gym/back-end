@@ -1,10 +1,8 @@
 package com.gym.record.photo;
 
 import com.gym.record.Record;
-import com.gym.record.dto.RecordGetReq;
-import com.gym.user.User;
-import com.gym.utils.JwtService;
-import com.gym.utils.UtilService;
+import com.gym.utils.S3Service;
+import com.gym.utils.dto.getS3Res;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +15,7 @@ import java.util.List;
 public class RecordPhotoService {
 
     private final RecordPhotoRepository recordPhotoRepository;
+    private final S3Service s3Service;
 
     @Transactional
     public void saveRecordPhoto(List<RecordPhoto> recordPhotos){
@@ -31,10 +30,10 @@ public class RecordPhotoService {
      *여러개의 recordPhoto 저장
      */
     @Transactional
-    public void saveAllRecordPhotoByRecord(List<String> imgUrls, Record record) {
+    public void saveAllRecordPhotoByRecord(List<getS3Res> getS3ResList, Record record) {
         List<RecordPhoto> recordPhotos = new ArrayList<>();
-        for(String img : imgUrls){
-            RecordPhoto recordPhoto = RecordPhoto.builder().imgUrl(img).build();
+        for(getS3Res getS3Res : getS3ResList){
+            RecordPhoto recordPhoto = RecordPhoto.builder().imgUrl(getS3Res.getImgUrl()).fileName(getS3Res.getFileName()).build();
             recordPhotos.add(recordPhoto);
             record.addPhotoList(recordPhoto);
         }
@@ -45,9 +44,18 @@ public class RecordPhotoService {
      * 기록과 연관된 모든 recordPhoto 삭제
      */
     @Transactional
+    public void deleteAllRecordPhotos(List<RecordPhoto> recordPhotos){
+        for (RecordPhoto recordPhoto : recordPhotos) {
+            s3Service.deleteFile(recordPhoto.getFileName());
+        }
+    }
+
+    @Transactional
     public void deleteAllRecordPhotoByRecord(List<Integer> ids){
         recordPhotoRepository.deleteAllByRecord(ids);
     }
+
+
 
     /**
      * record와 연관된 모든 id 조회
