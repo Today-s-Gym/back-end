@@ -4,12 +4,14 @@ import com.gym.record.dto.RecordGetRecentRes;
 import com.gym.config.exception.BaseException;
 import com.gym.record.dto.RecordGetReq;
 import com.gym.record.dto.RecordGetRes;
+import com.gym.record.photo.RecordPhoto;
 import com.gym.record.photo.RecordPhotoService;
 import com.gym.tag.TagService;
 import com.gym.user.User;
 import com.gym.utils.JwtService;
 import com.gym.utils.S3Service;
 import com.gym.utils.UtilService;
+import com.gym.utils.dto.getS3Res;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -47,11 +49,11 @@ public class RecordService {
     public Integer saveRecord(List<MultipartFile> multipartFiles, RecordGetReq recordGetReq) throws BaseException {
         validateDuplicateRecord();
         //엔티티 조회
-        User user = utilService.findByUserIdWithValidation(JwtService.getUserId());
+        User user = utilService.findByUserIdWithValidation(jwtService.getUserIdx());
         Record record = Record.createRecord(recordGetReq.getContent(), user);
         recordRepository.save(record);
         //Record 사진 추가
-        List<String> imgUrls = s3Service.uploadFile(multipartFiles);
+        List<getS3Res> imgUrls = s3Service.uploadFile(multipartFiles);
         recordPhotoService.saveAllRecordPhotoByRecord(imgUrls, record);
         //Tag 추가
         tagService.saveAllTagByRecord(recordGetReq, record);
@@ -104,16 +106,20 @@ public class RecordService {
      */
     @Transactional
     @Modifying
-    public Integer updateRecord(String date, RecordGetReq recordGetReq) throws BaseException {
+    public Integer updateRecord(String date, RecordGetReq recordGetReq, List<MultipartFile> multipartFiles) throws BaseException {
         //User, Record 조회 및 update
         User user = utilService.findByUserIdWithValidation(jwtService.getUserIdx());
         Record record = recordRepository.findAllByDay(user.getUserId(), date);
         record = utilService.findByRecordIdWithValidation(record.getRecordId());
         record.updateRecord(recordGetReq.getContent());
-        //RecordPhoto update
-        List<Integer> phIds = recordPhotoService.findAllId(record.getRecordId());
-        recordPhotoService.deleteAllRecordPhotoByRecord(phIds);
-        //recordPhotoService.saveAllRecordPhotoByRecord(recordGetReq, record);
+        //record 사진 삭제
+        List<RecordPhoto> recordPhotos = recordPhotoService.findByRecordId(record.getRecordId());
+        recordPhotoService.deleteAllRecordPhotos(recordPhotos);
+        List<Integer> ids = recordPhotoService.findAllId(record.getRecordId());
+        recordPhotoService.deleteAllRecordPhotoByRecord(ids);
+        //Record 사진 추가
+        List<getS3Res> imgUrls = s3Service.uploadFile(multipartFiles);
+        recordPhotoService.saveAllRecordPhotoByRecord(imgUrls, record);
         //Tag update
         List<Integer> tIds = tagService.findAllId(record.getRecordId());
         tagService.deleteAllTagByRecord(tIds);
@@ -132,6 +138,8 @@ public class RecordService {
         User user = utilService.findByUserIdWithValidation(jwtService.getUserIdx());
         Record record = recordRepository.findAllByDay(user.getUserId(), date);
         //recordPhoto 삭제
+        List<RecordPhoto> recordPhotos = recordPhotoService.findByRecordId(record.getRecordId());
+        recordPhotoService.deleteAllRecordPhotos(recordPhotos);
         List<Integer> ids = recordPhotoService.findAllId(record.getRecordId());
         recordPhotoService.deleteAllRecordPhotoByRecord(ids);
         //태그 삭제
