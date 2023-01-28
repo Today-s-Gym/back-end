@@ -29,10 +29,10 @@ public class IntroduceController {
 
     @PutMapping("/login/introduce")
     @ResponseBody
-    public BaseResponse<?> updateIntroduce(@RequestParam("userid") int userid, @RequestParam("nickname") String nickname, @RequestParam("introduce") String introduce)
+    public BaseResponse<?> updateIntroduce(@RequestParam("userId") int userId, @RequestParam("nickname") String nickname, @RequestParam("introduce") String introduce)
     {
         try{
-            User user = utilService.findByUserIdWithValidation(userid);
+            User user = utilService.findByUserIdWithValidation(userId);
             if((introduce.length() >= 0) && (introduce.length() <= 30)){
                 user.update(nickname, introduce);
                 userRepository.save(user);

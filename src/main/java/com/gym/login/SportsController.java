@@ -27,13 +27,13 @@ public class SportsController {
 
     @PutMapping("/login/sports")
     @ResponseBody
-    public BaseResponse<?> uploadSports(@RequestParam("userid") int userid, @RequestParam("categoryid") int categoryid)
+    public BaseResponse<?> uploadSports(@RequestParam("userId") int userId, @RequestParam("categoryId") int categoryId)
 
     {
         try{
-            User user = utilService.findByUserIdWithValidation(userid);
+            User user = utilService.findByUserIdWithValidation(userId);
             Category category = new Category();
-            category.setCategoryId(categoryid);
+            category.setCategoryId(categoryId);
             user.updateSports(category);
             userRepository.save(user);
             return new BaseResponse<>(BaseResponseStatus.SUCCESS);
