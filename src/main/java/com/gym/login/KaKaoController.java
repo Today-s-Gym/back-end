@@ -23,9 +23,6 @@ public class KaKaoController {
     @Autowired
     private UserService userService;
 
-    @Value("${kakao.default.password}")
-    private String kakaoPassword;
-
     @Autowired
     private UserRepository userRepository;
 
