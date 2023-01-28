@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -30,9 +31,11 @@ public class RecordPhotoService {
      *여러개의 recordPhoto 저장
      */
     @Transactional
-    public void saveAllRecordPhotoByRecord(RecordGetReq recordGetReq, Record record) {
-        List<RecordPhoto> recordPhotos = recordGetReq.getRecordPhotos();
-        for (RecordPhoto recordPhoto : recordPhotos) {
+    public void saveAllRecordPhotoByRecord(List<String> imgUrls, Record record) {
+        List<RecordPhoto> recordPhotos = new ArrayList<>();
+        for(String img : imgUrls){
+            RecordPhoto recordPhoto = RecordPhoto.builder().imgUrl(img).build();
+            recordPhotos.add(recordPhoto);
             record.addPhotoList(recordPhoto);
         }
         saveRecordPhoto(recordPhotos);

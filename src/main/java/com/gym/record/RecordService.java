@@ -8,6 +8,7 @@ import com.gym.record.photo.RecordPhotoService;
 import com.gym.tag.TagService;
 import com.gym.user.User;
 import com.gym.utils.JwtService;
+import com.gym.utils.S3Service;
 import com.gym.utils.UtilService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -34,20 +36,23 @@ public class RecordService {
     private final TagService tagService;
     private final JwtService jwtService;
 
+    private final S3Service s3Service;
+
 
 
     /**
      * Record, photo, tag 저장
      */
     @Transactional
-    public Integer saveRecord(RecordGetReq recordGetReq) throws BaseException {
+    public Integer saveRecord(List<MultipartFile> multipartFiles, RecordGetReq recordGetReq) throws BaseException {
         validateDuplicateRecord();
         //엔티티 조회
         User user = utilService.findByUserIdWithValidation(JwtService.getUserId());
         Record record = Record.createRecord(recordGetReq.getContent(), user);
         recordRepository.save(record);
         //Record 사진 추가
-        recordPhotoService.saveAllRecordPhotoByRecord(recordGetReq, record);
+        List<String> imgUrls = s3Service.uploadFile(multipartFiles);
+        recordPhotoService.saveAllRecordPhotoByRecord(imgUrls, record);
         //Tag 추가
         tagService.saveAllTagByRecord(recordGetReq, record);
         return record.getRecordId();
@@ -108,7 +113,7 @@ public class RecordService {
         //RecordPhoto update
         List<Integer> phIds = recordPhotoService.findAllId(record.getRecordId());
         recordPhotoService.deleteAllRecordPhotoByRecord(phIds);
-        recordPhotoService.saveAllRecordPhotoByRecord(recordGetReq, record);
+        //recordPhotoService.saveAllRecordPhotoByRecord(recordGetReq, record);
         //Tag update
         List<Integer> tIds = tagService.findAllId(record.getRecordId());
         tagService.deleteAllTagByRecord(tIds);
