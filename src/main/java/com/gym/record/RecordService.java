@@ -66,7 +66,8 @@ public class RecordService {
      * 하루에 하나만 기록 추가
      */
     private void validateDuplicateRecord() throws BaseException {
-        Integer count = recordRepository.findByRecordDate(String.valueOf(LocalDate.now()));
+        User user = utilService.findByUserIdWithValidation(jwtService.getUserIdx());
+        Integer count = recordRepository.findByRecordDate(String.valueOf(LocalDate.now()) , user.getUserId());
         if(count > 0){
             throw new BaseException(RECORD_DATE_EXISTS);
         }

@@ -22,8 +22,8 @@ public interface RecordRepository extends JpaRepository<Record, Integer> {
     @Query("select r from Record r where r.user.userId = :userId and date_format(r.createdAt, '%Y-%m') = :month")
     List<Record> findAllByMonth(@Param("userId") Integer userId, @Param("month") String month);
 
-    @Query("select count(r) from Record r where date_format(r.createdAt, '%Y-%m-%d') = :date")
-    Integer findByRecordDate(@Param("date") String date);
+    @Query("select count(r) from Record r where date_format(r.createdAt, '%Y-%m-%d') = :date and r.user.userId = :userId")
+    Integer findByRecordDate(@Param("date") String date, @Param("userId") Integer userId);
 
 
     @Modifying
