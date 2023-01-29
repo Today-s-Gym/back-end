@@ -4,9 +4,9 @@ import lombok.Data;
 
 @Data
 public class TagGetRecentRes {
-    String imgUrl;
+    String tag;
 
-    public TagGetRecentRes(String imgUrl) {
-        this.imgUrl = imgUrl;
+    public TagGetRecentRes(String tag) {
+        this.tag = tag;
     }
 }
