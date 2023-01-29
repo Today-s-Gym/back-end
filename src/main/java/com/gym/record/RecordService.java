@@ -53,8 +53,10 @@ public class RecordService {
         Record record = Record.createRecord(recordGetReq.getContent(), user);
         recordRepository.save(record);
         //Record 사진 추가
-        List<getS3Res> imgUrls = s3Service.uploadFile(multipartFiles);
-        recordPhotoService.saveAllRecordPhotoByRecord(imgUrls, record);
+        if(multipartFiles != null) {
+            List<getS3Res> imgUrls = s3Service.uploadFile(multipartFiles);
+            recordPhotoService.saveAllRecordPhotoByRecord(imgUrls, record);
+        }
         //Tag 추가
         tagService.saveAllTagByRecord(recordGetReq, record);
         return record.getRecordId();
@@ -118,8 +120,10 @@ public class RecordService {
         List<Integer> ids = recordPhotoService.findAllId(record.getRecordId());
         recordPhotoService.deleteAllRecordPhotoByRecord(ids);
         //Record 사진 추가
-        List<getS3Res> imgUrls = s3Service.uploadFile(multipartFiles);
-        recordPhotoService.saveAllRecordPhotoByRecord(imgUrls, record);
+        if(multipartFiles != null) {
+            List<getS3Res> imgUrls = s3Service.uploadFile(multipartFiles);
+            recordPhotoService.saveAllRecordPhotoByRecord(imgUrls, record);
+        }
         //Tag update
         List<Integer> tIds = tagService.findAllId(record.getRecordId());
         tagService.deleteAllTagByRecord(tIds);
