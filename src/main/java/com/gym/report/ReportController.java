@@ -20,11 +20,12 @@ public class ReportController {
     private final ReportService reportService;
     private final UserRepository userRepository;
     private final UtilService utilService;
+    private final JwtService jwtService;
 
     @PostMapping("/report/user")
     public BaseResponse<Integer> reportUser(@RequestBody ReportReq reportReq) {
         try {
-            User reporter = utilService.findByUserIdWithValidation(JwtService.getUserId());
+            User reporter = utilService.findByUserIdWithValidation(jwtService.getUserIdx());
             User reportedUser = utilService.findByUserIdWithValidation(reportReq.getReportedId());
             return new BaseResponse<>(reportService.saveReportUser(reporter, reportedUser));
         } catch (BaseException exception) {
@@ -35,7 +36,7 @@ public class ReportController {
     @PostMapping("/report/post")
     public BaseResponse<Integer> reportPost(@RequestBody ReportReq reportReq) {
         try {
-            User reporter = utilService.findByUserIdWithValidation(JwtService.getUserId());
+            User reporter = utilService.findByUserIdWithValidation(jwtService.getUserIdx());
             Post reportedPost = utilService.findByPostIdWithValidation(reportReq.getReportedId());
             return new BaseResponse<>(reportService.saveReportPost(reporter, reportedPost));
         } catch (BaseException exception) {
@@ -47,7 +48,7 @@ public class ReportController {
     @PostMapping("/report/comment")
     public BaseResponse<Integer> reportComment(@RequestBody ReportReq reportReq) {
         try {
-            User reporter = utilService.findByUserIdWithValidation(JwtService.getUserId());
+            User reporter = utilService.findByUserIdWithValidation(jwtService.getUserIdx());
             Comment reportedComment = utilService.findByCommentIdWithValidation(reportReq.getReportedId());
             return new BaseResponse<>(reportService.saveReportComment(reporter, reportedComment));
         } catch (BaseException exception) {
