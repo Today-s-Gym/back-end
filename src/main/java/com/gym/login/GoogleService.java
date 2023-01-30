@@ -58,30 +58,20 @@ public class GoogleService {
         );
 
         return responseEntity.getBody();
-
-        //String jsonData = responseEntity.getBody();
-
-/*        //JSON 데이터에서 액세스 토큰 정보만 추출
-        Gson gsonObj = new Gson();
-        Map<?, ?> data = gsonObj.fromJson(jsonData, Map.class);
-
-        return (String) data.get("access_token");*/
-
-
     }
 
-    public String getUserInfo(String access_Token) {
+    public String getUserInfo(String accessToken) {
         //요청하는 클라이언트마다 가진 정보가 다를 수 있기에 HashMap타입으로 선언
         HashMap<String, Object> googleUserInfo = new HashMap<>();
         //String reqURL = "https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token="+access_Token;
-        String reqURL = "https://www.googleapis.com/oauth2/v3/userinfo?access_token=" + access_Token;
+        String reqURL = "https://www.googleapis.com/oauth2/v3/userinfo?access_token=" + accessToken;
         User user = null;
         try {
             URL url = new URL(reqURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
             //요청에 필요한 Header에 포함될 내용
-            conn.setRequestProperty("Authorization", "Bearer " + access_Token);
+            conn.setRequestProperty("Authorization", "Bearer " + accessToken);
 
             int responseCode = conn.getResponseCode();
             System.out.println("responseCode : " + responseCode);

@@ -1,5 +1,7 @@
 package com.gym.login;
 
+import com.gym.config.exception.BaseResponse;
+import com.gym.user.UserService;
 import io.jsonwebtoken.Claims;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class JwtController {
     private final JwtProvider jwtProvider;
 
+    private final UserService userService;
+
     //==토큰 생성 컨트롤러==//
 
     public String createToken(Integer userId) throws Exception {
@@ -25,15 +29,24 @@ public class JwtController {
         return tokenDataResponse.token;
     }
 
-    public String createRefreshToken(Integer userId) throws Exception {
+    public TokenDataResponse createRefreshToken(Integer userId) throws Exception {
         String token = jwtProvider.createRefreshToken(userId); // 토큰 생성
         Claims claims = jwtProvider.parseJwtToken("Bearer "+ token); // 토큰 검증
 
-        TokenDataResponse tokenDataResponse = new TokenDataResponse(token, claims.getSubject(), claims.getIssuedAt().toString(), claims.getExpiration().toString());
+        TokenDataResponse tokenDataResponse = new TokenDataResponse(token, claims.getSubject(), claims.getIssuedAt().toString(),  claims.getExpiration().toString());
         TokenResponse tokenResponse = new TokenResponse("200", "OK", tokenDataResponse);
 
-        return tokenDataResponse.token;
+        return tokenDataResponse;
     }
+
+    @GetMapping(value = "/reissue")
+    public BaseResponse<?> reissue(@RequestHeader(value="Authorization") String token){
+
+        return userService.reissue(token);
+
+    }
+
+
 
     //==토큰 인증 컨트롤러==//
     @GetMapping(value = "/checkToken")
@@ -43,6 +56,8 @@ public class JwtController {
         TokenResponseNoData tokenResponseNoData = new TokenResponseNoData("200", "success");
         return tokenResponseNoData;
     }
+
+
 
     //==Response DTO==//
     @Data

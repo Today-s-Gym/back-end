@@ -6,6 +6,7 @@ import com.gym.config.exception.BaseResponse;
 import com.gym.config.exception.BaseResponseStatus;
 import com.gym.user.User;
 import com.gym.user.UserRepository;
+import com.gym.utils.JwtService;
 import com.gym.utils.UtilService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +25,15 @@ public class IntroduceController {
     @Autowired
     private UtilService utilService;
 
-    @Autowired(required = false)
-    private ModelMapper modelMapper;
+    @Autowired
+    private JwtService jwtService;
 
     @PutMapping("/login/introduce")
     @ResponseBody
-    public BaseResponse<?> updateIntroduce(@RequestParam("userid") int userid, @RequestParam("nickname") String nickname, @RequestParam("introduce") String introduce)
+    public BaseResponse<?> updateIntroduce(@RequestParam("nickname") String nickname, @RequestParam("introduce") String introduce)
     {
         try{
+            Integer userid = jwtService.getUserIdx();
             User user = utilService.findByUserIdWithValidation(userid);
             if((introduce.length() >= 0) && (introduce.length() <= 30)){
                 user.update(nickname, introduce);

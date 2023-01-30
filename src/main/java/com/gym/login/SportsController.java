@@ -7,6 +7,7 @@ import com.gym.config.exception.BaseResponse;
 import com.gym.config.exception.BaseResponseStatus;
 import com.gym.user.User;
 import com.gym.user.UserRepository;
+import com.gym.utils.JwtService;
 import com.gym.utils.UtilService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,18 +23,19 @@ public class SportsController {
     @Autowired
     private UtilService utilService;
 
-    @Autowired(required = false)
-    private ModelMapper modelMapper;
+    @Autowired
+    private JwtService jwtService;
 
     @PutMapping("/login/sports")
     @ResponseBody
-    public BaseResponse<?> uploadSports(@RequestParam("userid") int userid, @RequestParam("categoryid") int categoryid)
+    public BaseResponse<?> uploadSports(@RequestParam("categoryid") int categoryId)
 
     {
         try{
+            Integer userid = jwtService.getUserIdx();
             User user = utilService.findByUserIdWithValidation(userid);
             Category category = new Category();
-            category.setCategoryId(categoryid);
+            category.setCategoryId(categoryId);
             user.updateSports(category);
             userRepository.save(user);
             return new BaseResponse<>(BaseResponseStatus.SUCCESS);

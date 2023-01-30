@@ -19,10 +19,10 @@ public class NicknameController {
 
     @GetMapping("/login/nickname")
     @ResponseBody
-    public BaseResponse<?> updateNickname(@RequestParam("nickname") String nickname)
+    public BaseResponse<?> updateNickname(@RequestParam("nickname") String nickName)
     {
 
-        Optional<User> findUser = userRepository.findByNickName(nickname);
+        Optional<User> findUser = userRepository.findByNickName(nickName);
         if(findUser.isEmpty()){
 
             return new BaseResponse<>(BaseResponseStatus.SUCCESS);

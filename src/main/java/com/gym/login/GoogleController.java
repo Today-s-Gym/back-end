@@ -49,9 +49,9 @@ public class GoogleController {
             UserUpdateRequestDTO userUpdateRequestDTO = new UserUpdateRequestDTO(useremail);
             User googleUser = userService.save(userUpdateRequestDTO);
 
-            String refreshToken = jwtController.createRefreshToken(googleUser.getUserId());
+            //String refreshToken = jwtController.createRefreshToken(googleUser.getUserId());
             String loginToken = jwtController.createToken(googleUser.getUserId());
-            googleUser.updateRefreshToken(refreshToken);
+            //googleUser.updateRefreshToken(refreshToken);
             //System.out.println("refreshToken = " + refreshToken);
             userService.insertUser(googleUser);
             return loginToken;

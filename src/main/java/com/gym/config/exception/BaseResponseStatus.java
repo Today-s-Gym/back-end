@@ -88,7 +88,11 @@ public enum BaseResponseStatus {
      */
     NICKNAME_ERROR(false, 5000, "이미 존재하는 닉네임입니다."),
     INTRODUCE_ERROR(false, 5001, "한줄 소개는 0~30자이어야 합니다."),
-    KAKAO_ERROR(false, 5002, "카카오 로그아웃에 실패했습니다.");
+    KAKAO_ERROR(false, 5002, "카카오 로그아웃에 실패했습니다."),
+    JWT_NOTVALID_ERROR(false, 5100, "Refresh Token 정보가 유효하지 않습니다."),
+    JWT_OTHER_ERROR(false, 5105, "Refresh Token 정보가 일치하지 않습니다."),
+
+    NOT_VALID_ERROR(false, 5107, "잘못된 요청입니다.");
 
 
 
