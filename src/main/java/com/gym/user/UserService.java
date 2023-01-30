@@ -198,7 +198,7 @@ public class UserService {
         return false;
     }
 
-    private void saveMyAvatarInCollection(User user, MyAvatar myAvatar) {
+    public void saveMyAvatarInCollection(User user, MyAvatar myAvatar) {
         MyAvatarCollection myAvatarCollection = new MyAvatarCollection();
         myAvatarCollection.setUser(user);
         myAvatarCollection.setMyAvatar(myAvatar);
