@@ -198,6 +198,7 @@ public class UserService {
         return false;
     }
 
+    @Transactional
     public void saveMyAvatarInCollection(User user, MyAvatar myAvatar) {
         MyAvatarCollection myAvatarCollection = new MyAvatarCollection();
         myAvatarCollection.setUser(user);
