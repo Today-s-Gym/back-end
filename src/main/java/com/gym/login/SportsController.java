@@ -43,14 +43,4 @@ public class SportsController {
         }
     }
 
-
-/*    public void uploadSports(int userid, int categoryid)
-    {
-        User user = userRepository.findById(userid).get();
-        Category category = new Category();
-        category.setCategoryId(categoryid);
-        user.setCategory(category);
-        userRepository.save(user);
-
-    }*/
 }

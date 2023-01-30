@@ -31,19 +31,4 @@ public class NicknameController {
             return new BaseResponse<>(BaseResponseStatus.NICKNAME_ERROR);
         }
     }
-
-
-
-/*    public void updateNickname(User user, String nickname)
-    {
-        Optional<User> findUser = userRepository.findByNickName(nickname);
-        if(findUser.isEmpty()){
-            user.setNickName(nickname);
-            userRepository.save(user);
-            System.out.println("닉네임 생성 완료");
-        }
-        else{
-            System.out.println("이미 존재하는 닉네임입니다.");
-        }
-    }*/
 }
