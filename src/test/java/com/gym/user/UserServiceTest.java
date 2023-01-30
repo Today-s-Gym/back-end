@@ -91,7 +91,7 @@ class UserServiceTest {
     @DisplayName("내 아바타 조회 테스트")
     @Transactional
     void getAvatarCollection() throws BaseException {
-        List<MyAvatarDto> myCollection = userService.getMyCollection(1);
+        List<MyAvatarDto> myCollection = userService.getMyCollection(11);
         for (MyAvatarDto myAvatarDto : myCollection) {
             System.out.println("====");
             System.out.println("myAvatarId: " + myAvatarDto.getMyAvatarId());
@@ -105,7 +105,7 @@ class UserServiceTest {
     @DisplayName("마이 페이지 조회 테스트")
     @Transactional
     void testGetMyPage() throws BaseException {
-        GetMyPageRes mypage = userService.getMyPage(1);
+        GetMyPageRes mypage = userService.getMyPage(11);
         System.out.println("AvatarImgUrl() = " + mypage.getAvatarImgUrl());
         System.out.println("Nickname() = " + mypage.getNickname());
         System.out.println("CategoryName() = " + mypage.getCategoryName());
