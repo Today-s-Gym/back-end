@@ -35,7 +35,6 @@ public class IntroduceController {
 
     @PutMapping("/login/introduce")
     @ResponseBody
-    public BaseResponse<?> updateIntroduce(@RequestParam("userId") int userId, @RequestParam("nickname") String nickname, @RequestParam("introduce") String introduce)
     public BaseResponse<?> updateIntroduce(@RequestParam("nickname") String nickname, @RequestParam("introduce") String introduce)
     {
         try{

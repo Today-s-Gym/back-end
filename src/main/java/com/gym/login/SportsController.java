@@ -28,14 +28,11 @@ public class SportsController {
 
     @PutMapping("/login/sports")
     @ResponseBody
-    public BaseResponse<?> uploadSports(@RequestParam("userId") int userId, @RequestParam("categoryId") int categoryId)
     public BaseResponse<?> uploadSports(@RequestParam("categoryid") int categoryId)
-
     {
         try{
             Integer userid = jwtService.getUserIdx();
             User user = utilService.findByUserIdWithValidation(userid);
-            User user = utilService.findByUserIdWithValidation(userId);
             Category category = new Category();
             category.setCategoryId(categoryId);
             user.updateSports(category);

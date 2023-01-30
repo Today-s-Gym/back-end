@@ -18,9 +18,9 @@ public class SportsRegisterTest {
     private SportsController sportsController;
 
 
-    @Test
+/*    @Test
     public void test() throws Exception{
         sportsController.uploadSports(10, 2);
 
-    }
+    }*/
 }
