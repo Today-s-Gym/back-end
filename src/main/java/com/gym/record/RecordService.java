@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -70,7 +71,7 @@ public class RecordService {
      */
     private void validateDuplicateRecord() throws BaseException {
         User user = utilService.findByUserIdWithValidation(jwtService.getUserIdx());
-        Integer count = recordRepository.findByRecordDate(String.valueOf(LocalDate.now()) , user.getUserId());
+        Integer count = recordRepository.findByRecordDate(LocalDate.now(ZoneId.of("Asia/Seoul")).toString() , user.getUserId());
         if(count > 0){
             throw new BaseException(RECORD_DATE_EXISTS);
         }
