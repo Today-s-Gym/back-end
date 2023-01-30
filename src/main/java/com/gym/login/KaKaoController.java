@@ -53,19 +53,15 @@ public class KaKaoController {
             UserUpdateRequestDTO userUpdateRequestDTO = new UserUpdateRequestDTO(useremail);
             User kakaoUser = userService.save(userUpdateRequestDTO);
             JwtResponseDTO.TokenInfo tokenInfo = jwtProvider.generateToken(kakaoUser.getUserId());
-            //JwtController.TokenDataResponse kakaorefreshToken = jwtController.createRefreshToken(kakaoUser.getUserId());
 
-            // 4. RefreshToken Redis 저장 (expirationTime 설정을 통해 자동 삭제 처리)
+            // RefreshToken Redis 저장 (expirationTime 설정을 통해 자동 삭제 처리)
             redisTemplate.opsForValue()
                     .set("RT:" + useremail, tokenInfo.getRefreshToken(), jwtProvider.getExpiration(tokenInfo.getRefreshToken()), TimeUnit.MILLISECONDS);
-            //kakaoUser.updateRefreshToken(kakaorefreshToken);
-            //String loginToken = jwtController.createToken(kakaoUser.getUserId());
             userService.insertUser(kakaoUser);
 
             return new BaseResponse<>(tokenInfo);
         } else {
             User user = findUser.get();
-            //JwtController.TokenDataResponse kakaorefreshToken = jwtController.createRefreshToken(user.getUserId());
             JwtResponseDTO.TokenInfo tokenInfo = jwtProvider.generateToken(user.getUserId());
 
             // 4. RefreshToken Redis 저장 (expirationTime 설정을 통해 자동 삭제 처리)

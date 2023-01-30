@@ -1,67 +1,68 @@
 package com.gym.login;
 
 import com.google.gson.Gson;
+import com.gym.config.exception.BaseResponse;
+import com.gym.login.dto.JwtResponseDTO;
 import com.gym.login.dto.UserUpdateRequestDTO;
 import com.gym.user.User;
 import com.gym.user.UserRepository;
 import com.gym.user.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Controller
 public class GoogleController {
     @Autowired
     private GoogleService googleService;
-
     @Autowired
     private UserService userService;
-
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private JwtController jwtController;
-
-
     @Autowired(required = false)
     private ModelMapper modelMapper;
+    @Autowired
+    private JwtProvider jwtProvider;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @ResponseBody
     @GetMapping("/login/google")
-    public String GoogleCallback(String code) throws Exception {
+    public BaseResponse<?> GoogleCallback(String code) throws Exception {
         String accessToken = googleService.getAccessToken(code);
-
         Gson gsonObj = new Gson();
         Map<?, ?> data = gsonObj.fromJson(accessToken, Map.class);
-
         String atoken = (String) data.get("access_token");
-
         String useremail = googleService.getUserInfo(atoken);
-
         Optional<User> findUser = userRepository.findByEmail(useremail);
         if (findUser.isEmpty()) {
             UserUpdateRequestDTO userUpdateRequestDTO = new UserUpdateRequestDTO(useremail);
             User googleUser = userService.save(userUpdateRequestDTO);
-
-            //String refreshToken = jwtController.createRefreshToken(googleUser.getUserId());
-            String loginToken = jwtController.createToken(googleUser.getUserId());
-            //googleUser.updateRefreshToken(refreshToken);
-            //System.out.println("refreshToken = " + refreshToken);
+            JwtResponseDTO.TokenInfo tokenInfo = jwtProvider.generateToken(googleUser.getUserId());
+            // RefreshToken Redis 저장 (expirationTime 설정을 통해 자동 삭제 처리)
+            redisTemplate.opsForValue()
+                    .set("RT:" + useremail, tokenInfo.getRefreshToken(), jwtProvider.getExpiration(tokenInfo.getRefreshToken()), TimeUnit.MILLISECONDS);
             userService.insertUser(googleUser);
-            return loginToken;
-            //System.out.println(googleUser.getUserId());
+
+            return new BaseResponse<>(tokenInfo);
         } else {
             User user = findUser.get();
-            String loginToken = jwtController.createToken(user.getUserId());
-            //System.out.println("loginToken = " + loginToken);
-            //googleUser.setDeviceToken(loginToken);
-            return loginToken;
+            JwtResponseDTO.TokenInfo tokenInfo = jwtProvider.generateToken(user.getUserId());
+
+            // 4. RefreshToken Redis 저장 (expirationTime 설정을 통해 자동 삭제 처리)
+            redisTemplate.opsForValue()
+                    .set("RT:" + useremail, tokenInfo.getRefreshToken(), jwtProvider.getExpiration(tokenInfo.getRefreshToken()), TimeUnit.MILLISECONDS);
+            //String loginToken = jwtController.createToken(user.getUserId());
+            return new BaseResponse<>(tokenInfo);
         }
 
 
