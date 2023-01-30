@@ -1,6 +1,9 @@
 package com.gym.login;
 
 
+import com.gym.avatar.avatar.AvatarStep;
+import com.gym.avatar.avatar.MyAvatar;
+import com.gym.avatar.avatar.MyAvatarRepository;
 import com.gym.config.exception.BaseException;
 import com.gym.config.exception.BaseResponse;
 import com.gym.config.exception.BaseResponseStatus;
@@ -22,6 +25,8 @@ public class IntroduceController {
     private UserRepository userRepository;
 
     @Autowired
+    private MyAvatarRepository myAvatarRepository;
+    @Autowired
     private UtilService utilService;
 
     @Autowired(required = false)
@@ -33,11 +38,13 @@ public class IntroduceController {
     {
         try{
             User user = utilService.findByUserIdWithValidation(userId);
+
             if((introduce.length() >= 0) && (introduce.length() <= 30)){
-                user.update(nickname, introduce);
+                AvatarStep initialAvatarStep = AvatarStep.getInitialAvatarStep();
+                MyAvatar myAvatar = myAvatarRepository.findByAvatarStep(initialAvatarStep).get();
+                user.update(nickname, introduce, myAvatar);
                 userRepository.save(user);
                 return new BaseResponse<>(BaseResponseStatus.SUCCESS);
-
             }
             else{
                 return new BaseResponse<>(BaseResponseStatus.INTRODUCE_ERROR);
