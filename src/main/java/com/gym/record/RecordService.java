@@ -8,6 +8,7 @@ import com.gym.record.photo.RecordPhoto;
 import com.gym.record.photo.RecordPhotoService;
 import com.gym.tag.TagService;
 import com.gym.user.User;
+import com.gym.user.UserService;
 import com.gym.utils.JwtService;
 import com.gym.utils.S3Service;
 import com.gym.utils.UtilService;
@@ -39,6 +40,7 @@ public class RecordService {
     private final JwtService jwtService;
 
     private final S3Service s3Service;
+    private final UserService userService;
 
 
 
@@ -59,6 +61,7 @@ public class RecordService {
         }
         //Tag 추가
         tagService.saveAllTagByRecord(recordGetReq, record);
+        userService.checkAndMyAvatarLevelUp(jwtService.getUserIdx());
         return record.getRecordId();
     }
 
