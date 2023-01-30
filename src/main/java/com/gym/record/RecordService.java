@@ -18,12 +18,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -71,7 +74,8 @@ public class RecordService {
      */
     private void validateDuplicateRecord() throws BaseException {
         User user = utilService.findByUserIdWithValidation(jwtService.getUserIdx());
-        Integer count = recordRepository.findByRecordDate(LocalDate.now(ZoneId.of("Asia/Seoul")).toString() , user.getUserId());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        Integer count = recordRepository.findByRecordDate(ZonedDateTime.now(ZoneId.of("Asia/Seoul")).format(formatter).toString() , user.getUserId());
         if(count > 0){
             throw new BaseException(RECORD_DATE_EXISTS);
         }

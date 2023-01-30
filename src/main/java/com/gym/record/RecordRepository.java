@@ -24,8 +24,6 @@ public interface RecordRepository extends JpaRepository<Record, Integer> {
 
     @Query("select count(r) from Record r where date_format(r.createdAt, '%Y-%m-%d') = :date and r.user.userId = :userId")
     Integer findByRecordDate(@Param("date") String date, @Param("userId") Integer userId);
-
-
     @Modifying
     @Query("delete from Record r where r.recordId = :recordId")
     Integer deleteAllByRecordId(@Param("recordId") Integer recordId);
