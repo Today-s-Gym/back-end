@@ -84,9 +84,10 @@ public class User {
         this.myAvatar = myAvatar;
     }
 
-    public void update(String nickname, String introduce) {
+    public void update(String nickname, String introduce, MyAvatar myAvatar) {
         this.nickName = nickname;
         this.introduce = introduce;
+        this.myAvatar = myAvatar;
     }
 
     public void updateSports(Category category){

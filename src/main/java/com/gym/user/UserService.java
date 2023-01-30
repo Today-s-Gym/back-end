@@ -190,7 +190,7 @@ public class UserService {
         User user = userRepository.findWithMyAvatarByUserId(userId);
 
         if (!user.getMyAvatar().getAvatarStep().equals(avatarStep)) {
-            MyAvatar levelUpAvatar = myAvatarRepository.findByAvatarStep(avatarStep).get(0);
+            MyAvatar levelUpAvatar = myAvatarRepository.findByAvatarStep(avatarStep).get();
             saveMyAvatarInCollection(user, levelUpAvatar);
             user.changeAvatarStep(levelUpAvatar);
             return true;

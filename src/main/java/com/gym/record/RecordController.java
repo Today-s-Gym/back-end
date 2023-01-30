@@ -62,8 +62,10 @@ public class RecordController {
      * 기록 수정하기
      */
     @PostMapping("/record/update")
-    public BaseResponse<Integer> updateRecord(@Param("date") String date, @RequestBody RecordGetReq recordGetReq) throws BaseException {
-            return new BaseResponse<>(recordService.updateRecord(date, recordGetReq));
+    public BaseResponse<Integer> updateRecord(@Param("date") String date,
+                                              @RequestPart(value = "recordGetReq") RecordGetReq recordGetReq,
+                                              @RequestPart(value = "image", required = false) List<MultipartFile> multipartFiles) throws BaseException {
+            return new BaseResponse<>(recordService.updateRecord(date, recordGetReq, multipartFiles));
     }
 
     /**

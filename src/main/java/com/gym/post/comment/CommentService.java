@@ -66,7 +66,7 @@ public class CommentService {
                 isMine = true;
             }
 
-            res.add(new GetCommentsRes(comment.getCommentId(), comment.getContent(), writer.getNickName(), userService.getNowAvatarImg(writer.getUserId()), isMine));
+            res.add(new GetCommentsRes(comment.getCommentId(), comment.getContent(), writer.getUserId(), writer.getNickName(), userService.getNowAvatarImg(writer.getUserId()), isMine));
         }
         return res;
     }

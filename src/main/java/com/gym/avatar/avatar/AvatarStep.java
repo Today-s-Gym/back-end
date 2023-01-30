@@ -53,4 +53,11 @@ public enum AvatarStep {
                 .max(Comparator.comparingInt(AvatarStep::getMaxRecordCount))
                 .orElse(NONE);
     }
+
+    public static AvatarStep getInitialAvatarStep() {
+        return Arrays.stream(values())
+                .filter(step -> step.minRecordCount == 0)
+                .findFirst()
+                .orElse(NONE);
+    }
 }

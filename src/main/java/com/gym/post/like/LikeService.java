@@ -60,7 +60,6 @@ public class LikeService {
         }
         // 좋아요 상태 변경
         else {
-            like.changeStatus();
             result = "좋아요 상태 변경 성공";
             //좋아요 누른 상태였으면 취소로 변경, 아니었으면 누른 걸로 변경
             if(like.isStatus() == true) {
@@ -68,6 +67,7 @@ public class LikeService {
             } else {
                 status = true;
             }
+            like.changeStatus();
         }
         return new PushLikeRes(userId, postId, status, result);
     }

@@ -1,6 +1,9 @@
 package com.gym.login;
 
 
+import com.gym.avatar.avatar.AvatarStep;
+import com.gym.avatar.avatar.MyAvatar;
+import com.gym.avatar.avatar.MyAvatarRepository;
 import com.gym.config.exception.BaseException;
 import com.gym.config.exception.BaseResponse;
 import com.gym.config.exception.BaseResponseStatus;
@@ -23,6 +26,8 @@ public class IntroduceController {
     private UserRepository userRepository;
 
     @Autowired
+    private MyAvatarRepository myAvatarRepository;
+    @Autowired
     private UtilService utilService;
 
     @Autowired
@@ -30,16 +35,20 @@ public class IntroduceController {
 
     @PutMapping("/login/introduce")
     @ResponseBody
+    public BaseResponse<?> updateIntroduce(@RequestParam("userId") int userId, @RequestParam("nickname") String nickname, @RequestParam("introduce") String introduce)
     public BaseResponse<?> updateIntroduce(@RequestParam("nickname") String nickname, @RequestParam("introduce") String introduce)
     {
         try{
             Integer userid = jwtService.getUserIdx();
             User user = utilService.findByUserIdWithValidation(userid);
+
+
             if((introduce.length() >= 0) && (introduce.length() <= 30)){
-                user.update(nickname, introduce);
+                AvatarStep initialAvatarStep = AvatarStep.getInitialAvatarStep();
+                MyAvatar myAvatar = myAvatarRepository.findByAvatarStep(initialAvatarStep).get();
+                user.update(nickname, introduce, myAvatar);
                 userRepository.save(user);
                 return new BaseResponse<>(BaseResponseStatus.SUCCESS);
-
             }
             else{
                 return new BaseResponse<>(BaseResponseStatus.INTRODUCE_ERROR);

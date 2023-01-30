@@ -5,6 +5,7 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.gym.utils.dto.getS3Res;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,8 +46,8 @@ public class S3Service {
         }
     }
 
-    public List<String> uploadFile(List<MultipartFile> multipartFiles) {
-        List<String> fileList = new ArrayList<>();
+    public List<getS3Res> uploadFile(List<MultipartFile> multipartFiles) {
+        List<getS3Res> fileList = new ArrayList<>();
 
         // forEach 구문을 통해 multipartFile로 넘어온 파일들 하나씩 fileList에 추가
         multipartFiles.forEach(file -> {
@@ -61,7 +62,7 @@ public class S3Service {
             } catch(IOException e) {
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드에 실패했습니다.");
             }
-            fileList.add(s3Client.getUrl(bucket,fileName).toString());
+            fileList.add(new getS3Res(s3Client.getUrl(bucket,fileName).toString(), fileName));
         });
         return fileList;
     }

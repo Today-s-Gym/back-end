@@ -20,21 +20,21 @@ public class RecordPhoto {
     private Integer id;
 
     private String imgUrl;
+    private String fileName;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "record_id")
     private Record record;
 
-    public RecordPhoto(String imgUrl, Record record) {
+    public RecordPhoto(String imgUrl, Record record, String fileName) {
         this.imgUrl = imgUrl;
         this.record = record;
+        this.fileName= fileName;
     }
 
     //==객체 생성 메서드==//
     public void createRecord(Record record){
         this.record = record;
     }
-
-
 
 }
