@@ -25,7 +25,8 @@ public class GetPostsListRes {
     private Integer commentCounts;          // 댓글 개수
 
     //작성자(유저) 관련
-    private String writerAvatarImgUrl;    // 글 작성자의 아바타 이미지
+    private Integer writerId;               // 작성자의 userId
+    private String writerAvatarImgUrl;      // 글 작성자의 아바타 이미지
     private String writerNickName;          // 글 작성자의 닉네임
 
     //첨부된 기록 관련
