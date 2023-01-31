@@ -155,7 +155,7 @@ public class UserService {
         String thisMonth = LocalDate.now().format(formatter);
 
         int thisMonthRecordCount = recordRepository.countByUserIdMonth(user.getUserId(), thisMonth);
-        int totalRecordCount = recordRepository.countByUserId(user.getUserId());
+        int totalRecordCount = user.getRecordCount();
 
         GetMyPageRes myPageInfo = new GetMyPageRes(
                 user.getMyAvatar(),
@@ -184,10 +184,9 @@ public class UserService {
     }
     @Transactional
     public boolean checkAndMyAvatarLevelUp(Integer userId) {
-        int recordCount = recordRepository.countByUserId(userId);
-        AvatarStep avatarStep = AvatarStep.findByRecordCount(recordCount);
-
         User user = userRepository.findWithMyAvatarByUserId(userId);
+        int recordCount = user.getRecordCount();
+        AvatarStep avatarStep = AvatarStep.findByRecordCount(recordCount);
 
         if (!user.getMyAvatar().getAvatarStep().equals(avatarStep)) {
             MyAvatar levelUpAvatar = myAvatarRepository.findByAvatarStep(avatarStep).get();
