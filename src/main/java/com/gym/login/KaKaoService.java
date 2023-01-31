@@ -35,7 +35,7 @@ public class KaKaoService {
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
         body.add("client_id", Kakao_SECRET_KEY);
-        body.add("redirect_uri" , "http://localhost:8000/oauth/kakao");
+        body.add("redirect_uri" , "http://todaysgym.shop/oauth/kakao");
         body.add("code", code);
 
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(body, httpHeaders);
@@ -50,16 +50,6 @@ public class KaKaoService {
         );
 
         return responseEntity.getBody();
-
-        //String jsonData = responseEntity.getBody();
-
-/*        //JSON 데이터에서 액세스 토큰 정보만 추출
-        Gson gsonObj = new Gson();
-        Map<?, ?> data = gsonObj.fromJson(jsonData, Map.class);
-
-        return (String) data.get("access_token");*/
-
-
     }
 
     public String getUserInfo(String accessToken, String refreshToken) {
@@ -96,10 +86,6 @@ public class KaKaoService {
 
 
 
-
-    }
-
-    public void kakaoLogout(String JwtToken) throws BaseException{
 
     }
 

@@ -14,17 +14,15 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Controller
 public class NicknameController {
-    @Autowired
-    private UserRepository userRepository;
+
+    private final UserRepository userRepository;
 
     @GetMapping("/login/nickname")
     @ResponseBody
     public BaseResponse<?> updateNickname(@RequestParam("nickname") String nickName)
     {
-
         Optional<User> findUser = userRepository.findByNickName(nickName);
         if(findUser.isEmpty()){
-
             return new BaseResponse<>(BaseResponseStatus.SUCCESS);
         }
         else{

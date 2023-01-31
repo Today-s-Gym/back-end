@@ -43,7 +43,7 @@ public class GoogleService {
         body.add("grant_type", "authorization_code");
         body.add("client_id", Google_Client_Id);
         body.add("client_secret", Google_Secret_Password);
-        body.add("redirect_uri" , "http://localhost:8000/login/google");
+        body.add("redirect_uri" , "http://todaysgym.shop/login/google");
         body.add("code", code);
 
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(body, httpHeaders);
@@ -63,7 +63,6 @@ public class GoogleService {
     public String getUserInfo(String accessToken) {
         //요청하는 클라이언트마다 가진 정보가 다를 수 있기에 HashMap타입으로 선언
         HashMap<String, Object> googleUserInfo = new HashMap<>();
-        //String reqURL = "https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token="+access_Token;
         String reqURL = "https://www.googleapis.com/oauth2/v3/userinfo?access_token=" + accessToken;
         User user = null;
         try {
@@ -84,23 +83,14 @@ public class GoogleService {
                 while ((line = br.readLine()) != null) {
                     result += line;
                 }
-                //JsonParser parser = new JsonParser();
-                System.out.println("result : " + result);
-                //JsonElement element = parser.parse(result);
                 JsonElement element = JsonParser.parseString(result);
-
-                //String name = element.getAsJsonObject().get("name").getAsString();
                 String email = element.getAsJsonObject().get("email").getAsString();
-                //String id = "GOOGLE_"+element.getAsJsonObject().get("id").getAsString();
 
                 return email;
-
-
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return null;
     }
 }

@@ -60,8 +60,6 @@ public class JwtProvider {
         String accessToken = Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE) // (1)
                 .claim("userId", userid)
-                //.setIssuer("test") // 토큰발급자(iss)
-                //.setIssuedAt(now) // 발급시간(iat)
                 .setExpiration(accessTokenExpiresIn) // 만료시간(exp)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
@@ -75,10 +73,8 @@ public class JwtProvider {
                 .compact();
 
         return JwtResponseDTO.TokenInfo.builder()
-                //.grantType(BEARER_TYPE)
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
-                //.refreshTokenExpirationTime(REFRESH_TOKEN_EXPIRE_TIME)
                 .build();
     }
 
