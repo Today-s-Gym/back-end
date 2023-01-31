@@ -65,6 +65,7 @@ public class RecordService {
         }
         //Tag 추가
         tagService.saveAllTagByRecord(recordGetReq, record);
+        user.addRecordCount();
         userService.checkAndMyAvatarLevelUp(jwtService.getUserIdx());
         return record.getRecordId();
     }
@@ -195,4 +196,16 @@ public class RecordService {
         User user = utilService.findByUserIdWithValidation(jwtService.getUserIdx());
         return recordRepository.countByUserIdMonth(user.getUserId(), month);
     }
+
+    /**
+     * 기록 신고하기
+     */
+    @Transactional
+    public String reportRecord(String date) throws BaseException {
+        User user = utilService.findByUserIdWithValidation(jwtService.getUserIdx());
+        Record record = recordRepository.findAllByDay(user.getUserId(), date);
+        record.addReport();
+        return "신고가 접수되었습니다";
+    }
+
 }

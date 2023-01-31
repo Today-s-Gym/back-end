@@ -34,6 +34,7 @@ public class User {
     private String refreshToken;
     private String deviceToken;
     private boolean locked = false; // false = 공개, true = 비공개
+    private int recordCount = 0;
 
     @CreationTimestamp
     private LocalDateTime createdAt = LocalDateTime.now();
@@ -70,6 +71,10 @@ public class User {
 
     public void addReportCount() {
         this.report++;
+    }
+
+    public void addRecordCount() {
+        this.recordCount++;
     }
 
     public void editIntroduce(String introduce) {
