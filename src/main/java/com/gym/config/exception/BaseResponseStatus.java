@@ -38,6 +38,9 @@ public enum BaseResponseStatus {
     REPORT_USER_SELF(false, 2100, "자신을 신고할 수 없습니다."),
     REPORT_POST_SELF(false, 2101, "자신의 게시글을 신고할 수 없습니다."),
     REPORT_COMMENT_SELF(false, 2102, "자신의 댓글을 신고할 수 없습니다."),
+    REPORT_USER_DUPLICATE(false, 2103, "이미 신고한 유저입니다."),
+    REPORT_POST_DUPLICATE(false, 2104, "이미 신고한 게시글입니다."),
+    REPORT_COMMENT_DUPLICATE(false, 2105, "이미 신고한 댓글입니다."),
 
     // posts
     EMPTY_CATEGORY(false, 2200, "해당 카테고리에 게시글이 없습니다."),

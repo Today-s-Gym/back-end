@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.util.Optional;
 
 @SpringBootTest
 class ReportServiceTest {
@@ -189,5 +190,17 @@ class ReportServiceTest {
         Assertions.assertThatThrownBy(() -> reportService.saveReportComment(reporter, reportedComment))
                 .isInstanceOf(BaseException.class)
                 .extracting("status").isEqualTo(BaseResponseStatus.REPORT_COMMENT_SELF);
+    }
+
+    @Test
+    @DisplayName("같은 유저는 한 번만 신고할 수 있다.")
+    @Transactional
+    void reportUserDuplicate() throws BaseException {
+        User 해나 = userRepository.findByNickName("참새").get();
+        User 보라 = userRepository.findByNickName("보라").get();
+        reportService.saveReportUser(해나, 보라);
+        Assertions.assertThatThrownBy(() -> reportService.saveReportUser(해나, 보라))
+                .isInstanceOf(BaseException.class)
+                .extracting("status").isEqualTo(BaseResponseStatus.REPORT_USER_DUPLICATE);
     }
 }
