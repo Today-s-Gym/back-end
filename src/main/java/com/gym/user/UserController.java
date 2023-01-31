@@ -8,8 +8,6 @@ import com.gym.user.dto.EditMyPageReq;
 import com.gym.user.dto.GetMyPageRes;
 import com.gym.user.dto.UserEmailRes;
 import com.gym.utils.JwtService;
-import com.gym.utils.UtilService;
-import io.jsonwebtoken.Jwt;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -74,7 +72,7 @@ public class UserController {
      * 아바타 조회
      */
     @GetMapping("/user/avatar-collection")
-    public BaseResponse<List<MyAvatarDto>> getMyCollection(){
+    public BaseResponse<List<MyAvatarDto>> getMyCollection() {
         try {
             Integer userId = jwtService.getUserIdx();
             return new BaseResponse<>(userService.getMyCollection(userId));
