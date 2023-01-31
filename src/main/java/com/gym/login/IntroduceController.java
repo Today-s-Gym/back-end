@@ -9,6 +9,7 @@ import com.gym.config.exception.BaseResponse;
 import com.gym.config.exception.BaseResponseStatus;
 import com.gym.user.User;
 import com.gym.user.UserRepository;
+import com.gym.user.UserService;
 import com.gym.utils.JwtService;
 import com.gym.utils.UtilService;
 import org.modelmapper.ModelMapper;
@@ -33,6 +34,9 @@ public class IntroduceController {
     @Autowired
     private JwtService jwtService;
 
+    @Autowired
+    private UserService userService;
+
     @PutMapping("/login/introduce")
     @ResponseBody
     public BaseResponse<?> updateIntroduce(@RequestParam("nickname") String nickname, @RequestParam("introduce") String introduce)
@@ -47,6 +51,7 @@ public class IntroduceController {
                 MyAvatar myAvatar = myAvatarRepository.findByAvatarStep(initialAvatarStep).get();
                 user.update(nickname, introduce, myAvatar);
                 userRepository.save(user);
+                userService.saveMyAvatarInCollection(user, myAvatar);
                 return new BaseResponse<>(BaseResponseStatus.SUCCESS);
             }
             else{
