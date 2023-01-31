@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -38,7 +39,7 @@ public class KaKaoController {
 
     //카카오 로그인 코드
     @ResponseBody
-    @GetMapping("/oauth/kakao")
+    @PostMapping("/oauth/kakao")
     public BaseResponse<?> kakaoCallback(@RequestParam("code") String code) throws Exception {
         String accessToken = kaKaoLoginService.getAccessToken(code);
         Gson gsonObj = new Gson();
