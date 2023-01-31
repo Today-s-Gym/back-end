@@ -39,7 +39,7 @@ public class KaKaoController {
     //카카오 로그인 코드
     @ResponseBody
     @GetMapping("/oauth/kakao")
-    public BaseResponse<?> kakaoCallback(String code) throws Exception {
+    public BaseResponse<?> kakaoCallback(@RequestParam("code") String code) throws Exception {
         String accessToken = kaKaoLoginService.getAccessToken(code);
         Gson gsonObj = new Gson();
         Map<?, ?> data = gsonObj.fromJson(accessToken, Map.class);
