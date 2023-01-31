@@ -7,28 +7,22 @@ import com.gym.avatar.avatar.MyAvatarRepository;
 import com.gym.avatar.avatar.dto.MyAvatarDto;
 import com.gym.avatar.myAvatarCollection.MyAvatarCollection;
 import com.gym.avatar.myAvatarCollection.MyAvatarCollectionRepository;
-
 import com.gym.config.exception.BaseException;
 import com.gym.config.exception.BaseResponse;
-import com.gym.config.exception.BaseResponseStatus;
 import com.gym.login.JwtProvider;
 import com.gym.login.dto.JwtResponseDTO;
 import com.gym.login.dto.UserUpdateRequestDTO;
-import com.gym.login.dto.UsersaveRequestDTO;
 import com.gym.record.RecordRepository;
 import com.gym.user.dto.GetMyPageRes;
 import com.gym.user.dto.UserRecordCount;
-import com.gym.utils.JwtService;
 import com.gym.utils.UtilService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
@@ -39,26 +33,19 @@ import java.util.function.Supplier;
 import static com.gym.config.exception.BaseResponseStatus.*;
 import static java.util.Comparator.comparingInt;
 import static java.util.stream.Collectors.*;
-import static java.util.stream.Collectors.toList;
 
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
-
     private static int INTRODUCE_MAX_LENGTH = 30;
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private UtilService utilService;
+    private final UserRepository userRepository;
+    private final UtilService utilService;
     private final MyAvatarCollectionRepository myAvatarCollectionRepository;
     private final RecordRepository recordRepository;
     private final MyAvatarRepository myAvatarRepository;
-
     private final JwtProvider jwtProvider;
-
     private final RedisTemplate redisTemplate;
 
     /**
@@ -81,8 +68,7 @@ public class UserService {
     }
 
     @Transactional
-    public void insertUser(User user)
-    {
+    public void insertUser(User user) {
         userRepository.save(user);
     }
 
@@ -101,14 +87,14 @@ public class UserService {
     }
 
     @Transactional
-    public User save(UserUpdateRequestDTO requestDTO){
+    public User save(UserUpdateRequestDTO requestDTO) {
         return userRepository.save(requestDTO.toEntity());
     }
 
 
     /**
      * 마이페이지 수정
-    */
+     */
     @Transactional
     public BaseResponse<Integer> editMyPage(Integer userId, String newNickname, String newIntroduce) throws BaseException {
         User user = utilService.findByUserIdWithValidation(userId);
@@ -155,7 +141,7 @@ public class UserService {
         String thisMonth = LocalDate.now().format(formatter);
 
         int thisMonthRecordCount = recordRepository.countByUserIdMonth(user.getUserId(), thisMonth);
-        int totalRecordCount = recordRepository.countByUserId(user.getUserId());
+        int totalRecordCount = user.getRecordCount();
 
         GetMyPageRes myPageInfo = new GetMyPageRes(
                 user.getMyAvatar(),
@@ -182,12 +168,12 @@ public class UserService {
         User user = utilService.findByUserIdWithValidation(userId);
         return AvatarStep.findAvatarImg(user.getMyAvatar().getAvatarStep());
     }
+
     @Transactional
     public boolean checkAndMyAvatarLevelUp(Integer userId) {
-        int recordCount = recordRepository.countByUserId(userId);
-        AvatarStep avatarStep = AvatarStep.findByRecordCount(recordCount);
-
         User user = userRepository.findWithMyAvatarByUserId(userId);
+        int recordCount = user.getRecordCount();
+        AvatarStep avatarStep = AvatarStep.findByRecordCount(recordCount);
 
         if (!user.getMyAvatar().getAvatarStep().equals(avatarStep)) {
             MyAvatar levelUpAvatar = myAvatarRepository.findByAvatarStep(avatarStep).get();
@@ -229,12 +215,12 @@ public class UserService {
 
 
         // 3. Redis 에서 User email 을 기반으로 저장된 Refresh Token 값을 가져옵니다.
-        String refreshTokens = (String)redisTemplate.opsForValue().get("RT:" + useremail);
+        String refreshTokens = (String) redisTemplate.opsForValue().get("RT:" + useremail);
         // 로그아웃되어 Redis 에 RefreshToken 이 존재하지 않는 경우 처리
-        if(ObjectUtils.isEmpty(refreshToken)) {
+        if (ObjectUtils.isEmpty(refreshToken)) {
             return new BaseResponse<>(NOT_VALID_ERROR);
         }
-        if(!refreshToken.equals(refreshToken)) {
+        if (!refreshToken.equals(refreshToken)) {
             return new BaseResponse<>(JWT_OTHER_ERROR);
         }
 
@@ -248,7 +234,7 @@ public class UserService {
         return new BaseResponse<>(tokenInfo);
     }
 
-    public BaseResponse<?> logout(String accessToken){
+    public BaseResponse<?> logout(String accessToken) {
         // 1. Access Token 검증
         if (!jwtProvider.validateToken(accessToken)) {
             return new BaseResponse<>(JWT_NOTVALID_ERROR);

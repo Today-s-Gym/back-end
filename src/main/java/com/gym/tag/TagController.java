@@ -20,7 +20,11 @@ public class TagController {
      * 최근 사용한 태그 조회
      */
     @GetMapping("tag/recent")
-    public BaseResponse<Page<TagGetRecentRes>> findRecentTag(@Param("page") int page) throws BaseException {
-        return new BaseResponse<>(tagService.findRecentTag(page));
+    public BaseResponse<Page<TagGetRecentRes>> findRecentTag(@Param("page") int page) {
+        try {
+            return new BaseResponse<>(tagService.findRecentTag(page));
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
     }
 }

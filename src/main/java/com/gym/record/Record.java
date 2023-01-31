@@ -80,5 +80,6 @@ public class Record {
     public void updateRecord(String content){
         this.content = content;
     }
+    public void addReport(){ this.report++; }
 
 }

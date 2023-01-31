@@ -93,6 +93,15 @@ public class RecordController {
     }
 
     /**
+     * 기록 신고하기
+     */
+    @GetMapping("/record/report")
+    public BaseResponse<String> reportRecord(@Param("date") String date) throws BaseException {
+        return new BaseResponse<>(recordService.reportRecord(date));
+    }
+
+
+    /**
      * 기록 count
      * Test 할려고 만듬
      */

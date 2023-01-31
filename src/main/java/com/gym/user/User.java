@@ -1,13 +1,15 @@
 package com.gym.user;
 
 import com.gym.avatar.avatar.MyAvatar;
-import com.gym.avatar.myAvatarCollection.MyAvatarCollection;
 import com.gym.category.Category;
 import com.gym.post.Post;
 import com.gym.post.comment.Comment;
 import com.gym.record.Record;
 import com.gym.tag.Tag;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -34,6 +36,7 @@ public class User {
     private String refreshToken;
     private String deviceToken;
     private boolean locked = false; // false = 공개, true = 비공개
+    private int recordCount = 0;
 
     @CreationTimestamp
     private LocalDateTime createdAt = LocalDateTime.now();
@@ -72,6 +75,10 @@ public class User {
         this.report++;
     }
 
+    public void addRecordCount() {
+        this.recordCount++;
+    }
+
     public void editIntroduce(String introduce) {
         this.introduce = introduce;
     }
@@ -92,9 +99,5 @@ public class User {
 
     public void updateSports(Category category){
         this.category = category;
-    }
-
-    public void updateRefreshToken(String refreshToken){
-        this.refreshToken = refreshToken;
     }
 }

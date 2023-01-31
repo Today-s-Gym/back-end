@@ -16,7 +16,6 @@ import static com.gym.config.exception.BaseResponseStatus.*;
 public class ReportService {
 
     private final ReportRepository reportRepository;
-    private final UserRepository userRepository;
 
     @Transactional
     public Integer saveReportUser(User user, User reportedUser) throws BaseException {
@@ -29,6 +28,9 @@ public class ReportService {
     private void validateReportedUser(User user, User reportedUser) throws BaseException {
         if (user.equals(reportedUser)) {
             throw new BaseException(REPORT_USER_SELF);
+        }
+        if (reportRepository.findUserReport(user.getUserId(), reportedUser.getUserId()).isPresent()) {
+            throw new BaseException(REPORT_USER_DUPLICATE);
         }
     }
 
@@ -44,6 +46,9 @@ public class ReportService {
         if (reporter.equals(reportedPost.getUser())) {
             throw new BaseException(REPORT_POST_SELF);
         }
+        if (reportRepository.findPostReport(reporter.getUserId(), reportedPost.getPostId()).isPresent()) {
+            throw new BaseException(REPORT_POST_DUPLICATE);
+        }
     }
 
     @Transactional
@@ -57,6 +62,9 @@ public class ReportService {
     private void validateReportedComment(User reporter, Comment reportedComment) throws BaseException {
         if (reporter.equals(reportedComment.getUser())) {
             throw new BaseException(REPORT_COMMENT_SELF);
+        }
+        if (reportRepository.findCommentReport(reporter.getUserId(), reportedComment.getCommentId()).isPresent()) {
+            throw new BaseException(REPORT_COMMENT_DUPLICATE);
         }
     }
 }
