@@ -211,6 +211,8 @@ public class UserService {
 
         // 2. Access Token 에서 User email 를 가져옵니다.
         Integer userid = jwtProvider.getAuthentication(refreshToken);
+        User user = userRepository.findById(userid).get();
+
         //String useremail = userRepository.findById(userid).get().getEmail();
 
 
@@ -226,6 +228,8 @@ public class UserService {
 
         // 4. 새로운 토큰 생성
         JwtResponseDTO.TokenInfo tokenInfo = jwtProvider.generateToken(userid);
+        user.updateRefreshToken(tokenInfo.getRefreshToken());
+        userRepository.save(user);
 
 /*        // 5. RefreshToken Redis 업데이트
         redisTemplate.opsForValue()
