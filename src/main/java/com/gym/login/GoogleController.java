@@ -31,36 +31,46 @@ public class GoogleController {
     @ResponseBody
     @GetMapping("/login/google")
     public BaseResponse<?> GoogleCallback(String code) {
-        log.info("구글 로그인 진입");
-        String accessToken = googleService.getAccessToken(code);
+        try{
+            log.info("구글 로그인 진입");
+            String accessToken = googleService.getAccessToken(code);
 
-        Gson gsonObj = new Gson();
-        Map<?, ?> data = gsonObj.fromJson(accessToken, Map.class);
-        String atoken = (String) data.get("access_token");
-        String useremail = googleService.getUserInfo(atoken);
-        Optional<User> findUser = userRepository.findByEmail(useremail);
-        if (findUser.isEmpty()) {
-            log.info("구글 로그인 - 계정 새로 생성");
-            UserUpdateRequestDTO userUpdateRequestDTO = new UserUpdateRequestDTO(useremail);
-            User googleUser = userService.save(userUpdateRequestDTO);
-            JwtResponseDTO.TokenInfo tokenInfo = jwtProvider.generateToken(googleUser.getUserId());
-            // RefreshToken Redis 저장 (expirationTime 설정을 통해 자동 삭제 처리)
-            redisTemplate.opsForValue()
-                    .set("RT:" + useremail, tokenInfo.getRefreshToken(), jwtProvider.getExpiration(tokenInfo.getRefreshToken()), TimeUnit.MILLISECONDS);
-            userService.insertUser(googleUser);
+            log.info("code로부터 token 추출 성공");
 
-            return new BaseResponse<>(tokenInfo);
-        } else {
-            log.info("구글 로그인 - 기존 회원 로그인");
+            Gson gsonObj = new Gson();
+            Map<?, ?> data = gsonObj.fromJson(accessToken, Map.class);
+            String atoken = (String) data.get("access_token");
+            String useremail = googleService.getUserInfo(atoken);
+            log.info("token으로부터 useremail 추출 성공");
+            Optional<User> findUser = userRepository.findByEmail(useremail);
+            if (findUser.isEmpty()) {
+                log.info("구글 로그인 - 계정 새로 생성");
+                UserUpdateRequestDTO userUpdateRequestDTO = new UserUpdateRequestDTO(useremail);
+                User googleUser = userService.save(userUpdateRequestDTO);
+                JwtResponseDTO.TokenInfo tokenInfo = jwtProvider.generateToken(googleUser.getUserId());
+                // RefreshToken Redis 저장 (expirationTime 설정을 통해 자동 삭제 처리)
+                redisTemplate.opsForValue()
+                        .set("RT:" + useremail, tokenInfo.getRefreshToken(), jwtProvider.getExpiration(tokenInfo.getRefreshToken()), TimeUnit.MILLISECONDS);
+                userService.insertUser(googleUser);
 
-            User user = findUser.get();
-            JwtResponseDTO.TokenInfo tokenInfo = jwtProvider.generateToken(user.getUserId());
+                return new BaseResponse<>(tokenInfo);
+            } else {
+                log.info("구글 로그인 - 기존 회원 로그인");
 
-            // RefreshToken Redis 저장 (expirationTime 설정을 통해 자동 삭제 처리)
-            redisTemplate.opsForValue()
-                    .set("RT:" + useremail, tokenInfo.getRefreshToken(), jwtProvider.getExpiration(tokenInfo.getRefreshToken()), TimeUnit.MILLISECONDS);
-            return new BaseResponse<>(tokenInfo);
+                User user = findUser.get();
+                JwtResponseDTO.TokenInfo tokenInfo = jwtProvider.generateToken(user.getUserId());
+
+                // RefreshToken Redis 저장 (expirationTime 설정을 통해 자동 삭제 처리)
+                redisTemplate.opsForValue()
+                        .set("RT:" + useremail, tokenInfo.getRefreshToken(), jwtProvider.getExpiration(tokenInfo.getRefreshToken()), TimeUnit.MILLISECONDS);
+                return new BaseResponse<>(tokenInfo);
+            }
+
+        } catch(Exception e){
+            log.error(e.getMessage());
+            return null;
         }
+
 
 
     }
