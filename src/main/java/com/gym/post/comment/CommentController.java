@@ -24,7 +24,7 @@ public class CommentController {
     @PostMapping("/comment")
     public BaseResponse<String> createComment(@RequestBody PostCommentReq postCommentReq) throws BaseException {
         try {
-            Integer userId = jwtService.getUserId();
+            Integer userId = jwtService.getUserIdx();
             return new BaseResponse(commentService.createComment(userId, postCommentReq));
         }
         catch (BaseException exception) {
@@ -39,7 +39,7 @@ public class CommentController {
     @GetMapping("/comments/{postId}")
     public BaseResponse<GetCommentsRes> getAllComments(@PathVariable("postId") Integer postId) throws BaseException {
         try {
-            Integer userId = jwtService.getUserId();
+            Integer userId = jwtService.getUserIdx();
             return new BaseResponse(commentService.getCommentsByPostId(userId, postId));
         }
         catch (BaseException exception) {
@@ -54,7 +54,7 @@ public class CommentController {
     @PatchMapping ("/comment/delete")
     public BaseResponse<String> deleteComment(@Param("commentId") Integer commentId) throws BaseException {
         try {
-            Integer userId = jwtService.getUserId();
+            Integer userId = jwtService.getUserIdx();
             return new BaseResponse(commentService.deleteComment(userId, commentId));
         }
         catch (BaseException exception) {
