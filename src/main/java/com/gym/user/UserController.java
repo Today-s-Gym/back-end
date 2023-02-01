@@ -9,6 +9,7 @@ import com.gym.user.dto.GetMyPageRes;
 import com.gym.user.dto.UserEmailRes;
 import com.gym.utils.JwtService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.Set;
 
 import static com.gym.config.exception.BaseResponseStatus.REQUEST_ERROR;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class UserController {
@@ -48,6 +50,7 @@ public class UserController {
     public BaseResponse<UserEmailRes> getUserEmail() {
         try {
             String userEmail = userService.findUserEmailByUserId(jwtService.getUserIdx());
+            log.info("사용자 이메일 조회: " + userEmail);
             UserEmailRes userEmailRes = new UserEmailRes(userEmail);
             return new BaseResponse<>(userEmailRes);
         } catch (BaseException exception) {
