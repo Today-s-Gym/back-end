@@ -60,7 +60,7 @@ public class KaKaoController {
                 // RefreshToken Redis 저장 (expirationTime 설정을 통해 자동 삭제 처리)
 /*                redisTemplate.opsForValue()
                         .set("RT:" + useremail, tokenInfo.getRefreshToken(), jwtProvider.getExpiration(tokenInfo.getRefreshToken()), TimeUnit.MILLISECONDS);*/
-                userService.insertUser(kakaoUser);
+                //userService.insertUser(kakaoUser);
 
                 return new BaseResponse<>(tokenInfo);
             } else {
