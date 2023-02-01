@@ -211,10 +211,10 @@ public class UserService {
 
         // 2. Access Token 에서 User email 를 가져옵니다.
         Integer userid = jwtProvider.getAuthentication(refreshToken);
-        String useremail = userRepository.findById(userid).get().getEmail();
+        //String useremail = userRepository.findById(userid).get().getEmail();
 
 
-        // 3. Redis 에서 User email 을 기반으로 저장된 Refresh Token 값을 가져옵니다.
+/*        // 3. Redis 에서 User email 을 기반으로 저장된 Refresh Token 값을 가져옵니다.
         String refreshTokens = (String) redisTemplate.opsForValue().get("RT:" + useremail);
         // 로그아웃되어 Redis 에 RefreshToken 이 존재하지 않는 경우 처리
         if (ObjectUtils.isEmpty(refreshToken)) {
@@ -222,19 +222,19 @@ public class UserService {
         }
         if (!refreshToken.equals(refreshToken)) {
             return new BaseResponse<>(JWT_OTHER_ERROR);
-        }
+        }*/
 
         // 4. 새로운 토큰 생성
         JwtResponseDTO.TokenInfo tokenInfo = jwtProvider.generateToken(userid);
 
-        // 5. RefreshToken Redis 업데이트
+/*        // 5. RefreshToken Redis 업데이트
         redisTemplate.opsForValue()
-                .set("RT:" + useremail, tokenInfo.getRefreshToken(), jwtProvider.getExpiration(tokenInfo.getRefreshToken()), TimeUnit.MILLISECONDS);
+                .set("RT:" + useremail, tokenInfo.getRefreshToken(), jwtProvider.getExpiration(tokenInfo.getRefreshToken()), TimeUnit.MILLISECONDS);*/
 
         return new BaseResponse<>(tokenInfo);
     }
 
-    public BaseResponse<?> logout(String accessToken) {
+/*    public BaseResponse<?> logout(String accessToken) {
         // 1. Access Token 검증
         if (!jwtProvider.validateToken(accessToken)) {
             return new BaseResponse<>(JWT_NOTVALID_ERROR);
@@ -256,5 +256,5 @@ public class UserService {
                 .set(accessToken, "logout", expiration, TimeUnit.MILLISECONDS);
 
         return new BaseResponse<>(SUCCESS);
-    }
+    }*/
 }

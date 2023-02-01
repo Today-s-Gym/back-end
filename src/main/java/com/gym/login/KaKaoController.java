@@ -52,10 +52,12 @@ public class KaKaoController {
                 UserUpdateRequestDTO userUpdateRequestDTO = new UserUpdateRequestDTO(useremail);
                 User kakaoUser = userService.save(userUpdateRequestDTO);
                 JwtResponseDTO.TokenInfo tokenInfo = jwtProvider.generateToken(kakaoUser.getUserId());
+                kakaoUser.updateRefreshToken(tokenInfo.getRefreshToken());
+                userRepository.save(kakaoUser);
 
                 // RefreshToken Redis 저장 (expirationTime 설정을 통해 자동 삭제 처리)
-                redisTemplate.opsForValue()
-                        .set("RT:" + useremail, tokenInfo.getRefreshToken(), jwtProvider.getExpiration(tokenInfo.getRefreshToken()), TimeUnit.MILLISECONDS);
+/*                redisTemplate.opsForValue()
+                        .set("RT:" + useremail, tokenInfo.getRefreshToken(), jwtProvider.getExpiration(tokenInfo.getRefreshToken()), TimeUnit.MILLISECONDS);*/
                 userService.insertUser(kakaoUser);
 
                 return new BaseResponse<>(tokenInfo);
@@ -63,10 +65,12 @@ public class KaKaoController {
                 log.info("카카오 로그인 - 기존 회원 로그인");
                 User user = findUser.get();
                 JwtResponseDTO.TokenInfo tokenInfo = jwtProvider.generateToken(user.getUserId());
+                user.updateRefreshToken(tokenInfo.getRefreshToken());
+                userRepository.save(user);
 
                 //RefreshToken Redis 저장 (expirationTime 설정을 통해 자동 삭제 처리)
-                redisTemplate.opsForValue()
-                        .set("RT:" + useremail, tokenInfo.getRefreshToken(), jwtProvider.getExpiration(tokenInfo.getRefreshToken()), TimeUnit.MILLISECONDS);
+/*                redisTemplate.opsForValue()
+                        .set("RT:" + useremail, tokenInfo.getRefreshToken(), jwtProvider.getExpiration(tokenInfo.getRefreshToken()), TimeUnit.MILLISECONDS);*/
                 return new BaseResponse<>(tokenInfo);
             }
 
@@ -78,7 +82,7 @@ public class KaKaoController {
     }
 
     //카카오 로그아웃 코드
-    @GetMapping("/oauth/kakaologout")
+/*    @GetMapping("/oauth/kakaologout")
     @ResponseBody
     public BaseResponse<?> kakaoLogout(@RequestParam("state") String jwtToken)
     {
@@ -87,5 +91,5 @@ public class KaKaoController {
         } catch(Exception e){
             return new BaseResponse<>(BaseResponseStatus.KAKAO_ERROR);
         }
-    }
+    }*/
 }

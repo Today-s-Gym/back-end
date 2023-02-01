@@ -48,9 +48,11 @@ public class GoogleController {
                 UserUpdateRequestDTO userUpdateRequestDTO = new UserUpdateRequestDTO(useremail);
                 User googleUser = userService.save(userUpdateRequestDTO);
                 JwtResponseDTO.TokenInfo tokenInfo = jwtProvider.generateToken(googleUser.getUserId());
+                googleUser.updateRefreshToken(tokenInfo.getRefreshToken());
+                userRepository.save(googleUser);
                 // RefreshToken Redis 저장 (expirationTime 설정을 통해 자동 삭제 처리)
-                redisTemplate.opsForValue()
-                        .set("RT:" + useremail, tokenInfo.getRefreshToken(), jwtProvider.getExpiration(tokenInfo.getRefreshToken()), TimeUnit.MILLISECONDS);
+/*                redisTemplate.opsForValue()
+                        .set("RT:" + useremail, tokenInfo.getRefreshToken(), jwtProvider.getExpiration(tokenInfo.getRefreshToken()), TimeUnit.MILLISECONDS);*/
                 userService.insertUser(googleUser);
 
                 return new BaseResponse<>(tokenInfo);
@@ -59,10 +61,12 @@ public class GoogleController {
 
                 User user = findUser.get();
                 JwtResponseDTO.TokenInfo tokenInfo = jwtProvider.generateToken(user.getUserId());
+                user.updateRefreshToken(tokenInfo.getRefreshToken());
+                userRepository.save(user);
 
                 // RefreshToken Redis 저장 (expirationTime 설정을 통해 자동 삭제 처리)
-                redisTemplate.opsForValue()
-                        .set("RT:" + useremail, tokenInfo.getRefreshToken(), jwtProvider.getExpiration(tokenInfo.getRefreshToken()), TimeUnit.MILLISECONDS);
+/*                redisTemplate.opsForValue()
+                        .set("RT:" + useremail, tokenInfo.getRefreshToken(), jwtProvider.getExpiration(tokenInfo.getRefreshToken()), TimeUnit.MILLISECONDS);*/
                 return new BaseResponse<>(tokenInfo);
             }
 

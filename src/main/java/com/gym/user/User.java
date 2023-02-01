@@ -100,4 +100,8 @@ public class User {
     public void updateSports(Category category){
         this.category = category;
     }
+
+    public void updateRefreshToken(String refreshToken){
+        this.refreshToken = refreshToken;
+    }
 }
