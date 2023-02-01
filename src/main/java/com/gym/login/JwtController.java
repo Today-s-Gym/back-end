@@ -2,6 +2,7 @@ package com.gym.login;
 
 import com.gym.config.exception.BaseResponse;
 import com.gym.user.UserService;
+import com.gym.utils.JwtService;
 import io.jsonwebtoken.Claims;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class JwtController {
     private final JwtProvider jwtProvider;
+    private final JwtService jwtService;
 
     private final UserService userService;
 
@@ -40,9 +42,10 @@ public class JwtController {
     }
 
     @GetMapping(value = "/reissue")
-    public BaseResponse<?> reissue(@RequestHeader(value="Authorization") String token){
+    public BaseResponse<?> reissue(@RequestHeader(value="Authorization") String token) throws Exception{
+        Integer userid = jwtService.getUserIdx();
 
-        return userService.reissue(token);
+        return userService.reissue(userid);
 
     }
 

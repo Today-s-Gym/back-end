@@ -203,14 +203,14 @@ public class UserService {
 
 
     //액세스 토큰, 리프레시 토큰 함께 재발급
-    public BaseResponse<?> reissue(String refreshToken) {
+    public BaseResponse<?> reissue(Integer userid) {
         // 1. Refresh Token 검증
-        if (!jwtProvider.validateToken(refreshToken)) {
+/*        if (!jwtProvider.validateToken(refreshToken)) {
             return new BaseResponse<>(JWT_NOTVALID_ERROR);
-        }
+        }*/
 
         // 2. Access Token 에서 User email 를 가져옵니다.
-        Integer userid = jwtProvider.getAuthentication(refreshToken);
+        //Integer userid = jwtProvider.getAuthentication(refreshToken);
         User user = userRepository.findById(userid).get();
 
         //String useremail = userRepository.findById(userid).get().getEmail();
