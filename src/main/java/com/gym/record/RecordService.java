@@ -56,6 +56,7 @@ public class RecordService {
         validateDuplicateRecord();
         //엔티티 조회
         User user = utilService.findByUserIdWithValidation(jwtService.getUserIdx());
+        user.updateRecordCheck();
         Record record = Record.createRecord(recordGetReq.getContent(), user);
         recordRepository.save(record);
         //Record 사진 추가
@@ -65,7 +66,9 @@ public class RecordService {
         }
         //Tag 추가
         tagService.saveAllTagByRecord(recordGetReq, record);
-        user.addRecordCount();
+        if(user.isRecordCheck()==false) {
+            user.addRecordCount();
+        }
         userService.checkAndMyAvatarLevelUp(jwtService.getUserIdx());
         return record.getRecordId();
     }
@@ -207,5 +210,7 @@ public class RecordService {
         record.addReport();
         return "신고가 접수되었습니다";
     }
+
+
 
 }
