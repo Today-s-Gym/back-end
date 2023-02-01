@@ -10,6 +10,7 @@ import com.gym.record.dto.RecordGetRes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -118,4 +119,8 @@ public class RecordController {
     public BaseResponse<Integer> findRecordCountMonth(@Param("month") String month) throws BaseException {
         return new BaseResponse<>(recordService.findCountMonth(month));
     }
+
+
+
+
 }
