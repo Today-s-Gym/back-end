@@ -43,7 +43,7 @@ public class GoogleService {
         body.add("grant_type", "authorization_code");
         body.add("client_id", Google_Client_Id);
         body.add("client_secret", Google_Secret_Password);
-        body.add("redirect_uri" , "http://localhost:8000/login/google");
+        body.add("redirect_uri" , "http://todaysgym.shop/login/google");
         body.add("code", code);
 
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(body, httpHeaders);
