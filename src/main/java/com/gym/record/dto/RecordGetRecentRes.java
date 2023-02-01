@@ -11,12 +11,12 @@ import java.util.List;
 @Data
 public class RecordGetRecentRes {
     private String content;
-    private LocalDateTime createdAt;
+    private String createdTime;
     private String imgUrl;
 
     public RecordGetRecentRes(String content, LocalDateTime createdAt, List<RecordPhoto> recordPhotos) {
         this.content = content;
-        this.createdAt = createdAt;
+        this.createdTime = UtilService.convertLocalDateTimeToLocalDate(createdAt);
         if (recordPhotos.isEmpty()) {
             this.imgUrl = UtilService.returnRecordBaseImage();
         } else {

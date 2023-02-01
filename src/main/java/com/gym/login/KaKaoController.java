@@ -8,79 +8,63 @@ import com.gym.login.dto.UserUpdateRequestDTO;
 import com.gym.user.User;
 import com.gym.user.UserRepository;
 import com.gym.user.UserService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-@Controller
 @Slf4j
+@RestController
+@RequiredArgsConstructor
 public class KaKaoController {
-    @Autowired
-    private KaKaoService kaKaoLoginService;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private JwtController jwtController;
 
-    @Autowired
-    private JwtProvider jwtProvider;
-
-    @Autowired
-    private RedisTemplate redisTemplate;
+    private final KaKaoService kaKaoLoginService;
+    private final UserService userService;
+    private final UserRepository userRepository;
+    private final JwtProvider jwtProvider;
+    private final RedisTemplate redisTemplate;
 
     //카카오 로그인 코드
     @ResponseBody
     @PostMapping("/oauth/kakao")
-    public BaseResponse<?> kakaoCallback(@RequestParam("code") String code){
-        try{
-            String accessToken = kaKaoLoginService.getAccessToken(code);
-            Gson gsonObj = new Gson();
-            Map<?, ?> data = gsonObj.fromJson(accessToken, Map.class);
-            String atoken = (String) data.get("access_token");
-            //Gson gsonObj2 = new Gson();
-            //Map<?, ?> data2 = gsonObj.fromJson(accessToken, Map.class);
-            String refreshToken = (String) data.get("refresh_token");
-            String useremail = kaKaoLoginService.getUserInfo(atoken, refreshToken);
-            Optional<User> findUser = userRepository.findByEmail(useremail);
-            if (findUser.isEmpty()) {
-                UserUpdateRequestDTO userUpdateRequestDTO = new UserUpdateRequestDTO(useremail);
-                User kakaoUser = userService.save(userUpdateRequestDTO);
-                JwtResponseDTO.TokenInfo tokenInfo = jwtProvider.generateToken(kakaoUser.getUserId());
+    public BaseResponse<?> kakaoCallback(@RequestParam("code") String code) {
+        log.info("카카오 로그인 진입");
+        String accessToken = kaKaoLoginService.getAccessToken(code);
 
-                // RefreshToken Redis 저장 (expirationTime 설정을 통해 자동 삭제 처리)
-                redisTemplate.opsForValue()
-                        .set("RT:" + useremail, tokenInfo.getRefreshToken(), jwtProvider.getExpiration(tokenInfo.getRefreshToken()), TimeUnit.MILLISECONDS);
-                userService.insertUser(kakaoUser);
+        Gson gsonObj = new Gson();
+        Map<?, ?> data = gsonObj.fromJson(accessToken, Map.class);
+        String atoken = (String) data.get("access_token");
 
-                return new BaseResponse<>(tokenInfo);
-            } else {
-                User user = findUser.get();
-                JwtResponseDTO.TokenInfo tokenInfo = jwtProvider.generateToken(user.getUserId());
+        String useremail = kaKaoLoginService.getUserInfo(atoken);
+        Optional<User> findUser = userRepository.findByEmail(useremail);
 
-                //RefreshToken Redis 저장 (expirationTime 설정을 통해 자동 삭제 처리)
-                redisTemplate.opsForValue()
-                        .set("RT:" + useremail, tokenInfo.getRefreshToken(), jwtProvider.getExpiration(tokenInfo.getRefreshToken()), TimeUnit.MILLISECONDS);
-                return new BaseResponse<>(tokenInfo);
-            }
 
+        if (findUser.isEmpty()) {
+            log.info("카카오 로그인 - 계정 새로 생성");
+            UserUpdateRequestDTO userUpdateRequestDTO = new UserUpdateRequestDTO(useremail);
+            User kakaoUser = userService.save(userUpdateRequestDTO);
+            JwtResponseDTO.TokenInfo tokenInfo = jwtProvider.generateToken(kakaoUser.getUserId());
+
+            // RefreshToken Redis 저장 (expirationTime 설정을 통해 자동 삭제 처리)
+            redisTemplate.opsForValue()
+                    .set("RT:" + useremail, tokenInfo.getRefreshToken(), jwtProvider.getExpiration(tokenInfo.getRefreshToken()), TimeUnit.MILLISECONDS);
+            userService.insertUser(kakaoUser);
+
+            return new BaseResponse<>(tokenInfo);
+        } else {
+            log.info("카카오 로그인 - 기존 회원 로그인");
+            User user = findUser.get();
+            JwtResponseDTO.TokenInfo tokenInfo = jwtProvider.generateToken(user.getUserId());
+
+            //RefreshToken Redis 저장 (expirationTime 설정을 통해 자동 삭제 처리)
+            redisTemplate.opsForValue()
+                    .set("RT:" + useremail, tokenInfo.getRefreshToken(), jwtProvider.getExpiration(tokenInfo.getRefreshToken()), TimeUnit.MILLISECONDS);
+            return new BaseResponse<>(tokenInfo);
         }
-        catch(Exception e){
-            log.error(e.getMessage());
-            return null;
-        }
-
-
     }
 
     //카카오 로그아웃 코드

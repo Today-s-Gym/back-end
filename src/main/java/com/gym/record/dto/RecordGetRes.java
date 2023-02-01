@@ -16,9 +16,10 @@ import java.util.stream.Collectors;
 
 @Data
 public class RecordGetRes {
+
     public RecordGetRes(Record record, User user) {
         this.content = record.getContent();
-        this.createdAt = record.getCreatedAt();
+        this.createdTime = UtilService.convertLocalDateTimeToLocalDate(record.getCreatedAt());
         this.userName = user.getNickName();
         if(record.getPhotoList().isEmpty()){
             this.recordPhotos = new ArrayList<>();
@@ -34,7 +35,7 @@ public class RecordGetRes {
                 .collect(Collectors.toList());
     }
     private String content;
-    private LocalDateTime createdAt;
+    private String createdTime;
     private String userName;
     private List<RecordPhotoGetRes> recordPhotos;
     private List<TagGetRes> tags;
