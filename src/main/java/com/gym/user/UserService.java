@@ -18,6 +18,7 @@ import com.gym.user.dto.UserRecordCount;
 import com.gym.utils.UtilService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -261,4 +262,11 @@ public class UserService {
 
         return new BaseResponse<>(SUCCESS);
     }*/
+
+    @Transactional
+    @Scheduled(cron = "0 0 0 * * *")
+    public void updateRecordCheck(){
+        userRepository.updateRecordCheck();
+    }
+
 }

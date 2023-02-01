@@ -37,6 +37,7 @@ public class User {
     private String deviceToken;
     private boolean locked = false; // false = 공개, true = 비공개
     private int recordCount = 0;
+    private boolean recordCheck = false;
 
     @CreationTimestamp
     private LocalDateTime createdAt = LocalDateTime.now();
@@ -108,4 +109,6 @@ public class User {
     public void updateRefreshToken(String refreshToken){
         this.refreshToken = refreshToken;
     }
+
+    public void updateRecordCheck(){this.recordCheck = true;}
 }
