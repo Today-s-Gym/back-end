@@ -38,11 +38,11 @@ public class KaKaoController {
 
             log.info("accessToken 받아짐");
 
-            Gson gsonObj = new Gson();
-            Map<?, ?> data = gsonObj.fromJson(accessToken, Map.class);
-            String atoken = (String) data.get("access_token");
+            //Gson gsonObj = new Gson();
+            //Map<?, ?> data = gsonObj.fromJson(accessToken, Map.class);
+            //String atoken = (String) data.get("access_token");
 
-            String useremail = kaKaoLoginService.getUserInfo(atoken);
+            String useremail = kaKaoLoginService.getUserInfo(accessToken);
             log.info("token으로부터 useremail 추출 성공");
             Optional<User> findUser = userRepository.findByEmail(useremail);
 
