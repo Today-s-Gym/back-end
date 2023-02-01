@@ -4,9 +4,6 @@ package com.gym.login;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.gym.user.User;
-import com.gym.user.UserRepository;
-import com.gym.user.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -28,11 +25,6 @@ import static com.gym.secret.Secret.Google_Secret_Password;
 
 @Service
 public class GoogleService {
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private UserService userService;
 
     public String getAccessToken(String code){
         //HttpHeaders 생성00
