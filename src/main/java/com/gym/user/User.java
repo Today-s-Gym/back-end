@@ -101,6 +101,10 @@ public class User {
         this.category = category;
     }
 
+    public void updateEmail(String email){
+        this.email = email;
+    }
+
     public void updateRefreshToken(String refreshToken){
         this.refreshToken = refreshToken;
     }

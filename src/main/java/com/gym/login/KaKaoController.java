@@ -49,8 +49,10 @@ public class KaKaoController {
 
             if (findUser.isEmpty()) {
                 log.info("카카오 로그인 - 계정 새로 생성");
-                UserUpdateRequestDTO userUpdateRequestDTO = new UserUpdateRequestDTO(useremail);
-                User kakaoUser = userService.save(userUpdateRequestDTO);
+                //UserUpdateRequestDTO userUpdateRequestDTO = new UserUpdateRequestDTO(useremail);
+                //User kakaoUser = userService.save(userUpdateRequestDTO);
+                User kakaoUser = new User();
+                kakaoUser.updateEmail(useremail);
                 JwtResponseDTO.TokenInfo tokenInfo = jwtProvider.generateToken(kakaoUser.getUserId());
                 kakaoUser.updateRefreshToken(tokenInfo.getRefreshToken());
                 userRepository.save(kakaoUser);

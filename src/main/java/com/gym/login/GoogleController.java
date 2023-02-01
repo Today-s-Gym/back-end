@@ -45,8 +45,10 @@ public class GoogleController {
             Optional<User> findUser = userRepository.findByEmail(useremail);
             if (findUser.isEmpty()) {
                 log.info("구글 로그인 - 계정 새로 생성");
-                UserUpdateRequestDTO userUpdateRequestDTO = new UserUpdateRequestDTO(useremail);
-                User googleUser = userService.save(userUpdateRequestDTO);
+                //UserUpdateRequestDTO userUpdateRequestDTO = new UserUpdateRequestDTO(useremail);
+                //User googleUser = userService.save(userUpdateRequestDTO);
+                User googleUser = new User();
+                googleUser.updateEmail(useremail);
                 JwtResponseDTO.TokenInfo tokenInfo = jwtProvider.generateToken(googleUser.getUserId());
                 googleUser.updateRefreshToken(tokenInfo.getRefreshToken());
                 userRepository.save(googleUser);
