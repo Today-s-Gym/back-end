@@ -2,10 +2,6 @@ package com.gym.login;
 
 
 import com.google.gson.Gson;
-import com.gym.config.exception.BaseException;
-import com.gym.user.UserRepository;
-import com.gym.user.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -14,18 +10,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+
 import java.util.Map;
 
 import static com.gym.secret.Secret.Kakao_SECRET_KEY;
 
 @Service
 public class KaKaoService {
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private UserService userService;
 
     public String getAccessToken(String code){
         //HttpHeaders 생성00
@@ -52,7 +43,7 @@ public class KaKaoService {
         return responseEntity.getBody();
     }
 
-    public String getUserInfo(String accessToken, String refreshToken) {
+    public String getUserInfo(String accessToken) {
         //Httpheader 생성
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Authorization", "Bearer " + accessToken);
