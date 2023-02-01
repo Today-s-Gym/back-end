@@ -31,10 +31,10 @@ public class KaKaoController {
     //카카오 로그인 코드
     @ResponseBody
     @PostMapping("/oauth/kakao")
-    public BaseResponse<?> kakaoCallback(@RequestParam("code") String code) {
+    public BaseResponse<?> kakaoCallback(@RequestParam("token") String accessToken) {
         try{
-            log.info("카카오 로그인 진입");
-            String accessToken = kaKaoLoginService.getAccessToken(code);
+            //log.info("카카오 로그인 진입");
+            //String accessToken = kaKaoLoginService.getAccessToken(code);
 
             log.info("accessToken 받아짐");
 
@@ -55,13 +55,12 @@ public class KaKaoController {
                 kakaoUser.updateEmail(useremail);
                 JwtResponseDTO.TokenInfo tokenInfo = jwtProvider.generateToken(kakaoUser.getUserId());
                 kakaoUser.updateRefreshToken(tokenInfo.getRefreshToken());
-                //userRepository.save(kakaoUser);
+                userRepository.save(kakaoUser);
 
                 // RefreshToken Redis 저장 (expirationTime 설정을 통해 자동 삭제 처리)
 /*                redisTemplate.opsForValue()
                         .set("RT:" + useremail, tokenInfo.getRefreshToken(), jwtProvider.getExpiration(tokenInfo.getRefreshToken()), TimeUnit.MILLISECONDS);*/
-                userService.insertUser(kakaoUser);
-
+                //userService.insertUser(kakaoUser);
                 return new BaseResponse<>(tokenInfo);
             } else {
                 log.info("카카오 로그인 - 기존 회원 로그인");
@@ -69,7 +68,6 @@ public class KaKaoController {
                 JwtResponseDTO.TokenInfo tokenInfo = jwtProvider.generateToken(user.getUserId());
                 user.updateRefreshToken(tokenInfo.getRefreshToken());
                 userRepository.save(user);
-
                 //RefreshToken Redis 저장 (expirationTime 설정을 통해 자동 삭제 처리)
 /*                redisTemplate.opsForValue()
                         .set("RT:" + useremail, tokenInfo.getRefreshToken(), jwtProvider.getExpiration(tokenInfo.getRefreshToken()), TimeUnit.MILLISECONDS);*/

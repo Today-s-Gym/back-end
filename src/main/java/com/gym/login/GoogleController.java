@@ -51,11 +51,12 @@ public class GoogleController {
                 googleUser.updateEmail(useremail);
                 JwtResponseDTO.TokenInfo tokenInfo = jwtProvider.generateToken(googleUser.getUserId());
                 googleUser.updateRefreshToken(tokenInfo.getRefreshToken());
+                userRepository.save(googleUser);
                 //userRepository.save(googleUser);
                 // RefreshToken Redis 저장 (expirationTime 설정을 통해 자동 삭제 처리)
 /*                redisTemplate.opsForValue()
                         .set("RT:" + useremail, tokenInfo.getRefreshToken(), jwtProvider.getExpiration(tokenInfo.getRefreshToken()), TimeUnit.MILLISECONDS);*/
-                userService.insertUser(googleUser);
+                //userService.insertUser(googleUser);
 
                 return new BaseResponse<>(tokenInfo);
             } else {
