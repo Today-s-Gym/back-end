@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration>
+<configuration scan="true" scanPeriod="60 seconds">
     <springProperty name="filePath" source="logging.file.path"/>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} %-3level [File:%F] [Func:%M] [Line:%L] [Message:%m]- %msg%n</pattern>
+            <pattern>%d{HH:mm:ss.SSS} %-3level [File:%F] [Func:%M] [Line:%L] - %msg%n</pattern>
         </encoder>
     </appender>
 
@@ -18,7 +18,7 @@
             <maxHistory>30</maxHistory>
         </rollingPolicy>
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} %-3level [File:%F] [Func:%M] [Line:%L] [Message:%m]- %msg%n</pattern>
+            <pattern>%d{HH:mm:ss.SSS} %-3level [File:%F] [Func:%M] [Line:%L] - %msg%n</pattern>
         </encoder>
     </appender>
 
@@ -37,7 +37,7 @@
             <maxHistory>30</maxHistory>
         </rollingPolicy>
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} %-3level [File:%F] [Func:%M] [Line:%L] [Message:%m]- %msg%n</pattern>
+            <pattern>%d{HH:mm:ss.SSS} %-3level [File:%F] [Func:%M] [Line:%L] - %msg%n</pattern>
         </encoder>
     </appender>
 
@@ -45,7 +45,7 @@
         <appender-ref ref="STDOUT"/>
     </root>
 
-    <logger name="com.gym" level="WARN">
+    <logger name="com.gym" level="INFO">
         <appender-ref ref="APP_FILE"/>
         <appender-ref ref="ERROR_FILE"/>
     </logger>

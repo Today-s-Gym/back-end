@@ -43,7 +43,6 @@ out/
 
 ### VS Code ###
 .vscode/
-/logs/app.log
-/logs/error.log
+/logs/
 
 /src/main/java/com/gym/secret
