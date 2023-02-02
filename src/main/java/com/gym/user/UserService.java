@@ -171,29 +171,6 @@ public class UserService {
     }
 
     @Transactional
-    public boolean checkAndMyAvatarLevelUp(Integer userId) {
-        User user = userRepository.findWithMyAvatarByUserId(userId);
-        int recordCount = user.getRecordCount();
-        AvatarStep avatarStep = AvatarStep.findByRecordCount(recordCount);
-
-        if (!user.getMyAvatar().getAvatarStep().equals(avatarStep)) {
-            MyAvatar levelUpAvatar = myAvatarRepository.findByAvatarStep(avatarStep).get();
-            saveMyAvatarInCollection(user, levelUpAvatar);
-            user.changeAvatarStep(levelUpAvatar);
-            return true;
-        }
-        return false;
-    }
-
-    @Transactional
-    public void saveMyAvatarInCollection(User user, MyAvatar myAvatar) {
-        MyAvatarCollection myAvatarCollection = new MyAvatarCollection();
-        myAvatarCollection.setUser(user);
-        myAvatarCollection.setMyAvatar(myAvatar);
-        myAvatarCollectionRepository.save(myAvatarCollection);
-    }
-
-    @Transactional
     public GetMyPageRes getUserProfile(Integer userId) throws BaseException {
         User user = utilService.findByUserIdWithValidation(userId);
         if (user.isLocked()) {

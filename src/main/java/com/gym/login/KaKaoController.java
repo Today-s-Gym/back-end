@@ -1,6 +1,7 @@
 package com.gym.login;
 
 import com.google.gson.Gson;
+import com.gym.avatar.AvatarService;
 import com.gym.config.exception.BaseResponse;
 import com.gym.config.exception.BaseResponseStatus;
 import com.gym.login.dto.JwtResponseDTO;
@@ -27,6 +28,7 @@ public class KaKaoController {
     private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
     private final RedisTemplate redisTemplate;
+    private final AvatarService avatarService;
 
     //카카오 로그인 코드
     @ResponseBody
@@ -56,6 +58,7 @@ public class KaKaoController {
                 JwtResponseDTO.TokenInfo tokenInfo = jwtProvider.generateToken(kakaoUser.getUserId());
                 kakaoUser.updateRefreshToken(tokenInfo.getRefreshToken());
                 userRepository.save(kakaoUser);
+                avatarService.setInitialAvatar(kakaoUser);
 
                 // RefreshToken Redis 저장 (expirationTime 설정을 통해 자동 삭제 처리)
 /*                redisTemplate.opsForValue()

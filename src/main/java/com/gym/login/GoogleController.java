@@ -1,6 +1,7 @@
 package com.gym.login;
 
 import com.google.gson.Gson;
+import com.gym.avatar.AvatarService;
 import com.gym.config.exception.BaseResponse;
 import com.gym.login.dto.JwtResponseDTO;
 import com.gym.login.dto.UserUpdateRequestDTO;
@@ -27,6 +28,7 @@ public class GoogleController {
     private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
     private final RedisTemplate redisTemplate;
+    private final AvatarService avatarService;
 
     @ResponseBody
     @GetMapping("/login/google")
@@ -52,6 +54,7 @@ public class GoogleController {
                 JwtResponseDTO.TokenInfo tokenInfo = jwtProvider.generateToken(googleUser.getUserId());
                 googleUser.updateRefreshToken(tokenInfo.getRefreshToken());
                 userRepository.save(googleUser);
+                avatarService.setInitialAvatar(googleUser);
                 //userRepository.save(googleUser);
                 // RefreshToken Redis 저장 (expirationTime 설정을 통해 자동 삭제 처리)
 /*                redisTemplate.opsForValue()
