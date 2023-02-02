@@ -43,10 +43,13 @@
 
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
+        <appender-ref ref="APP_FILE"/>
+        <appender-ref ref="ERROR_FILE"/>
     </root>
 
-    <logger name="com.gym" level="INFO">
+    <logger name="com.gym" level="INFO" additivity="false">
         <appender-ref ref="APP_FILE"/>
         <appender-ref ref="ERROR_FILE"/>
     </logger>
+
 </configuration>
