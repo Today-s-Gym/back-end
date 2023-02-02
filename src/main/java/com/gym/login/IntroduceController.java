@@ -1,6 +1,7 @@
 package com.gym.login;
 
 
+import com.gym.avatar.AvatarService;
 import com.gym.avatar.avatar.AvatarStep;
 import com.gym.avatar.avatar.MyAvatar;
 import com.gym.avatar.avatar.MyAvatarRepository;
@@ -36,6 +37,7 @@ public class IntroduceController {
 
     @Autowired
     private UserService userService;
+    private AvatarService avatarService;
 
     @PutMapping("/login/introduce")
     @ResponseBody
@@ -45,13 +47,9 @@ public class IntroduceController {
             Integer userid = jwtService.getUserIdx();
             User user = utilService.findByUserIdWithValidation(userid);
 
-
             if((introduce.length() >= 0) && (introduce.length() <= 30)){
-                AvatarStep initialAvatarStep = AvatarStep.getInitialAvatarStep();
-                MyAvatar myAvatar = myAvatarRepository.findByAvatarStep(initialAvatarStep).get();
-                user.update(nickname, introduce, myAvatar);
+                user.update(nickname, introduce);
                 userRepository.save(user);
-                userService.saveMyAvatarInCollection(user, myAvatar);
                 return new BaseResponse<>(BaseResponseStatus.SUCCESS);
             }
             else{
