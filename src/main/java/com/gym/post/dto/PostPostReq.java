@@ -19,6 +19,4 @@ public class PostPostReq {
     private String content;
 
     private Integer recordId; // null 일 수도 있음
-
-    private List<String> postPhotos = new ArrayList<>();;
 }

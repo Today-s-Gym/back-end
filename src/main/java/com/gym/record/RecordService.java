@@ -125,6 +125,7 @@ public class RecordService {
     @Modifying
     public Integer updateRecord(String date, RecordGetReq recordGetReq, List<MultipartFile> multipartFiles) throws BaseException {
         //User, Record 조회 및 update
+
         User user = utilService.findByUserIdWithValidation(jwtService.getUserIdx());
         Record record = recordRepository.findAllByDay(user.getUserId(), date);
         record = utilService.findByRecordIdWithValidation(record.getRecordId());
