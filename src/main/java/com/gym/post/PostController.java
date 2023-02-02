@@ -13,6 +13,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -75,10 +76,11 @@ public class PostController {
 
 
     @PostMapping("/post")
-    public BaseResponse<String> createPost(@RequestBody PostPostReq postPostReq) throws BaseException {
+    public BaseResponse<String> createPost(@RequestPart(value = "image", required = false) List<MultipartFile> multipartFiles,
+                                            @RequestPart(value = "postPostReq") PostPostReq postPostReq){
         try {
             Integer userId = jwtService.getUserIdx();
-            return new BaseResponse<>(postService.createPost(userId, postPostReq));
+            return new BaseResponse<>(postService.createPost(userId, postPostReq, multipartFiles));
         }
         catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
@@ -91,10 +93,12 @@ public class PostController {
 
 
     @PatchMapping("/post")
-    public BaseResponse<String> updatePost(@Param("postId") Integer postId, @RequestBody PostPostReq postPostReq) throws BaseException {
+    public BaseResponse<String> updatePost(@Param("postId") Integer postId,
+                                           @RequestPart(value = "image", required = false) List<MultipartFile> multipartFiles,
+                                           @RequestPart(value = "postPostReq") PostPostReq postPostReq) throws BaseException {
         try {
             Integer userId = jwtService.getUserIdx();
-            return new BaseResponse<>(postService.updatePost(userId, postId, postPostReq));
+            return new BaseResponse<>(postService.updatePost(userId, postId, postPostReq, multipartFiles));
         }
         catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());

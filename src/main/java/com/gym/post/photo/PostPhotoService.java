@@ -6,7 +6,9 @@ import com.gym.post.dto.PostPostReq;
 import com.gym.record.Record;
 import com.gym.record.dto.RecordGetReq;
 import com.gym.record.photo.RecordPhoto;
+import com.gym.utils.S3Service;
 import com.gym.utils.UtilService;
+import com.gym.utils.dto.getS3Res;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +21,7 @@ import java.util.List;
 public class PostPhotoService {
 
     private final PostPhotoRepository postPhotoRepository;
+    private final S3Service s3Service;
 
     @Transactional
     public void savePostPhoto(List<PostPhoto> postPhotos){
@@ -29,15 +32,13 @@ public class PostPhotoService {
      *  여러 개의 PostPhoto 저장
      */
     @Transactional
-    public void saveAllPostPhotoByPost(PostPostReq postPostReq, Post post) {
+    public void saveAllPostPhotoByPost(List<getS3Res> getS3ResList , Post post) {
         // PostPhoto 리스트를 받아옴
-        List<String> imgUrlList = postPostReq.getPostPhotos();
 
         List<PostPhoto> postPhotos = new ArrayList<>();
-        for (String photo : imgUrlList) {
+        for (getS3Res getS3Res : getS3ResList) {
             PostPhoto newPostPhoto = PostPhoto.builder()
-                    .imgUrl(photo).build();
-
+                    .imgUrl(getS3Res.getImgUrl()).fileName(getS3Res.getFileName()).build();
             postPhotos.add(newPostPhoto);
             post.addPhotoList(newPostPhoto);
         }
@@ -53,6 +54,13 @@ public class PostPhotoService {
         postPhotoRepository.deleteAllByPost(ids);
     }
 
+    @Transactional
+    public void deleteAllPostPhotos(List<PostPhoto> postPhotos){
+        for (PostPhoto recordPhoto : postPhotos) {
+            s3Service.deleteFile(recordPhoto.getFileName());
+        }
+    }
+
     /**
      * 게시글과 연관된 모든 postPhoto 의 imgUrl 조회
      */
@@ -65,6 +73,10 @@ public class PostPhotoService {
      */
     public List<Integer> findAllId(int postId){
         return postPhotoRepository.findAllId(postId);
+    }
+
+    public List<PostPhoto> findAllByPostId(Integer postId){
+        return postPhotoRepository.findAllByPostId(postId).orElse(null);
     }
 
     public String findFirstByPostId(Integer postId) {

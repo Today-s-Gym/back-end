@@ -8,16 +8,20 @@ import com.gym.post.dto.GetPostRes;
 import com.gym.post.dto.GetPostsListRes;
 import com.gym.post.dto.PostPostReq;
 import com.gym.post.like.LikeService;
+import com.gym.post.photo.PostPhoto;
 import com.gym.post.photo.PostPhotoService;
 import com.gym.record.Record;
 import com.gym.user.User;
 import com.gym.user.UserRepository;
 import com.gym.user.UserService;
+import com.gym.utils.S3Service;
 import com.gym.utils.UtilService;
+import com.gym.utils.dto.getS3Res;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -35,6 +39,7 @@ public class PostService {
     private final UtilService utilService;
     private final PostPhotoService postPhotoService;
     private final UserService userService;
+    private final S3Service s3Service;
 
 
     @Transactional
@@ -45,7 +50,7 @@ public class PostService {
 
 
     @Transactional
-    public String createPost(Integer userId, PostPostReq postPostReq) throws BaseException {
+    public String createPost(Integer userId, PostPostReq postPostReq, List<MultipartFile> multipartFiles) throws BaseException {
         User user = utilService.findByUserIdWithValidation(userId);
         Category category = utilService.findByCategoryIdWithValidation(postPostReq.getCategoryId());
 
@@ -67,7 +72,11 @@ public class PostService {
 
         save(post);
 
-        postPhotoService.saveAllPostPhotoByPost(postPostReq, post);
+        if(multipartFiles != null) {
+            List<getS3Res> imgUrls = s3Service.uploadFile(multipartFiles);
+            postPhotoService.saveAllPostPhotoByPost(imgUrls, post);
+        }
+
 
         return "postId: " + post.getPostId() + "인 게시글을 생성했습니다.";
     }
@@ -132,7 +141,7 @@ public class PostService {
      */
     @Transactional
     @Modifying
-    public String updatePost(Integer userId, Integer postId, PostPostReq postPostReq) throws BaseException {
+    public String updatePost(Integer userId, Integer postId, PostPostReq postPostReq, List<MultipartFile> multipartFiles) throws BaseException {
         Post post = utilService.findByPostIdWithValidation(postId);
         //게시글을 작성한 유저
         User writer = post.getUser();
@@ -145,9 +154,15 @@ public class PostService {
             post.updatePost(postPostReq.getTitle(), postPostReq.getContent());
 
             //사진 업데이트, 지우고 다시 저장!
+            List<PostPhoto> allByPostId = postPhotoService.findAllByPostId(postId);
+            postPhotoService.deleteAllPostPhotos(allByPostId);
             List<Integer> Ids = postPhotoService.findAllId(post.getPostId());
             postPhotoService.deleteAllPostPhotoByPost(Ids);
-            postPhotoService.saveAllPostPhotoByPost(postPostReq, post);
+
+            if(multipartFiles != null) {
+                List<getS3Res> imgUrls = s3Service.uploadFile(multipartFiles);
+                postPhotoService.saveAllPostPhotoByPost(imgUrls, post);
+            }
 
             return "postId: " + post.getPostId() + "인 게시글을 수정했습니다.";
         } else {
@@ -168,8 +183,10 @@ public class PostService {
         User viewer = utilService.findByUserIdWithValidation(userId);
         if(writer.getUserId() == viewer.getUserId()) {
             //postPhoto 삭제
-            List<Integer> ids = postPhotoService.findAllId(post.getPostId());
-            postPhotoService.deleteAllPostPhotoByPost(ids);
+            List<PostPhoto> allByPostId = postPhotoService.findAllByPostId(postId);
+            postPhotoService.deleteAllPostPhotos(allByPostId);
+            List<Integer> Ids = postPhotoService.findAllId(post.getPostId());
+            postPhotoService.deleteAllPostPhotoByPost(Ids);
             //post 삭제
             postRepository.deleteByPostId(post.getPostId());
             return "postId: " + post.getPostId() + "인 게시글을 삭제했습니다.";
