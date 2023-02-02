@@ -1,5 +1,6 @@
 package com.gym.record;
 
+import com.gym.avatar.AvatarService;
 import com.gym.record.dto.RecordGetRecentRes;
 import com.gym.config.exception.BaseException;
 import com.gym.record.dto.RecordGetReq;
@@ -45,6 +46,7 @@ public class RecordService {
 
     private final S3Service s3Service;
     private final UserService userService;
+    private final AvatarService avatarService;
 
 
 
@@ -69,7 +71,7 @@ public class RecordService {
         }
         //Tag 추가
         tagService.saveAllTagByRecord(recordGetReq, record);
-        userService.checkAndMyAvatarLevelUp(jwtService.getUserIdx());
+        avatarService.checkAndMyAvatarLevelUp(jwtService.getUserIdx());
         return record.getRecordId();
     }
 
