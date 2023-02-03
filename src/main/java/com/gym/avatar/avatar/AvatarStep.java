@@ -8,11 +8,11 @@ import java.util.Comparator;
 @Getter
 public enum AvatarStep {
     NONE(0, "none", -1, -1),
-    AVATAR1_STEP1(1, "AVATAR1_IMG1", 0, 3),
-    AVATAR1_STEP2(2, "AVATAR1_IMG2", 3, 10),
-    AVATAR1_STEP3(3, "AVATAR1_IMG3", 10, 17),
-    AVATAR1_STEP4(4, "AVATAR1_IMG4", 17, 20),
-    AVATAR1_STEP5(5, "AVATAR1_IMG5", 20, 25),
+    AVATAR1_STEP1(1, "src/main/resources/avatar/bburakma/bburakma_level1.png", 0, 3),
+    AVATAR1_STEP2(2, "src/main/resources/avatar/bburakma/bburakma_level2.png", 3, 10),
+    AVATAR1_STEP3(3, "src/main/resources/avatar/bburakma/bburakma_level3.png", 10, 17),
+    AVATAR1_STEP4(4, "src/main/resources/avatar/bburakma/bburakma_level4.png", 17, 20),
+    AVATAR1_STEP5(5, "src/main/resources/avatar/bburakma/bburakma_level5.png", 20, 25),
     AVATAR2_STEP1(1, "AVATAR2_IMG1", 25, 30),
     AVATAR2_STEP2(2, "AVATAR2_IMG2", 30, 40),
     AVATAR2_STEP3(3, "AVATAR2_IMG3", 40, 50),
