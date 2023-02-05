@@ -9,21 +9,18 @@ import com.gym.user.User;
 import com.gym.user.UserRepository;
 import com.gym.utils.JwtService;
 import com.gym.utils.UtilService;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 public class SportsController {
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private UtilService utilService;
-
-    @Autowired
-    private JwtService jwtService;
+    private final  UserRepository userRepository;
+    private final UtilService utilService;
+    private final JwtService jwtService;
 
     @PutMapping("/login/sports")
     @ResponseBody

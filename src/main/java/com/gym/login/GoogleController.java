@@ -34,19 +34,13 @@ public class GoogleController {
     @GetMapping("/login/google")
     public BaseResponse<?> GoogleCallback(String code) {
         try{
-            log.info("구글 로그인 진입");
             String accessToken = googleService.getAccessToken(code);
-
-            log.info("code로부터 token 추출 성공");
-
             Gson gsonObj = new Gson();
             Map<?, ?> data = gsonObj.fromJson(accessToken, Map.class);
             String atoken = (String) data.get("access_token");
             String useremail = googleService.getUserInfo(atoken);
-            log.info("token으로부터 useremail 추출 성공");
             User findUser = userRepository.findByEmail(useremail).orElse(null);
             if (findUser == null) {
-                log.info("구글 로그인 - 계정 새로 생성");
                 //UserUpdateRequestDTO userUpdateRequestDTO = new UserUpdateRequestDTO(useremail);
                 //User googleUser = userService.save(userUpdateRequestDTO);
                 User googleUser = new User();
@@ -63,8 +57,6 @@ public class GoogleController {
 
                 return new BaseResponse<>(tokenInfo);
             } else {
-                log.info("구글 로그인 - 기존 회원 로그인");
-
                 User user = findUser;
                 JwtResponseDTO.TokenInfo tokenInfo = jwtProvider.generateToken(user.getUserId());
                 user.updateRefreshToken(tokenInfo.getRefreshToken());
