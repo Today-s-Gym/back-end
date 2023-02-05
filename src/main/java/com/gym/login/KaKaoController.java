@@ -35,22 +35,12 @@ public class KaKaoController {
     @PostMapping("/oauth/kakao")
     public BaseResponse<?> kakaoCallback(@RequestParam("token") String accessToken) {
         try{
-            //log.info("카카오 로그인 진입");
             //String accessToken = kaKaoLoginService.getAccessToken(code);
-
-            log.info("accessToken 받아짐");
-
-            //Gson gsonObj = new Gson();
-            //Map<?, ?> data = gsonObj.fromJson(accessToken, Map.class);
-            //String atoken = (String) data.get("access_token");
-
             String useremail = kaKaoLoginService.getUserInfo(accessToken);
-            log.info("token으로부터 useremail 추출 성공");
             Optional<User> findUser = userRepository.findByEmail(useremail);
 
 
             if (findUser.isEmpty()) {
-                log.info("카카오 로그인 - 계정 새로 생성");
                 //UserUpdateRequestDTO userUpdateRequestDTO = new UserUpdateRequestDTO(useremail);
                 //User kakaoUser = userService.save(userUpdateRequestDTO);
                 User kakaoUser = new User();
@@ -66,7 +56,6 @@ public class KaKaoController {
                 //userService.insertUser(kakaoUser);
                 return new BaseResponse<>(tokenInfo);
             } else {
-                log.info("카카오 로그인 - 기존 회원 로그인");
                 User user = findUser.get();
                 JwtResponseDTO.TokenInfo tokenInfo = jwtProvider.generateToken(user.getUserId());
                 user.updateRefreshToken(tokenInfo.getRefreshToken());

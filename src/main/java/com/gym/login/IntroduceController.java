@@ -13,6 +13,7 @@ import com.gym.user.UserRepository;
 import com.gym.user.UserService;
 import com.gym.utils.JwtService;
 import com.gym.utils.UtilService;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,24 +21,16 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-//@RequiredArgsConstructor
+@RequiredArgsConstructor
 @Controller
 public class IntroduceController {
+    private final UserRepository userRepository;
+    private final MyAvatarRepository myAvatarRepository;
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private MyAvatarRepository myAvatarRepository;
-    @Autowired
-    private UtilService utilService;
-
-    @Autowired
-    private JwtService jwtService;
-
-    @Autowired
-    private UserService userService;
-    private AvatarService avatarService;
+    private final UtilService utilService;
+    private final JwtService jwtService;
+    private final UserService userService;
+    private final AvatarService avatarService;
 
     @PutMapping("/login/introduce")
     @ResponseBody
