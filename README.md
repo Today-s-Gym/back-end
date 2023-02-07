@@ -1,4 +1,5 @@
 <h1 align="middle">오늘의 짐(Gym)</h1>
+
 <p align="middle"> 아바타와 함께 성장하는 운동기록 & SNS </p>
 
 ## 💪 오늘의 짐(Gym) 소개
