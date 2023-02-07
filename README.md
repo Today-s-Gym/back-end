@@ -1,5 +1,6 @@
 <center><h1>오늘의 짐(Gym)</h1></center>
 ---
+
 <center>아바타와 함께 성장하는 운동기록 & SNS </center>
 
 ## 오늘의 짐(Gym) 소개
