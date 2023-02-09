@@ -22,6 +22,10 @@
 - Spring Data JPA
 - MySQL
 
+## 🎯 ERD
+<img alt="erd" src = "https://user-images.githubusercontent.com/67584244/217715413-38fcaf96-b562-478f-bcec-85ed83b5ab9c.png">
+
+
 ## 👨‍💻 협업 규칙
 ### 1. 브랜치 규칙
 feature/{기능} 형식
