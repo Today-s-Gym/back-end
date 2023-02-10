@@ -21,7 +21,7 @@ public class RecordGetRecentRes {
         this.content = content;
         this.createdTime = UtilService.convertLocalDateTimeToLocalDate(createdAt);
         if (recordPhotos.isEmpty()) {
-            this.imgUrl = "";
+            this.imgUrl =  "";
         } else {
             this.imgUrl = recordPhotos.get(0).getImgUrl();
         }
