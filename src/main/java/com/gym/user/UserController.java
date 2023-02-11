@@ -7,10 +7,9 @@ import com.gym.user.dto.AccountPrivacyReq;
 import com.gym.user.dto.EditMyPageReq;
 import com.gym.user.dto.GetMyPageRes;
 import com.gym.user.dto.UserEmailRes;
-import com.gym.utils.JwtService;
+import com.gym.login.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

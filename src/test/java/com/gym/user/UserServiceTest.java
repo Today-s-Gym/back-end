@@ -2,9 +2,8 @@ package com.gym.user;
 
 import com.gym.avatar.avatar.dto.MyAvatarDto;
 import com.gym.config.exception.BaseException;
-import com.gym.user.dto.AccountPrivacyReq;
 import com.gym.user.dto.GetMyPageRes;
-import com.gym.utils.JwtService;
+import com.gym.login.jwt.JwtService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

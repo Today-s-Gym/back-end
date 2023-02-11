@@ -9,26 +9,25 @@ import com.gym.avatar.myAvatarCollection.MyAvatarCollection;
 import com.gym.avatar.myAvatarCollection.MyAvatarCollectionRepository;
 import com.gym.config.exception.BaseException;
 import com.gym.config.exception.BaseResponse;
-import com.gym.login.JwtProvider;
+import com.gym.login.jwt.JwtProvider;
 import com.gym.login.dto.JwtResponseDTO;
 import com.gym.login.dto.UserUpdateRequestDTO;
 import com.gym.record.RecordRepository;
 import com.gym.user.dto.GetMyPageRes;
 import com.gym.user.dto.UserRecordCount;
+import com.gym.login.jwt.JwtService;
 import com.gym.utils.UtilService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 import static com.gym.config.exception.BaseResponseStatus.*;
@@ -48,6 +47,7 @@ public class UserService {
     private final MyAvatarRepository myAvatarRepository;
     private final JwtProvider jwtProvider;
     private final RedisTemplate redisTemplate;
+    private final JwtService jwtService;
 
     /**
      * 사용자 공개 계정 전환
@@ -239,6 +239,16 @@ public class UserService {
 
         return new BaseResponse<>(SUCCESS);
     }*/
+
+    public BaseResponse<?> logout(String accessToken) throws Exception{
+        Integer userid = jwtService.getUserIdWithJWT(accessToken);
+        userRepository.deleteById(userid);
+
+        return new BaseResponse<>(SUCCESS);
+
+
+    }
+
 
     @Transactional
     @Scheduled(cron = "0 0 0 * * *")

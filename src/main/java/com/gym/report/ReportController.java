@@ -7,7 +7,7 @@ import com.gym.post.comment.Comment;
 import com.gym.report.dto.ReportReq;
 import com.gym.user.User;
 import com.gym.user.UserRepository;
-import com.gym.utils.JwtService;
+import com.gym.login.jwt.JwtService;
 import com.gym.utils.UtilService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;

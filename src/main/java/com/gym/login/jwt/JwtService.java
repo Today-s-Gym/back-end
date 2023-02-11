@@ -1,10 +1,8 @@
-package com.gym.utils;
+package com.gym.login.jwt;
 
 import com.gym.config.exception.BaseException;
 import com.gym.secret.Secret;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import java.security.Key;
 
-import static com.gym.config.exception.BaseResponseStatus.EMPTY_JWT;
-import static com.gym.config.exception.BaseResponseStatus.INVALID_JWT;
+import static com.gym.config.exception.BaseResponseStatus.*;
 
 @Service
 @RequiredArgsConstructor
@@ -55,6 +52,36 @@ public class JwtService {
                     .setSigningKey(key)
                     .build()
                     .parseClaimsJws(accessToken);
+        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
+            throw new BaseException(INVALID_JWT);
+        } catch (ExpiredJwtException e) {
+            throw new BaseException(EXPIRED_USER_JWT);
+        } catch (Exception ignored) {
+            throw new BaseException(INVALID_JWT);
+        }
+
+        // 3. userId 추출
+        return claims.getBody().get("userId",Integer.class);
+    }
+
+    public Integer getUserIdWithJWT(String accessToken) throws BaseException {
+
+        //1. JWT 추출
+        if(accessToken == null || accessToken.length() == 0){
+            throw new BaseException(EMPTY_JWT);
+        }
+
+        // 2. JWT parsing
+        Jws<Claims> claims;
+        try{
+            claims = Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(accessToken);
+        }catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
+            throw new BaseException(INVALID_JWT);
+        } catch (ExpiredJwtException e) {
+            throw new BaseException(EXPIRED_USER_JWT);
         } catch (Exception ignored) {
             throw new BaseException(INVALID_JWT);
         }
