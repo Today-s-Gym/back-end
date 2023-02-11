@@ -2,20 +2,16 @@ package com.gym.post;
 
 import com.gym.config.exception.BaseException;
 import com.gym.config.exception.BaseResponse;
-import com.gym.config.exception.BaseResponseStatus;
 import com.gym.post.dto.GetMyPostsListRes;
 import com.gym.post.dto.GetPostRes;
 import com.gym.post.dto.GetPostsListRes;
 import com.gym.post.dto.PostPostReq;
-import com.gym.utils.JwtService;
+import com.gym.login.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @RestController

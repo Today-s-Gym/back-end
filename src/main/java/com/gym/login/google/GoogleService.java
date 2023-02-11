@@ -1,4 +1,4 @@
-package com.gym.login;
+package com.gym.login.google;
 
 
 import com.google.gson.JsonElement;
