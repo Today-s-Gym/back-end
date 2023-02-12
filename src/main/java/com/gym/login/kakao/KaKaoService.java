@@ -1,4 +1,4 @@
-package com.gym.login;
+package com.gym.login.kakao;
 
 
 import com.google.gson.Gson;
@@ -26,7 +26,7 @@ public class KaKaoService {
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
         body.add("client_id", Kakao_SECRET_KEY);
-        body.add("redirect_uri" , "http://todaysgym.shop/oauth/kakao");
+        body.add("redirect_uri" , "http://localhost:8000/oauth/kakao");
         body.add("code", code);
 
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(body, httpHeaders);

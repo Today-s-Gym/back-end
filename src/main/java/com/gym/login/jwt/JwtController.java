@@ -1,8 +1,7 @@
-package com.gym.login;
+package com.gym.login.jwt;
 
 import com.gym.config.exception.BaseResponse;
 import com.gym.user.UserService;
-import com.gym.utils.JwtService;
 import io.jsonwebtoken.Claims;
 import lombok.AllArgsConstructor;
 import lombok.Data;

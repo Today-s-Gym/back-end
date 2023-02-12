@@ -3,12 +3,9 @@ package com.gym.post.like;
 import com.gym.config.exception.BaseException;
 import com.gym.config.exception.BaseResponse;
 import com.gym.post.like.dto.PushLikeRes;
-import com.gym.utils.JwtService;
+import com.gym.login.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 

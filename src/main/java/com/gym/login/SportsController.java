@@ -7,11 +7,9 @@ import com.gym.config.exception.BaseResponse;
 import com.gym.config.exception.BaseResponseStatus;
 import com.gym.user.User;
 import com.gym.user.UserRepository;
-import com.gym.utils.JwtService;
+import com.gym.login.jwt.JwtService;
 import com.gym.utils.UtilService;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
