@@ -10,15 +10,18 @@ import java.util.List;
 
 @Data
 public class RecordGetRecentRes {
+
+    private Integer recordId;
     private String content;
     private String createdTime;
     private String imgUrl;
 
-    public RecordGetRecentRes(String content, LocalDateTime createdAt, List<RecordPhoto> recordPhotos) {
+    public RecordGetRecentRes(Integer recordId, String content, LocalDateTime createdAt, List<RecordPhoto> recordPhotos) {
+        this.recordId = recordId;
         this.content = content;
         this.createdTime = UtilService.convertLocalDateTimeToLocalDate(createdAt);
         if (recordPhotos.isEmpty()) {
-            this.imgUrl = UtilService.returnRecordBaseImage();
+            this.imgUrl =  "";
         } else {
             this.imgUrl = recordPhotos.get(0).getImgUrl();
         }

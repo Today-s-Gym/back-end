@@ -181,7 +181,7 @@ public class RecordService {
         if (records.getTotalElements() == 0) {
             throw new BaseException(EMPTY_RECORD);
         }
-        Page<RecordGetRecentRes> results = records.map(r -> new RecordGetRecentRes(r.getContent(), r.getCreatedAt(), r.getPhotoList()));
+        Page<RecordGetRecentRes> results = records.map(r -> new RecordGetRecentRes(r.getRecordId(), r.getContent(), r.getCreatedAt(), r.getPhotoList()));
         return results;
     }
 

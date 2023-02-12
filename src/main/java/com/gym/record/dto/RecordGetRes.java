@@ -21,9 +21,8 @@ public class RecordGetRes {
         this.content = record.getContent();
         this.createdTime = UtilService.convertLocalDateTimeToLocalDate(record.getCreatedAt());
         this.userName = user.getNickName();
-        if(record.getPhotoList().isEmpty()){
+        if(record.getPhotoList().isEmpty()) {
             this.recordPhotos = new ArrayList<>();
-            this.recordPhotos.add(new RecordPhotoGetRes(UtilService.returnRecordBaseImage()));
         }
         else {
             this.recordPhotos = record.getPhotoList().stream()
