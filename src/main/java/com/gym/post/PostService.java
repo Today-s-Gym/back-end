@@ -225,7 +225,7 @@ public class PostService {
 
         //해당 게시물에 첨부된 기록이 없을 수도 있기에 default 값 지정
         Integer recordId = 0;
-        String recordPhotoImgUrl = returnRecordBaseImage();
+        String recordPhotoImgUrl = "";
         String recordCreatedAt = "기록이 없습니다.";
         String recordContent = "기록이 없습니다.";
 
@@ -233,7 +233,10 @@ public class PostService {
         if(post.getRecord() != null) {
             Record record = post.getRecord();
             recordId = record.getRecordId();
-            recordPhotoImgUrl = returnRecordBaseImage();
+            if(record.getPhotoList().size() > 0) {
+                recordPhotoImgUrl = record.getPhotoList().get(0).getImgUrl();
+            }
+            else recordPhotoImgUrl = "";
             recordCreatedAt = convertLocalDateTimeToLocalDate(record.getCreatedAt());
             recordContent = record.getContent();
         }
