@@ -71,6 +71,10 @@ public class Post {
         this.updatedAt = LocalDateTime.now();
     }
 
+    public void updateRecord(Record record){
+        this.record = record;
+    }
+
     //==연관관계 메서드==//
     public void addPhotoList(PostPhoto postPhoto){
         photoList.add(postPhoto);
