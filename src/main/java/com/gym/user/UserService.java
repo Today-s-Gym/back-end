@@ -7,6 +7,7 @@ import com.gym.avatar.avatar.MyAvatarRepository;
 import com.gym.avatar.avatar.dto.MyAvatarDto;
 import com.gym.avatar.myAvatarCollection.MyAvatarCollection;
 import com.gym.avatar.myAvatarCollection.MyAvatarCollectionRepository;
+import com.gym.category.Category;
 import com.gym.config.exception.BaseException;
 import com.gym.config.exception.BaseResponse;
 import com.gym.login.jwt.JwtProvider;
@@ -138,6 +139,7 @@ public class UserService {
     @Transactional
     public GetMyPageRes getMyPage(Integer userId) throws BaseException {
         User user = utilService.findByUserIdWithValidation(userId);
+        validateUserNicknameAndCategory(user.getNickName(), user.getCategory());
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
         String thisMonth = LocalDate.now().format(formatter);
@@ -160,6 +162,15 @@ public class UserService {
         myPageInfo.setUserRecordCount(userRecordCount);
 
         return myPageInfo;
+    }
+
+    private void validateUserNicknameAndCategory(String nickName, Category category) throws BaseException {
+        if (nickName == null) {
+            throw new BaseException(EMPTY_USER_NICKNAME);
+        }
+        if (category == null) {
+            throw new BaseException(EMPTY_USER_CATEGORY);
+        }
     }
 
     /**

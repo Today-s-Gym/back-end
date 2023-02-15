@@ -26,6 +26,9 @@ public enum BaseResponseStatus {
     // users
     USERS_EMPTY_USER_ID(false, 2010, "유저 아이디 값을 확인해주세요."),
     INVALID_USER(false, 2011, "존재하지 않는 사용자입니다."),
+    EMPTY_USER_NICKNAME(false, 2012, "닉네임 설정이 완료되지 않았습니다."),
+    EMPTY_USER_CATEGORY(false, 2501, "운동 선택이 완료되지 않았습니다."),
+
 
 
     // [POST] /users
