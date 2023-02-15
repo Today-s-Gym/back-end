@@ -13,6 +13,7 @@ import com.gym.login.jwt.JwtProvider;
 import com.gym.login.dto.JwtResponseDTO;
 import com.gym.login.dto.UserUpdateRequestDTO;
 import com.gym.record.RecordRepository;
+import com.gym.user.dto.AccountPrivacyRes;
 import com.gym.user.dto.GetMyPageRes;
 import com.gym.user.dto.UserRecordCount;
 import com.gym.login.jwt.JwtService;
@@ -179,6 +180,11 @@ public class UserService {
         return getMyPage(userId);
     }
 
+    @Transactional(readOnly = true)
+    public AccountPrivacyRes getUserAccountPrivacy(Integer userId) throws BaseException {
+        User user = utilService.findByUserIdWithValidation(userId);
+        return new AccountPrivacyRes(user.isLocked());
+    }
 
     //액세스 토큰, 리프레시 토큰 함께 재발급
     public BaseResponse<?> reissue(Integer userid) {
@@ -255,5 +261,6 @@ public class UserService {
     public void updateRecordCheck(){
         userRepository.updateRecordCheck();
     }
+
 
 }
