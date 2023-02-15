@@ -58,9 +58,9 @@ public class PostService {
         //첨부된 기록이 있으면
         if(postPostReq.getRecordId() != null) {
             record = utilService.findByRecordIdWithValidation(postPostReq.getRecordId());
-        }
-        if(record.getUser().getUserId() != user.getUserId()) {
-            return "자신의 기록만 추가할 수 있습니다!";
+            if(record.getUser().getUserId() != user.getUserId()) {
+                return "자신의 기록만 추가할 수 있습니다!";
+            }
         }
 
         Post post = Post.builder()
@@ -161,11 +161,12 @@ public class PostService {
             Record record = null;
             if(postPostReq.getRecordId() != null) {
                 record = utilService.findByRecordIdWithValidation(postPostReq.getRecordId());
+                if(record.getUser().getUserId()  == viewer.getUserId()) {
+                    post.updateRecord(record);
+                }
+                else return "자신의 기록만 추가할 수 있습니다.";
             }
-            if(record.getUser().getUserId()  == viewer.getUserId()) {
-                post.updateRecord(record);
-            }
-            else return "자신의 기록만 추가할 수 있습니다.";
+            else post.updateRecord(record);
 
             //사진 업데이트, 지우고 다시 저장!
             List<PostPhoto> allByPostId = postPhotoService.findAllByPostId(postId);

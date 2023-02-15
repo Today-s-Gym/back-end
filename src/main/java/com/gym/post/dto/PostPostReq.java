@@ -18,5 +18,5 @@ public class PostPostReq {
     private String title;
     private String content;
 
-    private Integer recordId; // null 일 수도 있음
+    private Integer recordId = null; // null 일 수도 있음
 }
