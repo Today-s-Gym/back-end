@@ -3,11 +3,8 @@ package com.gym.user;
 import com.gym.avatar.avatar.dto.MyAvatarDto;
 import com.gym.config.exception.BaseException;
 import com.gym.config.exception.BaseResponse;
-import com.gym.user.dto.AccountPrivacyReq;
-import com.gym.user.dto.EditMyPageReq;
-import com.gym.user.dto.GetMyPageRes;
-import com.gym.user.dto.UserEmailRes;
 import com.gym.login.jwt.JwtService;
+import com.gym.user.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -104,6 +101,19 @@ public class UserController {
     public BaseResponse<GetMyPageRes> getUserProfile(@PathVariable("userId") Integer userId) {
         try {
             return new BaseResponse<>(userService.getUserProfile(userId));
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    /**
+     * 사용자 공개 계정 여부 조회
+     */
+    @GetMapping("/user/check-locked")
+    public BaseResponse<AccountPrivacyRes> getUserAccountPrivacy() {
+        try {
+            Integer userId = jwtService.getUserIdx();
+            return new BaseResponse<>(userService.getUserAccountPrivacy(userId));
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
