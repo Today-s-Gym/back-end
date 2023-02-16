@@ -22,12 +22,13 @@ public class SportsController {
 
     @PutMapping("/login/sports")
     @ResponseBody
-    public BaseResponse<?> uploadSports(@RequestParam("categoryid") int categoryId)
+    public BaseResponse<?> uploadSports(@RequestParam(value = "categoryid", required = false) int categoryId)
     {
         try{
             Integer userid = jwtService.getUserIdx();
             User user = utilService.findByUserIdWithValidation(userid);
             Category category = new Category();
+            categoryId = 1;
             category.setCategoryId(categoryId);
             user.updateSports(category);
             userRepository.save(user);
