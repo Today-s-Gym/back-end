@@ -34,6 +34,7 @@ public class KaKaoController {
     @ResponseBody
     @PostMapping("/oauth/kakao")
     public BaseResponse<?> kakaoCallback(@RequestParam("token") String accessToken) {
+
         try{
             //String accessToken = kaKaoLoginService.getAccessToken(code);
             String useremail = kaKaoLoginService.getUserInfo(accessToken);

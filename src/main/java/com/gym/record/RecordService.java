@@ -58,6 +58,7 @@ public class RecordService {
         User user = utilService.findByUserIdWithValidation(jwtService.getUserIdx());
         if(user.isRecordCheck() == false) {
             user.addRecordCount();
+
         }
         user.updateRecordCheck();
         Record record = Record.createRecord(recordGetReq.getContent(), user);
