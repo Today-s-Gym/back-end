@@ -18,8 +18,8 @@ bin/
 !**/src/test/**/bin/
 
 ### project
-application.yml
-Secret.java
+!application.yml
+!Secret.java
 *.properties
 *.yml
 *.json
